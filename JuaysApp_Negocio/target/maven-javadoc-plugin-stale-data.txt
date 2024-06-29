@@ -1,0 +1,51 @@
+@options
+@packages
+-classpath
+'C:/Users/jesus/.m2/repository/com/JuatsAppPersistenciaa_247527/1.0-SNAPSHOT/JuatsAppPersistenciaa_247527-1.0-SNAPSHOT.jar;C:/Users/jesus/.m2/repository/com/mysql/mysql-connector-j/8.0.33/mysql-connector-j-8.0.33.jar;C:/Users/jesus/.m2/repository/com/google/protobuf/protobuf-java/3.21.9/protobuf-java-3.21.9.jar;C:/Users/jesus/.m2/repository/com/JuatsAppDominioo_247527/1.0-SNAPSHOT/JuatsAppDominioo_247527-1.0-SNAPSHOT.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Users/jesus/OneDrive/Documentos/NetBeansProjects/JuaysAppNegocioo_247527/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2024. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/jesus/OneDrive/Documentos/NetBeansProjects/JuaysAppNegocioo_247527/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'JuaysAppNegocioo_247527 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'JuaysAppNegocioo_247527 1.0-SNAPSHOT API'
+negocio
+C:\Users\jesus\.m2\repository\com\JuatsAppPersistenciaa_247527\1.0-SNAPSHOT\JuatsAppPersistenciaa_247527-1.0-SNAPSHOT.jar = 1716779778024
+C:\Users\jesus\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar = 1710209337428
+C:\Users\jesus\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar = 1710209337535
+C:\Users\jesus\.m2\repository\com\JuatsAppDominioo_247527\1.0-SNAPSHOT\JuatsAppDominioo_247527-1.0-SNAPSHOT.jar = 1716779760100
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\src\main\java = 1716613103264
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\allclasses-index.html = 1716779968313
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\allpackages-index.html = 1716779968326
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\copy.svg = 1716779968404
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\element-list = 1716779968229
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\help-doc.html = 1716779968374
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\index-all.html = 1716779968357
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\index.html = 1716779968365
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\link.svg = 1716779968409
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\member-search-index.js = 1716779968334
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\module-search-index.js = 1716779968329
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\overview-tree.html = 1716779968288
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\package-search-index.js = 1716779968330
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\script.js = 1716779968397
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\search-page.js = 1716779968417
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\search.html = 1716779968362
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\search.js = 1716779968413
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\stylesheet.css = 1716779968386
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\tag-search-index.js = 1716779968336
+C:\Users\jesus\OneDrive\Documentos\NetBeansProjects\JuaysAppNegocioo_247527\target\site\apidocs\type-search-index.js = 1716779968333
