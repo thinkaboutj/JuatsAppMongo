@@ -1,13 +1,7 @@
 package entidades;
 
-import com.mongodb.Bytes;
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
 import org.bson.types.ObjectId;
 
 /**
@@ -16,57 +10,57 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class Usuario implements Serializable {
+public class Usuario implements Serializable{
 
-    private ObjectId id;
+    private ObjectId objectId;
     private String usuario;
     private String contrasena;
     private Domicilio domicilio;
 
     private String telefono;
-    private String genero;
+    private String sexo;
     private byte[] imagen; // Arreglo de bytes para la imagen
-    private Calendar fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     public Usuario() {
     }
 
-    public Usuario(ObjectId id, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
-        this.id = id;
+    public Usuario(ObjectId objectId, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
+        this.objectId = objectId;
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = genero;
         this.imagen = imagen;
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
+    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = genero;
         this.imagen = imagen;
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, Calendar fechaNacimiento) {
+    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, LocalDate fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = genero;
         this.fechaNacimiento = fechaNacimiento;
     }
-
-    public ObjectId getId() {
-        return id;
+    
+    public ObjectId getObjectId() {
+        return objectId;
     }
 
-    public void setId(ObjectId id) {
-        this.id = id;
+    public void setObjectId(ObjectId objectId) {
+        this.objectId = objectId;
     }
 
     public String getUsuario() {
@@ -101,12 +95,12 @@ public class Usuario implements Serializable {
         this.telefono = telefono;
     }
 
-    public String getGenero() {
-        return genero;
+    public String getSexo() {
+        return sexo;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void setSexo(String genero) {
+        this.sexo = genero;
     }
 
     public byte[] getImagen() {
@@ -117,17 +111,14 @@ public class Usuario implements Serializable {
         this.imagen = imagen;
     }
 
-    public Calendar getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Calendar fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
-
-    @Override
-    public String toString() {
-        return "Usuario{" + "usuario=" + usuario + '}';
-    }
-
+    
+    
+    
 }

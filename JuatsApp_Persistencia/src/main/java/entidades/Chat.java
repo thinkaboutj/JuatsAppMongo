@@ -26,20 +26,20 @@ public class Chat {
 
     public Chat(Usuario emisor, Usuario receptor) {
         this.titulo = receptor.getUsuario();
-        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
+        this.idParticipantes = Arrays.asList(emisor.getObjectId(), receptor.getObjectId());
         this.mensajes = new LinkedList<>();
     }
 
     public Chat(Usuario emisor, Usuario receptor, List<Mensaje> mensajes) {
         this.titulo = receptor.getUsuario();
-        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
+        this.idParticipantes = Arrays.asList(emisor.getObjectId(), receptor.getObjectId());
         this.mensajes = mensajes;
     }
 
     public Chat(ObjectId id, Usuario emisor, Usuario receptor, List<Mensaje> mensajes) {
         this.id = id;
         this.titulo = receptor.getUsuario();
-        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
+        this.idParticipantes = Arrays.asList(emisor.getObjectId(), receptor.getObjectId());
         this.mensajes = mensajes;
     }
 

@@ -21,9 +21,9 @@ public class ConexionBD {
     private static ConexionBD instance;
     private MongoClient mongoClient;
     private final String direccion = "mongodb://localhost:27017/";
-    private final String nombreBD = "Restaurante";
+    private final String nombreBD = "JuatsApp";
 
-    private ConexionBD() {
+    public ConexionBD() {
         // Configuración del codec para manejar POJOs
         CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(
                 MongoClientSettings.getDefaultCodecRegistry(),
