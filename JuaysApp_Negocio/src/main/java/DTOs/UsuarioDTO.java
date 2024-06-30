@@ -1,4 +1,4 @@
-package entidades;
+package DTOs;
 
 import com.mongodb.Bytes;
 import java.io.Serializable;
@@ -11,27 +11,27 @@ import java.util.Objects;
 import org.bson.types.ObjectId;
 
 /**
- * Clase USUARIO la cual representa la entidad usuario y se utilizara para
+ * Clase USUARIODTO la cual representa la entidad usuario y se utilizara para
  * persistir en la base de datos
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class Usuario implements Serializable {
+public class UsuarioDTO implements Serializable {
 
-    private ObjectId id;
+    private String id;
     private String usuario;
     private String contrasena;
-    private Domicilio domicilio;
+    private DomicilioDTO domicilio;
 
     private String telefono;
     private String genero;
     private byte[] imagen; // Arreglo de bytes para la imagen
     private Calendar fechaNacimiento;
 
-    public Usuario() {
+    public UsuarioDTO() {
     }
 
-    public Usuario(ObjectId id, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
+    public UsuarioDTO(String id, String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
         this.id = id;
         this.usuario = usuario;
         this.contrasena = contrasena;
@@ -42,7 +42,7 @@ public class Usuario implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
+    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
@@ -52,7 +52,7 @@ public class Usuario implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, Calendar fechaNacimiento) {
+    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, Calendar fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
@@ -61,11 +61,11 @@ public class Usuario implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -85,11 +85,11 @@ public class Usuario implements Serializable {
         this.contrasena = contrasena;
     }
 
-    public Domicilio getDomicilio() {
+    public DomicilioDTO getDomicilio() {
         return domicilio;
     }
 
-    public void setDomicilio(Domicilio domicilio) {
+    public void setDomicilio(DomicilioDTO domicilio) {
         this.domicilio = domicilio;
     }
 

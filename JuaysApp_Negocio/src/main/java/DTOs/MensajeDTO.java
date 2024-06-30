@@ -1,4 +1,4 @@
-package entidades;
+package DTOs;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,50 +10,34 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class Mensaje {
+public class MensajeDTO {
 
-    private ObjectId id;
-    private Usuario usuario;
+    private UsuarioDTO usuario;
     private String texto;
     private byte[] imagen; // Arreglo de bytes para la imagen
     private LocalDate fecha_de_registro;
 
-    public Mensaje() {
+    public MensajeDTO() {
     }
 
-    public Mensaje(ObjectId id, Usuario usuario, String texto, LocalDate fecha_de_registro) {
-        this.id = id;
+    public MensajeDTO(UsuarioDTO usuario, String texto, LocalDate fecha_de_registro) {
         this.usuario = usuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public Mensaje(Usuario usuario, String texto, LocalDate fecha_de_registro) {
-        this.usuario = usuario;
-        this.texto = texto;
-        this.fecha_de_registro = fecha_de_registro;
-    }
-
-    public Mensaje(Usuario usuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+    public MensajeDTO(UsuarioDTO usuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
         this.usuario = usuario;
         this.texto = texto;
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public Usuario getUsuario() {
+    public UsuarioDTO getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UsuarioDTO usuario) {
         this.usuario = usuario;
     }
 
@@ -81,9 +65,5 @@ public class Mensaje {
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    @Override
-    public String toString() {
-        return "Mensaje{" + "id=" + id + ", usuario=" + usuario + ", texto=" + texto + ", fecha_de_registro=" + fecha_de_registro + '}';
-    }
 
 }

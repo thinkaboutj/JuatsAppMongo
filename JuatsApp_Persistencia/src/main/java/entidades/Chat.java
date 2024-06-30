@@ -1,107 +1,95 @@
 package entidades;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import org.bson.types.ObjectId;
 
 /**
- * Clase que representa un chat en la aplicación.
- * Un chat puede contener usuarios y mensajes asociados.
- * 
+ * Clase que representa un chat en la aplicación. Un chat puede contener
+ * usuarios y mensajes asociados.
+ *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class Chat {
 
-    /**
-     * atributos
-     */
-    private Long idChat;
-    private String nombre;
-    private Imagen miniatura;
-    private List<Usuario> usuarios;
-    private List<Mensaje> mensajes = new ArrayList<>();
+    private ObjectId id;
+    private String titulo;
+    private List<ObjectId> idParticipantes;
+    private List<Mensaje> mensajes;
+    private List<Usuario> participantes;
 
-    //--Constructores--
     public Chat() {
     }
 
-    public Chat(Long idChat, String nombre, Imagen miniatura, List<Usuario> usuarios, List<Mensaje> mensajes) {
-        this.idChat = idChat;
-        this.nombre = nombre;
-        this.miniatura = miniatura;
-        this.usuarios = usuarios;
+    public Chat(Usuario emisor, Usuario receptor) {
+        this.titulo = receptor.getUsuario();
+        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
+        this.mensajes = new LinkedList<>();
+    }
+
+    public Chat(Usuario emisor, Usuario receptor, List<Mensaje> mensajes) {
+        this.titulo = receptor.getUsuario();
+        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
         this.mensajes = mensajes;
     }
 
-    public Chat(String nombre, Imagen miniatura, List<Usuario> usuarios, List<Mensaje> mensajes) {
-        this.nombre = nombre;
-        this.miniatura = miniatura;
-        this.usuarios = usuarios;
+    public Chat(ObjectId id, Usuario emisor, Usuario receptor, List<Mensaje> mensajes) {
+        this.id = id;
+        this.titulo = receptor.getUsuario();
+        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
         this.mensajes = mensajes;
     }
 
-    public Chat(String nombre, Imagen miniatura) {
-        this.nombre = nombre;
-        this.miniatura = miniatura;
+    public Usuario getParticipante(Usuario usuario) {
+        if (participantes.get(0).equals(usuario)) {
+            return participantes.get(1);
+        }
+        return participantes.get(0);
     }
 
-    public Chat(Long idChat, String nombre, List<Usuario> usuarios, List<Mensaje> mensajes) {
-        this.idChat = idChat;
-        this.nombre = nombre;
-        this.usuarios = usuarios;
-        this.mensajes = mensajes;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public Chat(String nombre, List<Usuario> usuarios, List<Mensaje> mensajes) {
-        this.nombre = nombre;
-        this.usuarios = usuarios;
-        this.mensajes = mensajes;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public Chat(String nombre, List<Mensaje> mensajes) {
-        this.nombre = nombre;
-        this.mensajes = mensajes;
+    public ObjectId getId() {
+        return id;
     }
 
-    public Chat(String nombre) {
-        this.nombre = nombre;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
-    public void addUsuario(Usuario usuario) {
-        this.usuarios.add(usuario);
+    public List<Usuario> getParticipantes() {
+        return participantes;
     }
 
-    //Getter & setter
-    public String getNombre() {
-        return nombre;
+    public void setParticipantes(List<Usuario> participantes) {
+        this.participantes = participantes;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void addMensaje(Mensaje mensaje) {
+        if (mensaje == null) {
+            return;
+        }
+        if (this.mensajes == null) {
+            this.mensajes = new LinkedList();
+        }
+        this.mensajes.add(mensaje);
     }
 
-    public Imagen getMiniatura() {
-        return miniatura;
+    public List<ObjectId> getIdParticipantes() {
+        return idParticipantes;
     }
 
-    public void setMiniatura(Imagen miniatura) {
-        this.miniatura = miniatura;
-    }
-
-    public Long getIdChat() {
-        return idChat;
-    }
-
-    public void setIdChat(Long idChat) {
-        this.idChat = idChat;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setIdParticipantes(List<ObjectId> idParticipantes) {
+        this.idParticipantes = idParticipantes;
     }
 
     public List<Mensaje> getMensajes() {
@@ -114,8 +102,8 @@ public class Chat {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + Objects.hashCode(this.idChat);
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -131,12 +119,12 @@ public class Chat {
             return false;
         }
         final Chat other = (Chat) obj;
-        return Objects.equals(this.idChat, other.idChat);
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-        return "Chat{" + "idChat=" + idChat + ", nombre=" + nombre + ", miniatura=" + miniatura + ", usuarios=" + usuarios + ", mensajes=" + mensajes + '}';
+        return "Chat{" + "id=" + id + ", titulo=" + titulo + ", participantes=" + participantes + ", mensajes=" + mensajes + '}';
     }
 
 }
