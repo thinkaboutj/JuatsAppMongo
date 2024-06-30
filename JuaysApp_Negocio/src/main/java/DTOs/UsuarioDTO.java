@@ -1,14 +1,6 @@
 package DTOs;
 
-import com.mongodb.Bytes;
-import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
-import org.bson.types.ObjectId;
+import java.time.LocalDate;
 
 /**
  * Clase USUARIODTO la cual representa la entidad usuario y se utilizara para
@@ -16,7 +8,7 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class UsuarioDTO implements Serializable {
+public class UsuarioDTO {
 
     private String id;
     private String usuario;
@@ -24,40 +16,40 @@ public class UsuarioDTO implements Serializable {
     private DomicilioDTO domicilio;
 
     private String telefono;
-    private String genero;
+    private String sexo;
     private byte[] imagen; // Arreglo de bytes para la imagen
-    private Calendar fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(String id, String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
+    public UsuarioDTO(String id, String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String sexo, byte[] imagen, LocalDate fechaNacimiento) {
         this.id = id;
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = sexo;
         this.imagen = imagen;
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, byte[] imagen, Calendar fechaNacimiento) {
+    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String sexo, byte[] imagen, LocalDate fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = sexo;
         this.imagen = imagen;
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String genero, Calendar fechaNacimiento) {
+    public UsuarioDTO(String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String sexo, LocalDate fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.genero = genero;
+        this.sexo = sexo;
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -101,12 +93,12 @@ public class UsuarioDTO implements Serializable {
         this.telefono = telefono;
     }
 
-    public String getGenero() {
-        return genero;
+    public String getSexo() {
+        return sexo;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public byte[] getImagen() {
@@ -117,17 +109,18 @@ public class UsuarioDTO implements Serializable {
         this.imagen = imagen;
     }
 
-    public Calendar getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Calendar fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
     @Override
     public String toString() {
-        return "Usuario{" + "usuario=" + usuario + '}';
+        return "UsuarioDTO{" + "id=" + id + ", usuario=" + usuario + ", contrasena=" + contrasena + ", domicilio=" + domicilio + ", telefono=" + telefono + ", sexo=" + sexo + ", imagen=" + imagen + ", fechaNacimiento=" + fechaNacimiento + '}';
     }
+    
 
 }

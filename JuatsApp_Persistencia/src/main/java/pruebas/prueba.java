@@ -4,8 +4,11 @@
  */
 package pruebas;
 
-import Conexion.ConexionBD;
-import java.sql.Connection;
+import dao.UsuarioDAO;
+import entidades.Usuario;
+import excepciones.PersistenciaException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,11 +16,8 @@ import java.sql.Connection;
  */
 public class prueba {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-     
+        
     }
     
 }

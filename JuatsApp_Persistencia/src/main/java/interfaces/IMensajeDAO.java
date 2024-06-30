@@ -1,5 +1,10 @@
 package interfaces;
 
+import entidades.Mensaje;
+import excepciones.PersistenciaException;
+import java.util.List;
+import org.bson.types.ObjectId;
+
 
 
 /**
@@ -10,6 +15,14 @@ package interfaces;
  */
 public interface IMensajeDAO {
 
-  
+    public void agregar(Mensaje mensaje) throws PersistenciaException;
 
+    public void actualizar(Mensaje mensaje) throws PersistenciaException;
+
+    public List<Mensaje> consultarTodos() throws PersistenciaException;
+
+    public Mensaje consultar(ObjectId idMensaje) throws PersistenciaException;
+
+    public List<Mensaje> consultarPorUsuario(ObjectId idUsuario) throws PersistenciaException;
+   
 }

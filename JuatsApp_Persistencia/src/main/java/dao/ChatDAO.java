@@ -10,6 +10,7 @@ import static com.mongodb.client.model.Filters.in;
 import entidades.Chat;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
+import interfaces.IChatDAO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class ChatDAO {
+public class ChatDAO implements IChatDAO{
 
     private final MongoCollection<Chat> chatCollection;
 
@@ -34,6 +35,7 @@ public class ChatDAO {
 
     }
 
+    @Override
     public void agregar(Chat chat) throws PersistenciaException {
         try {
             chatCollection.insertOne(chat);
@@ -42,6 +44,7 @@ public class ChatDAO {
         }
     }
 
+    @Override
     public void actualizar(Chat chat) throws PersistenciaException {
         try {
             chatCollection.updateOne(
@@ -57,6 +60,7 @@ public class ChatDAO {
         }
     }
 
+    @Override
     public List<Chat> consultarTodos() throws PersistenciaException {
         try {
             List<Chat> listaChats = new LinkedList<>();
@@ -69,11 +73,12 @@ public class ChatDAO {
         }
     }
 
+    @Override
     public List<Chat> consultarTodos(Usuario usuario) throws PersistenciaException {
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
-            etapas.add(match(in("idParticipantes", Arrays.asList(usuario.getObjectId()))));
+            etapas.add(match(in("idParticipantes", Arrays.asList(usuario.getId()))));
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
             chatCollection.aggregate(etapas).into(listaChats);
             return listaChats;
@@ -82,13 +87,14 @@ public class ChatDAO {
         }
     }
 
+    @Override
     public Chat consultar(Usuario usuario, Usuario receptor) throws PersistenciaException {
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
             etapas.add(match(Filters.and(
-                    in("idParticipantes", Arrays.asList(usuario.getObjectId())),
-                    in("idParticipantes", Arrays.asList(receptor.getObjectId()))
+                    in("idParticipantes", Arrays.asList(usuario.getId())),
+                    in("idParticipantes", Arrays.asList(receptor.getId()))
             )));
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
             chatCollection.aggregate(etapas).into(listaChats);
@@ -101,6 +107,7 @@ public class ChatDAO {
         }
     }
 
+    @Override
     public Chat consultar(ObjectId idChat) throws PersistenciaException {
         try {
             List<Chat> listaChats = new LinkedList<>();

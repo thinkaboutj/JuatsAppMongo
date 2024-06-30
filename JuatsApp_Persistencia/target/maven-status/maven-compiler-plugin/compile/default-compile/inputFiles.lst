@@ -1,6 +1,5 @@
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\dao\MensajeDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\Conexion\ConexionBD.java
-C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\Conexion\main.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\pruebas\prueba.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\entidades\Chat.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\entidades\Mensaje.java
@@ -8,9 +7,7 @@ C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\s
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\interfaces\IChatDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\interfaces\IMensajeDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\entidades\Usuario.java
-C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\dao\DomicilioDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\interfaces\IUsuarioDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\excepciones\PersistenciaException.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\dao\UsuarioDAO.java
 C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\dao\ChatDAO.java
-C:\Users\crazy\OneDrive\Escritorio\juatsap\JuatsAppMongo\JuatsApp_Persistencia\src\main\java\dao\ImagenDAO.java

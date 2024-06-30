@@ -4,6 +4,11 @@
  */
 package interfaces;
 
+import entidades.Usuario;
+import excepciones.PersistenciaException;
+import java.util.List;
+import org.bson.types.ObjectId;
+
 
 /**
  * Interfaz para el acceso a datos de la entidad Usuario. Define métodos para
@@ -13,5 +18,23 @@ package interfaces;
  */
 public interface IUsuarioDAO {
 
+    public void agregar(Usuario usuario) throws PersistenciaException;
 
+    public List<Usuario> consultarTodos() throws PersistenciaException;
+
+    public Usuario consultar(ObjectId idUsuario) throws PersistenciaException;
+
+    public Usuario consultar(String telefono) throws PersistenciaException;
+
+    public Usuario consultarPorUsuario(String username) throws PersistenciaException;
+
+    public void actualizar(Usuario usuario) throws PersistenciaException;
+    
+    public void actualizarPassword(Usuario usuario) throws PersistenciaException;
+    
+    public Usuario login(String contrasena, String telefono) throws PersistenciaException;
+        
+    
+    
+   
 }

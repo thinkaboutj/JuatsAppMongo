@@ -1,11 +1,9 @@
 presentacion\PnlChat.class
 presentacion\frmChat$4.class
-presentacion\Login$3.class
 presentacion\Login$1.class
+main\Main.class
 presentacion\FrmRegistroUsuario$4.class
 presentacion\FrmBuscarImg.class
-presentacion\FrmBuscarImg$2.class
-presentacion\FrmRegistroUsuario$6.class
 presentacion\PnlChat$1.class
 presentacion\FrmRegistroUsuario$1.class
 presentacion\frmChat$3.class

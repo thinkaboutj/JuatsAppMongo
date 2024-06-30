@@ -4,6 +4,15 @@
  */
 package presentacion;
 
+import DTOs.DomicilioDTO;
+import DTOs.UsuarioDTO;
+import excepciones.NegocioException;
+import interfaces.IUsuarioBO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import negocio.UsuarioBO;
+
 
 
 /**
@@ -12,12 +21,12 @@ package presentacion;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class FrmRegistroUsuario extends javax.swing.JFrame {
-
-  
-
+    
+    private IUsuarioBO usuarioBO;
+    
     public FrmRegistroUsuario() {
         initComponents();
-
+        usuarioBO = new UsuarioBO();
     }
 
     @SuppressWarnings("unchecked")
@@ -30,7 +39,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txtContrasenya = new javax.swing.JPasswordField();
+        txtContrasena = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -43,7 +52,6 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         txtNumero = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
@@ -51,10 +59,13 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         JLImg = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         dcFechaCumple = new com.github.lgooddatepicker.components.DatePicker();
+        txtUsuario = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txtSexo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Usuario");
-        setPreferredSize(new java.awt.Dimension(800, 500));
+        setMinimumSize(new java.awt.Dimension(800, 500));
         setResizable(false);
 
         pnlBackground.setBackground(new java.awt.Color(255, 255, 255));
@@ -89,98 +100,86 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
 
         pnlBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, -1));
 
+        jLabel1.setText("Usuario:");
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Teléfono:");
-        pnlBackground.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, -1, -1));
-        pnlBackground.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 300, 30));
+        pnlBackground.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, -1));
+        pnlBackground.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 300, 30));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Fecha Nacimiento:");
-        pnlBackground.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
-        pnlBackground.add(txtContrasenya, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 280, 30));
+        pnlBackground.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, -1, -1));
+        pnlBackground.add(txtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 210, 300, 30));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Contraseña:");
-        pnlBackground.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
+        pnlBackground.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Numero:");
-        pnlBackground.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 380, -1, -1));
+        pnlBackground.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 390, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Sexo:");
-        pnlBackground.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, -1, -1));
+        pnlBackground.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, -1, -1));
 
         txtCalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCalleActionPerformed(evt);
             }
         });
-        pnlBackground.add(txtCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, 320, 30));
+        pnlBackground.add(txtCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 300, 320, 30));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Calle:");
-        pnlBackground.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 280, -1, -1));
-        pnlBackground.add(txtColonia, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 320, 310, 30));
+        pnlBackground.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 300, -1, -1));
+        pnlBackground.add(txtColonia, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, 320, 30));
 
         jLabel8.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Colonia:");
-        pnlBackground.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, -1, -1));
-        pnlBackground.add(txtCodigoPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, 80, 30));
+        pnlBackground.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 340, -1, -1));
+        pnlBackground.add(txtCodigoPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 380, 110, 30));
 
         jLabel9.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Codigo Postal:");
-        pnlBackground.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, -1, -1));
-        pnlBackground.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 370, 120, 30));
+        pnlBackground.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 390, -1, -1));
+        pnlBackground.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 380, 110, 30));
 
         jLabel10.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 51, 102));
         jLabel10.setText("Domicilio");
-        pnlBackground.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, -1, -1));
+        pnlBackground.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 270, -1, -1));
 
+        btnAceptar.setText("Aceptar");
         btnAceptar.setBackground(new java.awt.Color(0, 51, 102));
+        btnAceptar.setBorder(null);
         btnAceptar.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAceptar.setText("Aceptar");
-        btnAceptar.setBorder(null);
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
             }
         });
-        pnlBackground.add(btnAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, 90, 40));
+        pnlBackground.add(btnAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 440, 90, 40));
 
-        btnLimpiar.setBackground(new java.awt.Color(0, 51, 102));
-        btnLimpiar.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
-        btnLimpiar.setText("Limpiar");
-        btnLimpiar.setBorder(null);
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
-        pnlBackground.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 430, 90, 40));
-
-        btnCancelar.setBackground(new java.awt.Color(0, 51, 102));
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
+        btnCancelar.setBackground(new java.awt.Color(0, 51, 102));
         btnCancelar.setBorder(null);
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
             }
         });
-        pnlBackground.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 430, 100, 40));
+        pnlBackground.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 440, 100, 40));
 
         btnCargarImagen.setText("Subir Imagen");
         btnCargarImagen.setBackground(new java.awt.Color(0, 51, 102));
@@ -190,7 +189,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
                 btnCargarImagenActionPerformed(evt);
             }
         });
-        pnlBackground.add(btnCargarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 220, 120, 30));
+        pnlBackground.add(btnCargarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 220, 120, 30));
 
         jCheckBox1.setText("Ver");
         jCheckBox1.setForeground(new java.awt.Color(0, 0, 0));
@@ -199,14 +198,22 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
                 jCheckBox1ActionPerformed(evt);
             }
         });
-        pnlBackground.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, -1, -1));
+        pnlBackground.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 220, -1, -1));
         pnlBackground.add(JLDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 120, 20));
-        pnlBackground.add(JLImg, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 80, 130, 130));
+        pnlBackground.add(JLImg, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 60, 130, 130));
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
-        pnlBackground.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 90, 110, 110));
-        pnlBackground.add(dcFechaCumple, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 190, -1, -1));
+        pnlBackground.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 70, 110, 110));
+        pnlBackground.add(dcFechaCumple, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
+        pnlBackground.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 300, 30));
+
+        jLabel12.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel12.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel12.setText("Teléfono:");
+        pnlBackground.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
+        pnlBackground.add(txtSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 80, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -216,7 +223,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnlBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -229,12 +236,28 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
-        dispose();
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
+        usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
+        usuarioDTO.setSexo(txtSexo.getText());
+        usuarioDTO.setUsuario(txtUsuario.getText());
+        usuarioDTO.setTelefono(txtTelefono.getText());
+        
+        DomicilioDTO domicilioDTO = new DomicilioDTO();
+        domicilioDTO.setCalle(txtCalle.getText());
+        domicilioDTO.setColonia(txtColonia.getText());
+        domicilioDTO.setCodigoPostal(txtCodigoPostal.getText());
+        domicilioDTO.setNumero(txtNumero.getText());
+        
+        usuarioDTO.setDomicilio(domicilioDTO);
+        
+        try {
+            usuarioBO.registrarUsuario(usuarioDTO);
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showConfirmDialog(this, ex);
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
-
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
@@ -248,9 +271,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if (jCheckBox1.isSelected()) {
-            txtContrasenya.setEchoChar((char) 0);
+            txtContrasena.setEchoChar((char) 0);
         } else {
-            txtContrasenya.setEchoChar('*');
+            txtContrasena.setEchoChar('*');
         }
         
     }//GEN-LAST:event_jCheckBox1ActionPerformed
@@ -262,12 +285,12 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCargarImagen;
-    private javax.swing.JButton btnLimpiar;
     private com.github.lgooddatepicker.components.DatePicker dcFechaCumple;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -281,8 +304,10 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JTextField txtCalle;
     private javax.swing.JTextField txtCodigoPostal;
     private javax.swing.JTextField txtColonia;
-    private javax.swing.JPasswordField txtContrasenya;
+    private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtNumero;
+    private javax.swing.JTextField txtSexo;
     private javax.swing.JTextField txtTelefono;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

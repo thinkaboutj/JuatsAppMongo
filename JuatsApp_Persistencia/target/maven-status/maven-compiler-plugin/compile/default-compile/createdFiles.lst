@@ -1,8 +1,6 @@
 interfaces\IChatDAO.class
 interfaces\IMensajeDAO.class
 Conexion\ConexionBD.class
-Conexion\main.class
-dao\ImagenDAO.class
 excepciones\PersistenciaException.class
 pruebas\prueba.class
 entidades\Chat.class
@@ -13,4 +11,3 @@ interfaces\IUsuarioDAO.class
 entidades\Mensaje.class
 dao\ChatDAO.class
 entidades\Usuario.class
-dao\DomicilioDAO.class

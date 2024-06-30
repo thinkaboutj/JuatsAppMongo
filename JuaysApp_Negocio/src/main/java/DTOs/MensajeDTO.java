@@ -1,9 +1,6 @@
 package DTOs;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
-import org.bson.types.ObjectId;
 
 /**
  * Clase que representa la entidad mensajes la cual utiliza usuario
@@ -11,7 +8,8 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class MensajeDTO {
-
+    
+    private String id;
     private UsuarioDTO usuario;
     private String texto;
     private byte[] imagen; // Arreglo de bytes para la imagen
@@ -65,5 +63,15 @@ public class MensajeDTO {
         this.fecha_de_registro = fecha_de_registro;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    
+    
 
 }

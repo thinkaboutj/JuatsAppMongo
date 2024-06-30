@@ -1,7 +1,5 @@
 package DTOs;
 
-import java.sql.SQLException;
-
 /**
  * Clase que representa un domicilioDTO en la aplicación. Un domicilio tiene una
  * dirección compuesta por calle, número, colonia y código postal. También tiene
@@ -57,5 +55,12 @@ public class DomicilioDTO {
     public void setCodigoPostal(String codigoPostal) {
         this.codigoPostal = codigoPostal;
     }
+
+    @Override
+    public String toString() {
+        return "DomicilioDTO{" + "calle=" + calle + ", numero=" + numero + ", colonia=" + colonia + ", codigoPostal=" + codigoPostal + '}';
+    }
+    
+    
 
 }

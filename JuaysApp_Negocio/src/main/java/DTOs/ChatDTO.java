@@ -1,11 +1,8 @@
 package DTOs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import org.bson.types.ObjectId;
 
 /**
  * Clase que representa un chat en la aplicación. Un chat puede contener
@@ -14,7 +11,8 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class ChatDTO {
-
+    
+    private String id;
     private String titulo;
     private List<String> idParticipantes;
     private List<MensajeDTO> mensajes;
@@ -84,5 +82,14 @@ public class ChatDTO {
         this.mensajes = mensajes;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    
   
 }

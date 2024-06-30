@@ -1,6 +1,5 @@
 package entidades;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import org.bson.types.ObjectId;
 
@@ -10,9 +9,9 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class Usuario implements Serializable{
+public class Usuario{
 
-    private ObjectId objectId;
+    private ObjectId id;
     private String usuario;
     private String contrasena;
     private Domicilio domicilio;
@@ -25,8 +24,8 @@ public class Usuario implements Serializable{
     public Usuario() {
     }
 
-    public Usuario(ObjectId objectId, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
-        this.objectId = objectId;
+    public Usuario(ObjectId id, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
+        this.id = id;
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.domicilio = domicilio;
@@ -55,12 +54,12 @@ public class Usuario implements Serializable{
         this.fechaNacimiento = fechaNacimiento;
     }
     
-    public ObjectId getObjectId() {
-        return objectId;
+    public ObjectId getId() {
+        return id;
     }
 
-    public void setObjectId(ObjectId objectId) {
-        this.objectId = objectId;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getUsuario() {
@@ -117,6 +116,11 @@ public class Usuario implements Serializable{
 
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "objectId=" + id + ", usuario=" + usuario + ", contrasena=" + contrasena + ", domicilio=" + domicilio + ", telefono=" + telefono + ", sexo=" + sexo + ", imagen=" + imagen + ", fechaNacimiento=" + fechaNacimiento + '}';
     }
     
     
