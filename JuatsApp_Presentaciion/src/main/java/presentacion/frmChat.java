@@ -4,8 +4,23 @@
  */
 package presentacion;
 
+import DTOs.UsuarioDTO;
+import excepciones.NegocioException;
+import interfaces.IUsuarioBO;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
+import static presentacion.FrmEditarPerfil.byteArrayToIcon;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -13,15 +28,19 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class frmChat extends javax.swing.JFrame {
-    
+
     private ObjectId idUsuarioLogeado;
-    
+    private IUsuarioBO usuarioBO;
+
     public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
+        usuarioBO = new UsuarioBO();
+
         this.idUsuarioLogeado = idUsuarioLogeado;
-        
+        consultarDatosDelUsuarioYLlenarCamposDeTexto();
+
     }
-    
+
     public void llenarTablaChats() {
 //        listaChats = usuario.getChats();
 //        DefaultTableModel modeloTabla = (DefaultTableModel) this.tblChats.getModel();
@@ -39,7 +58,58 @@ public class frmChat extends javax.swing.JFrame {
     public void actualizarChats() {
         llenarTablaChats();
     }
-    
+
+    // convertir el arreglo de bytes de la imagen del usuario consultado
+    // para asi poder mostrar la imagen
+    public static Icon byteArrayToIcon(byte[] bytes) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(bais);
+            if (bufferedImage != null) {
+                return new ImageIcon(bufferedImage);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void consultarDatosDelUsuarioYLlenarCamposDeTexto() {
+        UsuarioDTO usuario = new UsuarioDTO();
+        try {
+            usuario = usuarioBO.consultarUsuario(idUsuarioLogeado);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
+        }
+
+        byte[] imagenBytes = usuario.getImagen();
+        Icon icon = byteArrayToIcon(imagenBytes);
+        btnPerfil.setIcon(icon);
+
+    }
+
+    // convertir el icono del label a un arreglo de bytes
+    public static byte[] iconToByteArray(Icon icon) {
+        if (icon instanceof ImageIcon) {
+            Image image = ((ImageIcon) icon).getImage();
+            BufferedImage bufferedImage = new BufferedImage(
+                    image.getWidth(null),
+                    image.getHeight(null),
+                    BufferedImage.TYPE_INT_RGB
+            );
+            Graphics g = bufferedImage.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                ImageIO.write(bufferedImage, "jpg", baos);
+                return baos.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -204,19 +274,19 @@ public class frmChat extends javax.swing.JFrame {
         // TODO add your handling code here:
         FrmEditarPerfil frame = new FrmEditarPerfil(idUsuarioLogeado);
         frame.setVisible(true);
-        
+
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void tblChatsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblChatsMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_tblChatsMouseClicked
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         // TODO add your handling code here:
         Login frame = new Login();
         frame.setVisible(true);
-        
+
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 //
