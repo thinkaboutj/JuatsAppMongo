@@ -4,7 +4,6 @@
  */
 package presentacion;
 
-
 import javax.swing.table.DefaultTableModel;
 import org.bson.types.ObjectId;
 

@@ -8,8 +8,6 @@ import DTOs.DomicilioDTO;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IUsuarioBO;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.UsuarioBO;
 
