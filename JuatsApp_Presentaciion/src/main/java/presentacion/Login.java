@@ -1,5 +1,14 @@
 package presentacion;
 
+import DTOs.UsuarioDTO;
+import excepciones.NegocioException;
+import interfaces.IUsuarioBO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import negocio.UsuarioBO;
+import org.bson.types.ObjectId;
+
 
 /**
  * Frama para iniciar sesion y es el frame principal de la app
@@ -7,13 +16,14 @@ package presentacion;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class Login extends javax.swing.JFrame {
-
-
+    
+    private IUsuarioBO usuarioBO;
+    
     public Login() {
         initComponents();
+        usuarioBO = new UsuarioBO();
     }
-
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -23,7 +33,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtTelefonoLogin = new javax.swing.JTextField();
-        txtContrasenyaLogin = new javax.swing.JPasswordField();
+        txtContrasenaLogin = new javax.swing.JPasswordField();
         btnIngresar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         btnRegistrar = new javax.swing.JButton();
@@ -50,7 +60,7 @@ public class Login extends javax.swing.JFrame {
 
         txtTelefonoLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnBackground.add(txtTelefonoLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 240, -1));
-        pnBackground.add(txtContrasenyaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 240, -1));
+        pnBackground.add(txtContrasenaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 240, -1));
 
         btnIngresar.setBackground(new java.awt.Color(0, 51, 102));
         btnIngresar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -103,13 +113,23 @@ public class Login extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
-        dispose();
+        UsuarioDTO usuarioLogin = new UsuarioDTO();
+        try {
+            usuarioLogin = usuarioBO.login(String.valueOf(txtContrasenaLogin.getPassword()), txtTelefonoLogin.getText());
+            
+            frmChat frame = new frmChat(new ObjectId(usuarioLogin.getId()));
+            frame.setVisible(true);
+            
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         FrmRegistroUsuario frmRegistroUsuario = new FrmRegistroUsuario();
         frmRegistroUsuario.setVisible(true);
-        dispose();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
 
@@ -121,7 +141,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel pnBackground;
-    private javax.swing.JPasswordField txtContrasenyaLogin;
+    private javax.swing.JPasswordField txtContrasenaLogin;
     private javax.swing.JTextField txtTelefonoLogin;
     // End of variables declaration//GEN-END:variables
 }

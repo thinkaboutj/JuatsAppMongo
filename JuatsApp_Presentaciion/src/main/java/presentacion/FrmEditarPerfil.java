@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.UsuarioBO;
+import org.bson.types.ObjectId;
 
 
 
@@ -20,14 +21,38 @@ import negocio.UsuarioBO;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class FrmRegistroUsuario extends javax.swing.JFrame {
+public class FrmEditarPerfil extends javax.swing.JFrame {
     
     private IUsuarioBO usuarioBO;
+    private ObjectId idUsuarioLogeado;
     
-    public FrmRegistroUsuario() {
+    public FrmEditarPerfil(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
+        this.idUsuarioLogeado = idUsuarioLogeado;
+        consultarDatosDelUsuarioYLlenarCamposDeTexto();
     }
+    
+    private void consultarDatosDelUsuarioYLlenarCamposDeTexto(){
+        UsuarioDTO usuario = new UsuarioDTO();
+        try {
+            usuario = usuarioBO.consultarUsuario(idUsuarioLogeado);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
+        }
+        
+        txtUsuario.setText(usuario.getUsuario());
+        txtContrasena.setText(usuario.getContrasena());
+        txtTelefono.setText(usuario.getTelefono());
+        txtSexo.setText(usuario.getTelefono());
+        dcFechaCumple.setDate(usuario.getFechaNacimiento());
+        
+        txtCalle.setText(usuario.getDomicilio().getCalle());
+        txtColonia.setText(usuario.getDomicilio().getColonia());
+        txtCodigoPostal.setText(usuario.getDomicilio().getCodigoPostal());
+        txtNumero.setText(usuario.getDomicilio().getNumero());
+    }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -51,7 +76,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtNumero = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        btnAceptar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
         verContrasena = new javax.swing.JCheckBox();
@@ -77,7 +102,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(0, 51, 102));
         jPanel1.setPreferredSize(new java.awt.Dimension(600, 50));
 
-        jLabel5.setText("Registrar Datos");
+        jLabel5.setText("Editar mi perfil");
         jLabel5.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -88,7 +113,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(306, 306, 306)
                 .addComponent(jLabel5)
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addContainerGap(325, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,17 +183,17 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jLabel10.setText("Domicilio");
         pnlBackground.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 270, -1, -1));
 
-        btnAceptar.setText("Aceptar");
-        btnAceptar.setBackground(new java.awt.Color(0, 51, 102));
-        btnAceptar.setBorder(null);
-        btnAceptar.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setText("Guardar cambios");
+        btnGuardar.setBackground(new java.awt.Color(0, 51, 102));
+        btnGuardar.setBorder(null);
+        btnGuardar.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
-        pnlBackground.add(btnAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 440, 90, 40));
+        pnlBackground.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 440, 120, 40));
 
         btnCancelar.setText("Cancelar");
         btnCancelar.setBackground(new java.awt.Color(0, 51, 102));
@@ -234,9 +259,10 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCalleActionPerformed
 
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setId(idUsuarioLogeado.toHexString());
         usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
         usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
         usuarioDTO.setSexo(txtSexo.getText());
@@ -252,12 +278,12 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         usuarioDTO.setDomicilio(domicilioDTO);
         
         try {
-            usuarioBO.registrarUsuario(usuarioDTO);
+            usuarioBO.actualizar(usuarioDTO);
             this.dispose();
         } catch (NegocioException ex) {
             JOptionPane.showConfirmDialog(this, ex);
         }
-    }//GEN-LAST:event_btnAceptarActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
@@ -282,9 +308,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLDireccion;
     private javax.swing.JLabel JLImg;
-    private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCargarImagen;
+    private javax.swing.JButton btnGuardar;
     private com.github.lgooddatepicker.components.DatePicker dcFechaCumple;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

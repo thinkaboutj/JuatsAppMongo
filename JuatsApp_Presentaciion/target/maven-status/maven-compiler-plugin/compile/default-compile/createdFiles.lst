@@ -1,5 +1,7 @@
 presentacion\PnlChat.class
 presentacion\frmChat$4.class
+presentacion\FrmEditarPerfil$4.class
+presentacion\FrmEditarPerfil$2.class
 presentacion\Login$1.class
 main\Main.class
 presentacion\FrmRegistroUsuario$4.class
@@ -10,13 +12,17 @@ presentacion\frmChat$3.class
 presentacion\FrmRegistroUsuario$3.class
 presentacion\FrmNuevoChat$1.class
 presentacion\frmChat$5.class
+presentacion\FrmEditarPerfil$5.class
 presentacion\Login.class
 presentacion\frmChat$1.class
+presentacion\FrmEditarPerfil$1.class
 presentacion\FrmNuevoChat.class
+presentacion\FrmEditarPerfil.class
 presentacion\FrmBuscarImg$1.class
 presentacion\frmChat$2.class
 presentacion\FrmRegistroUsuario$5.class
 presentacion\FrmRegistroUsuario.class
 presentacion\Login$2.class
+presentacion\FrmEditarPerfil$3.class
 presentacion\FrmRegistroUsuario$2.class
 presentacion\frmChat.class

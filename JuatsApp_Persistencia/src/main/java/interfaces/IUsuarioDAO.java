@@ -33,8 +33,5 @@ public interface IUsuarioDAO {
     public void actualizarPassword(Usuario usuario) throws PersistenciaException;
     
     public Usuario login(String contrasena, String telefono) throws PersistenciaException;
-        
     
-    
-   
 }

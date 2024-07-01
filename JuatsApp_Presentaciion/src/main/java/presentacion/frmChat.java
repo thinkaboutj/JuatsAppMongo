@@ -6,6 +6,7 @@ package presentacion;
 
 
 import javax.swing.table.DefaultTableModel;
+import org.bson.types.ObjectId;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -14,8 +15,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmChat extends javax.swing.JFrame {
     
-    public frmChat() {
+    private ObjectId idUsuarioLogeado;
+    
+    public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
+        this.idUsuarioLogeado = idUsuarioLogeado;
+        
     }
     
     public void llenarTablaChats() {
@@ -198,6 +203,9 @@ public class frmChat extends javax.swing.JFrame {
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
         // TODO add your handling code here:
+        FrmEditarPerfil frame = new FrmEditarPerfil(idUsuarioLogeado);
+        frame.setVisible(true);
+        
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void tblChatsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblChatsMouseClicked
@@ -207,7 +215,10 @@ public class frmChat extends javax.swing.JFrame {
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+        Login frame = new Login();
+        frame.setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 //
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {

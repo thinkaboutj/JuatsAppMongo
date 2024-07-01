@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.UsuarioBO;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -21,17 +22,6 @@ import negocio.UsuarioBO;
 public class pruebas {
     
     public static void main (String [] args){
-        IUsuarioBO usuarioBO = new UsuarioBO();
-        
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        
-        try {
-            usuarioDTO = usuarioBO.login("xr471112", "asd");
-            System.out.println(usuarioDTO.toString());
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        
         
     }
     

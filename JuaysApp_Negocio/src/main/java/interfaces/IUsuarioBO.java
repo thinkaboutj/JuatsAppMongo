@@ -6,6 +6,7 @@ package interfaces;
 
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -13,5 +14,11 @@ import excepciones.NegocioException;
  */
 public interface IUsuarioBO {
     public void registrarUsuario(UsuarioDTO usuarioDTO) throws NegocioException;
+    
     public UsuarioDTO login(String contrasena, String telefono) throws NegocioException;
+    
+    public UsuarioDTO consultarUsuario(ObjectId idUsuario) throws NegocioException;
+    
+    public void actualizar(UsuarioDTO usuarioDTO) throws NegocioException;
+
 }
