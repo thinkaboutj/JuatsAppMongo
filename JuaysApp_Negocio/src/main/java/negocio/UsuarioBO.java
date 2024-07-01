@@ -38,6 +38,7 @@ public class UsuarioBO implements IUsuarioBO{
     public UsuarioDTO convertirADTO(Usuario usuario){
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         
+        usuarioDTO.setImagen(usuario.getImagen());
         usuarioDTO.setId(usuario.getId().toHexString());
         usuarioDTO.setContrasena(usuario.getContrasena());
         usuarioDTO.setSexo(usuario.getSexo());
@@ -58,6 +59,8 @@ public class UsuarioBO implements IUsuarioBO{
     
     public Usuario convertirAEntidad(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
+        
+        usuario.setImagen(usuarioDTO.getImagen());
         usuario.setContrasena(usuarioDTO.getContrasena());
         usuario.setSexo(usuarioDTO.getSexo());
         usuario.setTelefono(usuarioDTO.getTelefono());
@@ -80,6 +83,8 @@ public class UsuarioBO implements IUsuarioBO{
     // debido a que no hace nada con el id
     public Usuario convertirAEntidadConID(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
+        
+        usuario.setImagen(usuarioDTO.getImagen());
         usuario.setId(new ObjectId(usuarioDTO.getId()));
         usuario.setContrasena(usuarioDTO.getContrasena());
         usuario.setSexo(usuarioDTO.getSexo());
