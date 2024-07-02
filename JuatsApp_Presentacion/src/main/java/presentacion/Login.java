@@ -115,7 +115,7 @@ public class Login extends javax.swing.JFrame {
         try {
             usuarioLogin = usuarioBO.login(String.valueOf(txtContrasenaLogin.getPassword()), txtTelefonoLogin.getText());
             
-            frmChat frame = new frmChat(new ObjectId(usuarioLogin.getId()));
+            FrmChat frame = new FrmChat(new ObjectId(usuarioLogin.getId()));
             frame.setVisible(true);
             
             this.dispose();

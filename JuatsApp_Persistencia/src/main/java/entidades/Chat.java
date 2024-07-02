@@ -19,25 +19,23 @@ public class Chat {
 
     public Chat() {
     }
-
-
+    
     public String getTitulo() {
         return nombre;
     }
-
+    
     public void setTitulo(String titulo) {
         this.nombre = titulo;
     }
-
+    
     public ObjectId getId() {
         return id;
     }
-
+    
     public void setId(ObjectId id) {
         this.id = id;
     }
-
-
+    
     public void addMensaje(Mensaje mensaje) {
         if (mensaje == null) {
             return;

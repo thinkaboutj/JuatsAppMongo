@@ -25,12 +25,12 @@ import org.bson.types.ObjectId;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class frmChat extends javax.swing.JFrame {
+public class FrmChat extends javax.swing.JFrame {
 
     private ObjectId idUsuarioLogeado;
     private IUsuarioBO usuarioBO;
 
-    public frmChat(ObjectId idUsuarioLogeado) {
+    public FrmChat(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
 
@@ -142,22 +142,22 @@ public class frmChat extends javax.swing.JFrame {
         });
         jPanel1.add(btnPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 81, 75));
 
+        btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.setBackground(new java.awt.Color(255, 255, 255));
+        btnCerrarSesion.setBorder(null);
         btnCerrarSesion.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         btnCerrarSesion.setForeground(new java.awt.Color(0, 0, 0));
-        btnCerrarSesion.setText("Cerrar Sesión");
-        btnCerrarSesion.setBorder(null);
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarSesionActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 40, 141, 36));
+        jPanel1.add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(1390, 30, 141, 36));
 
         jLabel1.setFont(new java.awt.Font("Roboto Black", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("JUATSAPP");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(514, 23, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 30, -1, -1));
 
         btnAgregarContactos.setBackground(new java.awt.Color(204, 204, 204));
         btnAgregarContactos.setText("Agregar contactos");
@@ -179,7 +179,7 @@ public class frmChat extends javax.swing.JFrame {
         });
         jPanel1.add(btnAgregarContactos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 114, 42));
 
-        pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1600, -1));
 
         panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -187,26 +187,26 @@ public class frmChat extends javax.swing.JFrame {
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGap(0, 1040, Short.MAX_VALUE)
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGap(0, 750, Short.MAX_VALUE)
         );
 
-        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 120, 620, 430));
+        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 120, 1040, 750));
 
+        btnNuevoChat.setText("Nuevo Chat");
         btnNuevoChat.setBackground(new java.awt.Color(0, 51, 102));
+        btnNuevoChat.setBorder(null);
         btnNuevoChat.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         btnNuevoChat.setForeground(new java.awt.Color(255, 255, 255));
-        btnNuevoChat.setText("Nuevo Chat");
-        btnNuevoChat.setBorder(null);
         btnNuevoChat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoChatActionPerformed(evt);
             }
         });
-        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 150, 40));
+        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 450, 40));
 
         tblChats.setBackground(new java.awt.Color(0, 102, 153));
         tblChats.setForeground(new java.awt.Color(204, 204, 204));
@@ -239,21 +239,17 @@ public class frmChat extends javax.swing.JFrame {
             tblChats.getColumnModel().getColumn(0).setResizable(false);
         }
 
-        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 146, 380));
+        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, 690));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 1600, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
 
         pack();
@@ -262,7 +258,7 @@ public class frmChat extends javax.swing.JFrame {
 
     private void btnNuevoChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoChatActionPerformed
         // TODO add your handling code here:
-        FrmNuevoChat frmNuevoChat = new FrmNuevoChat();
+        DlgNuevoGrupo frmNuevoChat = new DlgNuevoGrupo(this, false);
         frmNuevoChat.setVisible(true);
     }//GEN-LAST:event_btnNuevoChatActionPerformed
 
