@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>.com</groupId>
-    <artifactId>JuaysApp_Negocio</artifactId>
+    <artifactId>JuatsApp_Negocio</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
@@ -11,7 +11,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.juaysappnegocioo_247527.JuaysAppNegocioo_247527</exec.mainClass>
     </properties>
-    <name>JuaysApp_Negocio</name>
+    <name>JuatsApp_Negocio</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
