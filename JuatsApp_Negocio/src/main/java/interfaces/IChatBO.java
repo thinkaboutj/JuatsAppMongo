@@ -6,6 +6,8 @@ package interfaces;
 
 import DTOs.ChatDTO;
 import excepciones.NegocioException;
+import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -14,6 +16,8 @@ import excepciones.NegocioException;
 public interface IChatBO {
     
     public void agregar(ChatDTO chat) throws NegocioException;
+    
+   public List<ChatDTO> consultarChatsDelUsuario(ObjectId idUsuario) throws NegocioException;
 
     
 }

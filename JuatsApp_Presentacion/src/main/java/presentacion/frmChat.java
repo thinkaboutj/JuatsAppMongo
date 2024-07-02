@@ -4,8 +4,10 @@
  */
 package presentacion;
 
+import DTOs.ChatDTO;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
+import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,10 +15,15 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import negocio.ChatBO;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
 
@@ -29,10 +36,12 @@ public class FrmChat extends javax.swing.JFrame {
 
     private ObjectId idUsuarioLogeado;
     private IUsuarioBO usuarioBO;
+    private IChatBO chatBO;
 
     public FrmChat(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
+        chatBO = new ChatBO();
 
         this.idUsuarioLogeado = idUsuarioLogeado;
     }
@@ -104,6 +113,7 @@ public class FrmChat extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnAgregarContactos = new javax.swing.JButton();
         btnAgregarContactos1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -167,6 +177,14 @@ public class FrmChat extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnAgregarContactos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 114, 42));
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, -1, -1));
 
         pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1600, -1));
 
@@ -283,6 +301,16 @@ public class FrmChat extends javax.swing.JFrame {
         frame.setVisible(true);
         
     }//GEN-LAST:event_btnAgregarContactos1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        List<ChatDTO> chats = new ArrayList<>();
+        try {
+            chats = chatBO.consultarChatsDelUsuario(idUsuarioLogeado);
+        } catch (NegocioException ex) {
+            Logger.getLogger(FrmChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 //
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
@@ -302,6 +330,7 @@ public class FrmChat extends javax.swing.JFrame {
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevoChat;
     private javax.swing.JButton btnPerfil;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

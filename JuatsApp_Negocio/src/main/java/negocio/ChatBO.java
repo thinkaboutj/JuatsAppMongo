@@ -5,14 +5,22 @@
 package negocio;
 
 import DTOs.ChatDTO;
+import com.mongodb.MongoException;
+import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Filters.in;
 import dao.ChatDAO;
 import entidades.Chat;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IChatBO;
 import interfaces.IChatDAO;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 
 
@@ -34,6 +42,11 @@ public class ChatBO implements IChatBO{
         return chatEntidad;
     }
     
+    private ChatDTO transformarEnDTO(Chat chat){
+        ChatDTO chatDTO = new ChatDTO(chat.getIdParticipantes());
+        return chatDTO;
+    }
+    
     
     @Override
     public void agregar(ChatDTO chatDTO) throws NegocioException {
@@ -46,6 +59,26 @@ public class ChatBO implements IChatBO{
         }
     }
     
+    @Override
+    public List<ChatDTO> consultarChatsDelUsuario(ObjectId idUsuario) throws NegocioException {
+        List<Chat> chatsDelUsuario = new ArrayList<>();
+        List<ChatDTO> chats = new ArrayList<>();
+        
+        try {
+            chatsDelUsuario = dao.consultarChatsDelUsuario(idUsuario);
+            
+            for (int i = 1; i < chatsDelUsuario.size(); i++){
+                ChatDTO chatDTO = new ChatDTO();
+                chats.add(chatDTO);
+            }
+            
+            return chats;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException();
+        }
+        
+        
+    }
     
 
 }

@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -98,6 +100,14 @@ public class DlgNuevoChat extends javax.swing.JDialog {
         
         
         ChatDTO chat = new ChatDTO(listaUsuarios);
+        
+        try {
+            chatBO.agregar(chat);
+            JOptionPane.showMessageDialog(this, "Chat creado exitosamente");
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo crear el chat");
+        }
         
         
         

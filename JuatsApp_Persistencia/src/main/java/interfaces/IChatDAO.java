@@ -17,15 +17,8 @@ import org.bson.types.ObjectId;
 public interface IChatDAO {
     
     public void agregar(Chat chat) throws PersistenciaException;
-
-    public void actualizar(Chat chat) throws PersistenciaException;
     
-    public List<Chat> consultarTodos() throws PersistenciaException;
+    public List<Chat> consultarChatsDelUsuario(ObjectId idUsuario) throws PersistenciaException;
 
-    public List<Chat> consultarTodos(Usuario usuario) throws PersistenciaException;
-
-    public Chat consultar(Usuario usuario, Usuario receptor) throws PersistenciaException;
-
-    public Chat consultar(ObjectId idChat) throws PersistenciaException;
 
 }

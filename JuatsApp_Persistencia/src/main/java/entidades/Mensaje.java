@@ -19,33 +19,33 @@ public class Mensaje {
     public Mensaje() {
     }
 
-    public Mensaje(ObjectId id, ObjectId usuario, String texto, LocalDate fecha_de_registro) {
+    public Mensaje(ObjectId id, ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
         this.id = id;
-        this.idUsuario = usuario;
+        this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
+    public Mensaje(ObjectId id, ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.imagen = imagen;
+        this.fecha_de_registro = fecha_de_registro;
+    }
+    
+    
     public Mensaje(ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
         this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public Mensaje(ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+    public Mensaje(ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
         this.idUsuario = idUsuario;
-        this.texto = texto;
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public Mensaje(ObjectId id, ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
-        this.id = id;
-        this.idUsuario = idUsuario;
-        this.texto = texto;
-        this.imagen = imagen;
-        this.fecha_de_registro = fecha_de_registro;
-    }
 
     public ObjectId getId() {
         return id;

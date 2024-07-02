@@ -43,94 +43,21 @@ public class ChatDAO implements IChatDAO{
             throw new PersistenciaException("No fue posible agregar el chat.", e);
         }
     }
-
+    
     @Override
-    public void actualizar(Chat chat) throws PersistenciaException {
+    public List<Chat> consultarChatsDelUsuario(ObjectId idUsuario) throws PersistenciaException {
         try {
-            chatCollection.updateOne(
-                    Filters.eq("_id", chat.getId()),
-                    new Document("$set", new Document()
-                            .append("idParticipantes", chat.getIdParticipantes())
-                            .append("mensajes", chat.getMensajes())
-                    )
-            );
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible actualizar el chat.", e);
-        }
-    }
-
-    @Override
-    public List<Chat> consultarTodos() throws PersistenciaException {
-        try {
-            List<Chat> listaChats = new LinkedList<>();
+            List<Chat> listaChats = new ArrayList<>();
             List<Bson> etapas = new ArrayList<>();
             
-            etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
+            etapas.add(match(in("idParticipantes", Arrays.asList(idUsuario))));
             
             chatCollection.aggregate(etapas).into(listaChats);
             return listaChats;
         } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar los chats.", e);
+            throw new PersistenciaException("No fue posible consultar los chats del usuario.", e);
         }
     }
 
-    @Override
-    public List<Chat> consultarTodos(Usuario usuario) throws PersistenciaException {
-        try {
-            List<Chat> listaChats = new LinkedList<>();
-            List<Bson> etapas = new ArrayList<>();
-            
-            etapas.add(match(in("idParticipantes", Arrays.asList(usuario.getId()))));
-            etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
-            
-            chatCollection.aggregate(etapas).into(listaChats);
-            return listaChats;
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar los chats.", e);
-        }
-    }
-
-    @Override
-    public Chat consultar(Usuario usuario, Usuario receptor) throws PersistenciaException {
-        try {
-            List<Chat> listaChats = new LinkedList<>();
-            List<Bson> etapas = new ArrayList<>();
-            
-            etapas.add(match(Filters.and(in("idParticipantes", Arrays.asList(usuario.getId())), in("idParticipantes", Arrays.asList(receptor.getId())))));
-            etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
-            
-            chatCollection.aggregate(etapas).into(listaChats);
-            
-            if (listaChats.isEmpty()) {
-                return null;
-            }
-            return listaChats.get(0);
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar el chat.", e);
-        }
-    }
-
-    @Override
-    public Chat consultar(ObjectId idChat) throws PersistenciaException {
-        try {
-            List<Chat> listaChats = new LinkedList<>();
-            List<Bson> etapas = new ArrayList<>();
-            
-            etapas.add(match(new Document("_id", idChat)));
-            etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
-            
-            chatCollection.aggregate(etapas).into(listaChats);
-            
-            if (listaChats.isEmpty()) {
-                return null;
-            }
-            
-            return listaChats.get(0);
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar el chat.", e);
-        }
-    }
     
-    
-
 }

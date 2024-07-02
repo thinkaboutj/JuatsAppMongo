@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
  */
 public class MensajeDTO {
     
-    private String id;
+    private ObjectId id;
     private ObjectId idUsuario;
     private String texto;
     private byte[] imagen; // Arreglo de bytes para la imagen
@@ -18,16 +18,30 @@ public class MensajeDTO {
     
     public MensajeDTO() {
     }
+    
+    public MensajeDTO(ObjectId id, ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.texto = texto;
+        this.fecha_de_registro = fecha_de_registro;
+    }
 
+    public MensajeDTO(ObjectId id, ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.imagen = imagen;
+        this.fecha_de_registro = fecha_de_registro;
+    }
+    
+    
     public MensajeDTO(ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
         this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public MensajeDTO(ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+    public MensajeDTO(ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
         this.idUsuario = idUsuario;
-        this.texto = texto;
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
     }
@@ -64,14 +78,22 @@ public class MensajeDTO {
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
-    
+
+    public ObjectId getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(ObjectId idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     
     
 
