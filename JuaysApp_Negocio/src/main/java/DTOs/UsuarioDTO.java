@@ -1,6 +1,8 @@
 package DTOs;
 
 import java.time.LocalDate;
+import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  * Clase USUARIODTO la cual representa la entidad usuario y se utilizara para
@@ -20,7 +22,21 @@ public class UsuarioDTO {
     private byte[] imagen; // Arreglo de bytes para la imagen
     private LocalDate fechaNacimiento;
 
+    private List<ObjectId> contactos; 
+    
     public UsuarioDTO() {
+    }
+    
+    public UsuarioDTO(String id, String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String sexo, byte[] imagen, LocalDate fechaNacimiento, List<ObjectId> contactos) {
+        this.id = id;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.domicilio = domicilio;
+        this.telefono = telefono;
+        this.sexo = sexo;
+        this.imagen = imagen;
+        this.fechaNacimiento = fechaNacimiento;
+        this.contactos = contactos;
     }
 
     public UsuarioDTO(String id, String usuario, String contrasena, DomicilioDTO domicilio, String telefono, String sexo, byte[] imagen, LocalDate fechaNacimiento) {
@@ -51,6 +67,14 @@ public class UsuarioDTO {
         this.telefono = telefono;
         this.sexo = sexo;
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public List<ObjectId> getContactos() {
+        return contactos;
+    }
+
+    public void setContactos(List<ObjectId> contactos) {
+        this.contactos = contactos;
     }
 
     public String getId() {

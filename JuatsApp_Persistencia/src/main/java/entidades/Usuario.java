@@ -1,6 +1,7 @@
 package entidades;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.bson.types.ObjectId;
 
 /**
@@ -20,10 +21,25 @@ public class Usuario{
     private String sexo;
     private byte[] imagen; // Arreglo de bytes para la imagen
     private LocalDate fechaNacimiento;
+    
+    private List<ObjectId> contactos; // Lista de IDs de los contactos
+
 
     public Usuario() {
     }
-
+    
+    public Usuario(ObjectId id, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento, List<ObjectId> contactos) {
+        this.id = id;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.domicilio = domicilio;
+        this.telefono = telefono;
+        this.sexo = genero;
+        this.imagen = imagen;
+        this.fechaNacimiento = fechaNacimiento;
+        this.contactos = contactos;
+    }
+    
     public Usuario(ObjectId id, String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
         this.id = id;
         this.usuario = usuario;
@@ -34,7 +50,7 @@ public class Usuario{
         this.imagen = imagen;
         this.fechaNacimiento = fechaNacimiento;
     }
-
+    
     public Usuario(String usuario, String contrasena, Domicilio domicilio, String telefono, String genero, byte[] imagen, LocalDate fechaNacimiento) {
         this.usuario = usuario;
         this.contrasena = contrasena;
@@ -52,6 +68,14 @@ public class Usuario{
         this.telefono = telefono;
         this.sexo = genero;
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public List<ObjectId> getContactos() {
+        return contactos;
+    }
+
+    public void setContactos(List<ObjectId> contactos) {
+        this.contactos = contactos;
     }
     
     public ObjectId getId() {

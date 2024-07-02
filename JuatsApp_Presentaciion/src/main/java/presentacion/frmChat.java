@@ -17,10 +17,8 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
-import static presentacion.FrmEditarPerfil.byteArrayToIcon;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -37,7 +35,7 @@ public class frmChat extends javax.swing.JFrame {
         usuarioBO = new UsuarioBO();
 
         this.idUsuarioLogeado = idUsuarioLogeado;
-        consultarDatosDelUsuarioYLlenarCamposDeTexto();
+        consultarUsuario();
 
     }
 
@@ -74,18 +72,14 @@ public class frmChat extends javax.swing.JFrame {
         return null;
     }
 
-    private void consultarDatosDelUsuarioYLlenarCamposDeTexto() {
+    private void consultarUsuario() {
         UsuarioDTO usuario = new UsuarioDTO();
         try {
             usuario = usuarioBO.consultarUsuario(idUsuarioLogeado);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
         }
-
-        byte[] imagenBytes = usuario.getImagen();
-        Icon icon = byteArrayToIcon(imagenBytes);
-        btnPerfil.setIcon(icon);
-
+        
     }
 
     // convertir el icono del label a un arreglo de bytes
@@ -119,6 +113,8 @@ public class frmChat extends javax.swing.JFrame {
         btnPerfil = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnAgregarContactos = new javax.swing.JButton();
+        btnAgregarContactos1 = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -134,6 +130,7 @@ public class frmChat extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 102));
         jPanel1.setPreferredSize(new java.awt.Dimension(900, 100));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnPerfil.setBackground(new java.awt.Color(204, 204, 204));
         btnPerfil.setText("Perfil");
@@ -143,6 +140,7 @@ public class frmChat extends javax.swing.JFrame {
                 btnPerfilActionPerformed(evt);
             }
         });
+        jPanel1.add(btnPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 81, 75));
 
         btnCerrarSesion.setBackground(new java.awt.Color(255, 255, 255));
         btnCerrarSesion.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
@@ -154,34 +152,32 @@ public class frmChat extends javax.swing.JFrame {
                 btnCerrarSesionActionPerformed(evt);
             }
         });
+        jPanel1.add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 40, 141, 36));
 
         jLabel1.setFont(new java.awt.Font("Roboto Black", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("JUATSAPP");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(514, 23, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(btnPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(133, 133, 133)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
-                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(19, 19, 19))
-        );
+        btnAgregarContactos.setBackground(new java.awt.Color(204, 204, 204));
+        btnAgregarContactos.setText("Agregar contactos");
+        btnAgregarContactos.setBorder(null);
+        btnAgregarContactos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarContactosActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAgregarContactos, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 114, 42));
+
+        btnAgregarContactos1.setBackground(new java.awt.Color(204, 204, 204));
+        btnAgregarContactos1.setText("Ver Contactos");
+        btnAgregarContactos1.setBorder(null);
+        btnAgregarContactos1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarContactos1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAgregarContactos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 114, 42));
 
         pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -289,6 +285,19 @@ public class frmChat extends javax.swing.JFrame {
 
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnAgregarContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactosActionPerformed
+        // TODO add your handling code here:
+        DlgTelefonos dialog = new DlgTelefonos(this, true, idUsuarioLogeado);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnAgregarContactosActionPerformed
+
+    private void btnAgregarContactos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactos1ActionPerformed
+        // TODO add your handling code here:
+        DlgContactos frame = new DlgContactos(this, false, idUsuarioLogeado);
+        frame.setVisible(true);
+        
+    }//GEN-LAST:event_btnAgregarContactos1ActionPerformed
 //
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
@@ -303,6 +312,8 @@ public class frmChat extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarContactos;
+    private javax.swing.JButton btnAgregarContactos1;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevoChat;
     private javax.swing.JButton btnPerfil;

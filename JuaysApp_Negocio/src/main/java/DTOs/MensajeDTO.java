@@ -14,7 +14,7 @@ public class MensajeDTO {
     private String texto;
     private byte[] imagen; // Arreglo de bytes para la imagen
     private LocalDate fecha_de_registro;
-
+    
     public MensajeDTO() {
     }
 

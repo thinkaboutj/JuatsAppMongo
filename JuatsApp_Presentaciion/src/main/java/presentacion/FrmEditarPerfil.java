@@ -24,8 +24,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
 
-
-
 /**
  * Frame para registrar usuarios
  *
@@ -34,6 +32,7 @@ import org.bson.types.ObjectId;
 public class FrmEditarPerfil extends javax.swing.JFrame {
     
     private IUsuarioBO usuarioBO;
+    private UsuarioDTO usuarioLogeado;
     private ObjectId idUsuarioLogeado;
     private String txtRuta;
     
@@ -41,6 +40,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
     public FrmEditarPerfil(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
+        usuarioLogeado = new UsuarioDTO();
         this.idUsuarioLogeado = idUsuarioLogeado;
         consultarDatosDelUsuarioYLlenarCamposDeTexto();
     }
@@ -84,29 +84,32 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
     
     
     private void consultarDatosDelUsuarioYLlenarCamposDeTexto(){
-        UsuarioDTO usuario = new UsuarioDTO();
         try {
-            usuario = usuarioBO.consultarUsuario(idUsuarioLogeado);
+            usuarioLogeado = usuarioBO.consultarUsuario(idUsuarioLogeado);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
         }
         
-        byte[] imagenBytes = usuario.getImagen();
-        Icon icon = byteArrayToIcon(imagenBytes);
-        lblImagen.setIcon(icon);
+        try{
+            byte[] imagenBytes = usuarioLogeado.getImagen();
+            Icon icon = byteArrayToIcon(imagenBytes);
+            lblImagen.setIcon(icon);
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, e);
+        }
         
-        txtUsuario.setText(usuario.getUsuario());
-        txtContrasena.setText(usuario.getContrasena());
-        txtTelefono.setText(usuario.getTelefono());
-        txtSexo.setText(usuario.getTelefono());
+        txtUsuario.setText(usuarioLogeado.getUsuario());
+        txtContrasena.setText(usuarioLogeado.getContrasena());
+        txtTelefono.setText(usuarioLogeado.getTelefono());
+        txtSexo.setText(usuarioLogeado.getTelefono());
         
         
-        dcFechaCumple.setDate(usuario.getFechaNacimiento());
+        dcFechaCumple.setDate(usuarioLogeado.getFechaNacimiento());
         
-        txtCalle.setText(usuario.getDomicilio().getCalle());
-        txtColonia.setText(usuario.getDomicilio().getColonia());
-        txtCodigoPostal.setText(usuario.getDomicilio().getCodigoPostal());
-        txtNumero.setText(usuario.getDomicilio().getNumero());
+        txtCalle.setText(usuarioLogeado.getDomicilio().getCalle());
+        txtColonia.setText(usuarioLogeado.getDomicilio().getColonia());
+        txtCodigoPostal.setText(usuarioLogeado.getDomicilio().getCodigoPostal());
+        txtNumero.setText(usuarioLogeado.getDomicilio().getNumero());
     }
     
 
@@ -315,16 +318,15 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
         byte[] bytesImagen = iconToByteArray(lblImagen.getIcon());
 
-        usuarioDTO.setImagen(bytesImagen);
-        usuarioDTO.setId(idUsuarioLogeado.toHexString());
-        usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
-        usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
-        usuarioDTO.setSexo(txtSexo.getText());
-        usuarioDTO.setUsuario(txtUsuario.getText());
-        usuarioDTO.setTelefono(txtTelefono.getText());
+        usuarioLogeado.setImagen(bytesImagen);
+        usuarioLogeado.setId(idUsuarioLogeado.toHexString());
+        usuarioLogeado.setContrasena(String.valueOf(txtContrasena.getPassword()));
+        usuarioLogeado.setFechaNacimiento(dcFechaCumple.getDate());
+        usuarioLogeado.setSexo(txtSexo.getText());
+        usuarioLogeado.setUsuario(txtUsuario.getText());
+        usuarioLogeado.setTelefono(txtTelefono.getText());
         
         DomicilioDTO domicilioDTO = new DomicilioDTO();
         domicilioDTO.setCalle(txtCalle.getText());
@@ -332,10 +334,10 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         domicilioDTO.setCodigoPostal(txtCodigoPostal.getText());
         domicilioDTO.setNumero(txtNumero.getText());
         
-        usuarioDTO.setDomicilio(domicilioDTO);
+        usuarioLogeado.setDomicilio(domicilioDTO);
         
         try {
-            usuarioBO.actualizar(usuarioDTO);
+            usuarioBO.actualizar(usuarioLogeado);
             this.dispose();
         } catch (NegocioException ex) {
             JOptionPane.showConfirmDialog(this, ex);

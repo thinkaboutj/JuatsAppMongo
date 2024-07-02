@@ -7,8 +7,13 @@ package pruebas;
 import dao.UsuarioDAO;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
+import interfaces.IUsuarioDAO;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -17,6 +22,9 @@ import java.util.logging.Logger;
 public class prueba {
 
     public static void main(String[] args) {
+        IUsuarioDAO dao = new UsuarioDAO();
+        
+        
         
     }
     

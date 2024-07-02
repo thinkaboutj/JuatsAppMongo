@@ -17,6 +17,10 @@ import Encriptadores.EncriptadorAES;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -45,6 +49,7 @@ public class UsuarioBO implements IUsuarioBO{
         usuarioDTO.setTelefono(usuario.getTelefono());
         usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
         usuarioDTO.setUsuario(usuario.getUsuario());
+        usuarioDTO.setContactos(usuario.getContactos());
         
         DomicilioDTO domicilio = new DomicilioDTO();
         domicilio.setCalle(usuario.getDomicilio().getCalle());
@@ -57,6 +62,8 @@ public class UsuarioBO implements IUsuarioBO{
         return usuarioDTO;    
     }
     
+    
+    // se usa para agregar
     public Usuario convertirAEntidad(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
         
@@ -65,7 +72,10 @@ public class UsuarioBO implements IUsuarioBO{
         usuario.setSexo(usuarioDTO.getSexo());
         usuario.setTelefono(usuarioDTO.getTelefono());
         usuario.setFechaNacimiento(usuarioDTO.getFechaNacimiento());
-        usuario.setUsuario(usuarioDTO.getUsuario());
+        usuario.setUsuario(usuarioDTO.getUsuario());  
+        
+        usuario.setContactos(new ArrayList<ObjectId>());
+        
         
         Domicilio domicilio = new Domicilio();
         domicilio.setCalle(usuarioDTO.getDomicilio().getCalle());
@@ -91,6 +101,7 @@ public class UsuarioBO implements IUsuarioBO{
         usuario.setTelefono(usuarioDTO.getTelefono());
         usuario.setFechaNacimiento(usuarioDTO.getFechaNacimiento());
         usuario.setUsuario(usuarioDTO.getUsuario());
+        usuario.setContactos(usuarioDTO.getContactos());
         
         Domicilio domicilio = new Domicilio();
         domicilio.setCalle(usuarioDTO.getDomicilio().getCalle());
@@ -168,6 +179,89 @@ public class UsuarioBO implements IUsuarioBO{
         }
         
     }
+
+    @Override
+    public List<UsuarioDTO> consultarTodos() throws NegocioException {
+        
+        try{
+            List<Usuario> listaDeUsuarios = dao.consultarTodos();
+            List<UsuarioDTO> usuariosConsultados = new ArrayList<>();
+
+
+            for (int i = 0; i < listaDeUsuarios.size(); i++){
+                UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
+                System.out.println(usuario.toString());
+                usuariosConsultados.add(usuario);
+            }
+            return usuariosConsultados;
+
+        } catch (PersistenciaException e){
+            throw new NegocioException(e);
+        }
+        
+    }
+
+    @Override
+    public void agregarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
+        try {
+            dao.agregarContacto(idUsuario, idContacto);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+        
+    }
+
+    @Override
+    public List<UsuarioDTO> consultarContactos(ObjectId idUsuario) throws NegocioException {
+        
+        try{
+            List<Usuario> listaDeUsuarios = dao.consultarContactos(idUsuario);
+            List<UsuarioDTO> usuariosConsultados = new ArrayList<>();
+            
+            for (int i = 0; i < listaDeUsuarios.size(); i++){
+                UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
+                System.out.println(usuario.toString());
+                usuariosConsultados.add(usuario);
+            }
+            return usuariosConsultados;
+
+        } catch (PersistenciaException e){
+            throw new NegocioException(e);
+        }
+        
+    }
+
+    @Override
+    public void eliminarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
+        try {
+            dao.eliminarContacto(idUsuario, idContacto);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+    }
+
+    @Override
+    public List<UsuarioDTO> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws NegocioException {
+        
+        try{
+            List<Usuario> listaDeUsuarios = dao.consultarTelefonosQueNoTieneEnContactos(idUsuario);
+            List<UsuarioDTO> usuariosConsultados = new ArrayList<>();
+            
+            for (int i = 0; i < listaDeUsuarios.size(); i++){
+                UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
+                System.out.println(usuario.toString());
+                usuariosConsultados.add(usuario);
+            }
+            return usuariosConsultados;
+
+        } catch (PersistenciaException e){
+            throw new NegocioException(e);
+        }
+        
+    }
+    
+    
+    
 
     
 
