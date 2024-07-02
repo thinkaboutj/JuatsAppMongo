@@ -258,7 +258,7 @@ public class FrmChat extends javax.swing.JFrame {
 
     private void btnNuevoChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoChatActionPerformed
         // TODO add your handling code here:
-        DlgNuevoGrupo frmNuevoChat = new DlgNuevoGrupo(this, false);
+        DlgNuevoChat frmNuevoChat = new DlgNuevoChat(this, true);
         frmNuevoChat.setVisible(true);
     }//GEN-LAST:event_btnNuevoChatActionPerformed
 
@@ -290,7 +290,7 @@ public class FrmChat extends javax.swing.JFrame {
 
     private void btnAgregarContactos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactos1ActionPerformed
         // TODO add your handling code here:
-        DlgContactos frame = new DlgContactos(this, false, idUsuarioLogeado);
+        DlgContactos frame = new DlgContactos(this, true, idUsuarioLogeado);
         frame.setVisible(true);
         
     }//GEN-LAST:event_btnAgregarContactos1ActionPerformed

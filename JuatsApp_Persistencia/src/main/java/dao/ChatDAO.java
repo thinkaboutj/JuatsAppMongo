@@ -51,7 +51,7 @@ public class ChatDAO implements IChatDAO{
                     Filters.eq("_id", chat.getId()),
                     new Document("$set", new Document()
                             .append("idParticipantes", chat.getIdParticipantes())
-                            .append("titulo", chat.getTitulo())
+                            .append("titulo", chat.getNombre())
                             .append("mensajes", chat.getMensajes())
                     )
             );
@@ -65,7 +65,9 @@ public class ChatDAO implements IChatDAO{
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
+            
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
+            
             chatCollection.aggregate(etapas).into(listaChats);
             return listaChats;
         } catch (MongoException e) {
@@ -78,8 +80,10 @@ public class ChatDAO implements IChatDAO{
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
+            
             etapas.add(match(in("idParticipantes", Arrays.asList(usuario.getId()))));
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
+            
             chatCollection.aggregate(etapas).into(listaChats);
             return listaChats;
         } catch (MongoException e) {
@@ -92,12 +96,12 @@ public class ChatDAO implements IChatDAO{
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
-            etapas.add(match(Filters.and(
-                    in("idParticipantes", Arrays.asList(usuario.getId())),
-                    in("idParticipantes", Arrays.asList(receptor.getId()))
-            )));
+            
+            etapas.add(match(Filters.and(in("idParticipantes", Arrays.asList(usuario.getId())), in("idParticipantes", Arrays.asList(receptor.getId())))));
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
+            
             chatCollection.aggregate(etapas).into(listaChats);
+            
             if (listaChats.isEmpty()) {
                 return null;
             }
@@ -112,16 +116,22 @@ public class ChatDAO implements IChatDAO{
         try {
             List<Chat> listaChats = new LinkedList<>();
             List<Bson> etapas = new ArrayList<>();
+            
             etapas.add(match(new Document("_id", idChat)));
             etapas.add(lookup("usuarios", "idParticipantes", "_id", "participantes"));
+            
             chatCollection.aggregate(etapas).into(listaChats);
+            
             if (listaChats.isEmpty()) {
                 return null;
             }
+            
             return listaChats.get(0);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible consultar el chat.", e);
         }
     }
+    
+    
 
 }

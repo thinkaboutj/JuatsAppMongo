@@ -4,9 +4,12 @@
  */
 package pruebas;
 
+import dao.ChatDAO;
 import dao.UsuarioDAO;
+import entidades.Chat;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
+import interfaces.IChatDAO;
 import interfaces.IUsuarioDAO;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import org.bson.types.ObjectId;
 public class prueba {
 
     public static void main(String[] args) {
-        IUsuarioDAO dao = new UsuarioDAO();
+
         
         
         

@@ -3,6 +3,7 @@ package DTOs;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  * Clase que representa un chat en la aplicación. Un chat puede contener
@@ -12,50 +13,45 @@ import java.util.List;
  */
 public class ChatDTO {
     
-    private String id;
-    private String titulo;
-    private List<String> idParticipantes;
+    private ObjectId id;
+    private String nombre;
+    private byte[] imagen;
+    private List<ObjectId> idParticipantes;
     private List<MensajeDTO> mensajes;
-    private List<UsuarioDTO> participantes;
-
-    public ChatDTO() {
+    
+    public ChatDTO(){
     }
 
-    public ChatDTO(UsuarioDTO emisor, UsuarioDTO receptor) {
-        this.titulo = receptor.getUsuario();
-        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
-        this.mensajes = new LinkedList<>();
+    public ChatDTO(String nombre, byte[] imagen, List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.idParticipantes = idParticipantes;
+        this.mensajes = mensajes;
     }
-
-    public ChatDTO(UsuarioDTO emisor, UsuarioDTO receptor, List<MensajeDTO> mensajes) {
-        this.titulo = receptor.getUsuario();
-        this.idParticipantes = Arrays.asList(emisor.getId(), receptor.getId());
+    
+    public ChatDTO(ObjectId id, String nombre, byte[] imagen, List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
+        this.id = id;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.idParticipantes = idParticipantes;
         this.mensajes = mensajes;
     }
 
-    public UsuarioDTO getParticipante(UsuarioDTO usuario) {
-        if (participantes.get(0).equals(usuario)) {
-            return participantes.get(1);
-        }
-        return participantes.get(0);
+    public ChatDTO(ObjectId id, String nombre, byte[] imagen, List<ObjectId> idParticipantes) {
+        this.id = id;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.idParticipantes = idParticipantes;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public ChatDTO(String nombre, byte[] imagen, List<ObjectId> idParticipantes) {
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.idParticipantes = idParticipantes;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
 
-    public List<UsuarioDTO> getParticipantes() {
-        return participantes;
-    }
-
-    public void setParticipantes(List<UsuarioDTO> participantes) {
-        this.participantes = participantes;
-    }
-
+    
     public void addMensaje(MensajeDTO mensaje) {
         if (mensaje == null) {
             return;
@@ -66,11 +62,35 @@ public class ChatDTO {
         this.mensajes.add(mensaje);
     }
 
-    public List<String> getIdParticipantes() {
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    public List<ObjectId> getIdParticipantes() {
         return idParticipantes;
     }
 
-    public void setIdParticipantes(List<String> idParticipantes) {
+    public void setIdParticipantes(List<ObjectId> idParticipantes) {
         this.idParticipantes = idParticipantes;
     }
 
@@ -80,14 +100,6 @@ public class ChatDTO {
 
     public void setMensajes(List<MensajeDTO> mensajes) {
         this.mensajes = mensajes;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
     
     

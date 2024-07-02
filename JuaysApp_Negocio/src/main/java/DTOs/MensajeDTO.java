@@ -1,6 +1,7 @@
 package DTOs;
 
 import java.time.LocalDate;
+import org.bson.types.ObjectId;
 
 /**
  * Clase que representa la entidad mensajes la cual utiliza usuario
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 public class MensajeDTO {
     
     private String id;
-    private UsuarioDTO usuario;
+    private ObjectId idUsuario;
     private String texto;
     private byte[] imagen; // Arreglo de bytes para la imagen
     private LocalDate fecha_de_registro;
@@ -18,25 +19,25 @@ public class MensajeDTO {
     public MensajeDTO() {
     }
 
-    public MensajeDTO(UsuarioDTO usuario, String texto, LocalDate fecha_de_registro) {
-        this.usuario = usuario;
+    public MensajeDTO(ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
+        this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public MensajeDTO(UsuarioDTO usuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
-        this.usuario = usuario;
+    public MensajeDTO(ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+        this.idUsuario = idUsuario;
         this.texto = texto;
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public UsuarioDTO getUsuario() {
-        return usuario;
+    public ObjectId getUsuarioId() {
+        return idUsuario;
     }
 
-    public void setUsuario(UsuarioDTO usuario) {
-        this.usuario = usuario;
+    public void setUsuarioId(ObjectId idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getTexto() {

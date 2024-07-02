@@ -286,6 +286,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         
         try {
             usuarioBO.registrarUsuario(usuarioDTO);
+            JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
             this.dispose();
         } catch (NegocioException ex) {
             JOptionPane.showConfirmDialog(this, ex);

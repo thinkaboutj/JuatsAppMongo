@@ -55,11 +55,11 @@ public class Mensaje {
         this.id = id;
     }
 
-    public ObjectId getIdUsuario() {
+    public ObjectId getIdUsuarioId() {
         return idUsuario;
     }
 
-    public void setIdUsuario(ObjectId idUsuario) {
+    public void setIdUsuarioId(ObjectId idUsuario) {
         this.idUsuario = idUsuario;
     }
 
