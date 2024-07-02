@@ -7,7 +7,6 @@ presentacion\Login$1.class
 utilerias\ComboItems.class
 main\Main.class
 presentacion\FrmRegistroUsuario$4.class
-presentacion\FrmBuscarImg.class
 presentacion\frmChat$6.class
 presentacion\PnlChat$1.class
 presentacion\FrmRegistroUsuario$1.class
@@ -30,7 +29,6 @@ presentacion\FrmEditarPerfil$1.class
 presentacion\FrmNuevoChat.class
 presentacion\frmChat$7.class
 presentacion\FrmEditarPerfil.class
-presentacion\FrmBuscarImg$1.class
 presentacion\frmChat$2.class
 presentacion\FrmRegistroUsuario$5.class
 presentacion\FrmRegistroUsuario.class

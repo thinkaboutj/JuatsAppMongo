@@ -29,9 +29,7 @@ public interface IUsuarioDAO {
     public Usuario consultarPorUsuario(String username) throws PersistenciaException;
 
     public void actualizar(Usuario usuario) throws PersistenciaException;
-    
-    public void actualizarPassword(Usuario usuario) throws PersistenciaException;
-    
+        
     public Usuario login(String contrasena, String telefono) throws PersistenciaException;
     
     public List<Usuario> consultarContactosDelUsuario(ObjectId objectId) throws PersistenciaException;

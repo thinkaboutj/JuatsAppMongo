@@ -11,29 +11,37 @@ import org.bson.types.ObjectId;
 public class Mensaje {
 
     private ObjectId id;
-    private Usuario usuario;
+    private ObjectId idUsuario;
     private String texto;
-    private byte[] imagen; // Arreglo de bytes para la imagen
+    private byte[] imagen; 
     private LocalDate fecha_de_registro;
 
     public Mensaje() {
     }
 
-    public Mensaje(ObjectId id, Usuario usuario, String texto, LocalDate fecha_de_registro) {
+    public Mensaje(ObjectId id, ObjectId usuario, String texto, LocalDate fecha_de_registro) {
         this.id = id;
-        this.usuario = usuario;
+        this.idUsuario = usuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public Mensaje(Usuario usuario, String texto, LocalDate fecha_de_registro) {
-        this.usuario = usuario;
+    public Mensaje(ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
+        this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public Mensaje(Usuario usuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
-        this.usuario = usuario;
+    public Mensaje(ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+        this.idUsuario = idUsuario;
+        this.texto = texto;
+        this.imagen = imagen;
+        this.fecha_de_registro = fecha_de_registro;
+    }
+
+    public Mensaje(ObjectId id, ObjectId idUsuario, String texto, byte[] imagen, LocalDate fecha_de_registro) {
+        this.id = id;
+        this.idUsuario = idUsuario;
         this.texto = texto;
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
@@ -47,12 +55,12 @@ public class Mensaje {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public ObjectId getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setIdUsuario(ObjectId idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getTexto() {
@@ -81,7 +89,9 @@ public class Mensaje {
 
     @Override
     public String toString() {
-        return "Mensaje{" + "id=" + id + ", usuario=" + usuario + ", texto=" + texto + ", fecha_de_registro=" + fecha_de_registro + '}';
+        return "Mensaje{" + "id=" + id + ", idUsuario=" + idUsuario + ", texto=" + texto + ", imagen=" + imagen + ", fecha_de_registro=" + fecha_de_registro + '}';
     }
-
+    
+    
+  
 }

@@ -40,9 +40,8 @@ public class MensajeDAO implements IMensajeDAO{
     public void actualizar(Mensaje mensaje) throws PersistenciaException {
         try {
             mensajeCollection.updateOne(
-                    Filters.eq("_id", mensaje.getId()),
-                    new Document("$set", new Document()
-                            .append("usuario", mensaje.getUsuario())
+                    Filters.eq("_id", mensaje.getId()), new Document("$set", new Document() 
+                            .append("usuario", mensaje.getIdUsuario())
                             .append("texto", mensaje.getTexto())
                             .append("imagen", mensaje.getImagen())
                             .append("fecha_de_registro", mensaje.getFecha_de_registro())

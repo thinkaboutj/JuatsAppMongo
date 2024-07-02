@@ -90,16 +90,6 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public void actualizarPassword(Usuario usuario) throws PersistenciaException {
-        try {
-            usuarioCollection.updateOne(Filters.eq("_id", usuario.getId()), 
-                new Document("$set", new Document("password", usuario.getContrasena())));
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible actualizar la contraseña.", e);
-        }
-    }
-
-    @Override
     public Usuario login(String contrasena, String telefono) throws PersistenciaException {
         try {
             Bson filter = Filters.and(
