@@ -289,6 +289,7 @@ public class DlgNuevoChat extends javax.swing.JDialog {
         try {
             chatBO.agregar(chatDTO);
             JOptionPane.showMessageDialog(this, "Grupo creado");
+            this.dispose();
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No se pudo crear el grupo");
         }
