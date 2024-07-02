@@ -72,13 +72,13 @@ public class DlgContactos extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblTelefonos = new javax.swing.JTable();
+        tblContactos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tblTelefonos.setModel(new javax.swing.table.DefaultTableModel(
+        tblContactos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -97,12 +97,12 @@ public class DlgContactos extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tblTelefonos.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tblTelefonos);
-        if (tblTelefonos.getColumnModel().getColumnCount() > 0) {
-            tblTelefonos.getColumnModel().getColumn(0).setResizable(false);
-            tblTelefonos.getColumnModel().getColumn(1).setResizable(false);
-            tblTelefonos.getColumnModel().getColumn(3).setResizable(false);
+        tblContactos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblContactos);
+        if (tblContactos.getColumnModel().getColumnCount() > 0) {
+            tblContactos.getColumnModel().getColumn(0).setResizable(false);
+            tblContactos.getColumnModel().getColumn(1).setResizable(false);
+            tblContactos.getColumnModel().getColumn(3).setResizable(false);
         }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 670, 500));
@@ -123,7 +123,7 @@ public class DlgContactos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void llenarTablaContactos(List<UsuarioDTO> listaContactos) {
-        DefaultTableModel  modeloTabla = (DefaultTableModel)  this.tblTelefonos.getModel();
+        DefaultTableModel  modeloTabla = (DefaultTableModel)  this.tblContactos.getModel();
         if (modeloTabla.getRowCount() > 0) {
             for (int i = modeloTabla.getRowCount() - 1; i > -1; i--) {
                 modeloTabla.removeRow(i);
@@ -159,18 +159,17 @@ public class DlgContactos extends javax.swing.JDialog {
         ActionListener onEliminarClickListener = (ActionEvent e) -> {
             eliminar();
         };
-        TableColumn columnaImagen = tblTelefonos.getColumnModel().getColumn(0);
+        TableColumn columnaImagen = tblContactos.getColumnModel().getColumn(0);
         columnaImagen.setCellRenderer(new ImageRenderer());       
         int indiceEliminar = 3;
-        TableColumnModel modeloColumnas = this.tblTelefonos.getColumnModel();
+        TableColumnModel modeloColumnas = this.tblContactos.getColumnModel();
         modeloColumnas.getColumn(indiceEliminar).setCellRenderer(new JButtonRenderer("Eliminar"));
         modeloColumnas.getColumn(indiceEliminar).setCellEditor(new JButtonCellEditor("Eliminar",onEliminarClickListener));
         
     }
 
     public void eliminar(){
-        ObjectId idContacto = new ObjectId( (String) (tblTelefonos.getValueAt(tblTelefonos.getSelectedRow(), 2)));
-        
+        ObjectId idContacto = new ObjectId( (String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 2)));
         try {
             usuarioBO.eliminarContacto(idUsuarioLogeado, idContacto);
             JOptionPane.showMessageDialog(this, "Contacto eliminado");
@@ -178,7 +177,6 @@ public class DlgContactos extends javax.swing.JDialog {
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No se pudo eliminar su contacto");
         }
-        
     }
     
     
@@ -187,7 +185,7 @@ public class DlgContactos extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblTelefonos;
+    private javax.swing.JTable tblContactos;
     // End of variables declaration//GEN-END:variables
 
 

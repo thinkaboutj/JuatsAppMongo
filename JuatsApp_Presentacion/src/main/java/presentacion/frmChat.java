@@ -35,8 +35,6 @@ public class FrmChat extends javax.swing.JFrame {
         usuarioBO = new UsuarioBO();
 
         this.idUsuarioLogeado = idUsuarioLogeado;
-        consultarUsuario();
-
     }
 
     public void llenarTablaChats() {
@@ -72,15 +70,6 @@ public class FrmChat extends javax.swing.JFrame {
         return null;
     }
 
-    private void consultarUsuario() {
-        UsuarioDTO usuario = new UsuarioDTO();
-        try {
-            usuario = usuarioBO.consultarUsuario(idUsuarioLogeado);
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
-        }
-        
-    }
 
     // convertir el icono del label a un arreglo de bytes
     public static byte[] iconToByteArray(Icon icon) {
@@ -258,7 +247,7 @@ public class FrmChat extends javax.swing.JFrame {
 
     private void btnNuevoChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoChatActionPerformed
         // TODO add your handling code here:
-        DlgNuevoChat frmNuevoChat = new DlgNuevoChat(this, true);
+        DlgNuevoChat frmNuevoChat = new DlgNuevoChat(this, true, idUsuarioLogeado);
         frmNuevoChat.setVisible(true);
     }//GEN-LAST:event_btnNuevoChatActionPerformed
 

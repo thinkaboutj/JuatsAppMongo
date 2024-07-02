@@ -1,11 +1,13 @@
 DTOs\DomicilioDTO.class
 interfaces\IUsuarioBO.class
 DTOs\ChatDTO.class
-Encriptadores\EncriptadorAES.class
-negocio\UsuarioBO.class
-negocio\MensajeBO.class
 DTOs\MensajeDTO.class
 DTOs\UsuarioDTO.class
+interfaces\IChatBO.class
 pruebas\pruebas.class
 excepciones\NegocioException.class
+Encriptadores\EncriptadorAES.class
+interfaces\IMensajeBO.class
+negocio\UsuarioBO.class
+negocio\MensajeBO.class
 negocio\ChatBO.class

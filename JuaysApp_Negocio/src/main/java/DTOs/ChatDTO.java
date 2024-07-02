@@ -1,6 +1,5 @@
 package DTOs;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -49,8 +48,6 @@ public class ChatDTO {
         this.imagen = imagen;
         this.idParticipantes = idParticipantes;
     }
-
-
     
     public void addMensaje(MensajeDTO mensaje) {
         if (mensaje == null) {
