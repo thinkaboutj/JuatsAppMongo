@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>JuaysApp_Negocio</artifactId>
+            <artifactId>JuatsApp_Negocio</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -13,39 +13,29 @@ import org.bson.types.ObjectId;
 public class ChatDTO {
     
     private ObjectId id;
-    private String nombre;
-    private byte[] imagen;
     private List<ObjectId> idParticipantes;
     private List<MensajeDTO> mensajes;
     
     public ChatDTO(){
     }
 
-    public ChatDTO(String nombre, byte[] imagen, List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
-        this.nombre = nombre;
-        this.imagen = imagen;
+    public ChatDTO(List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
         this.idParticipantes = idParticipantes;
         this.mensajes = mensajes;
     }
     
-    public ChatDTO(ObjectId id, String nombre, byte[] imagen, List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
+    public ChatDTO(ObjectId id, List<ObjectId> idParticipantes, List<MensajeDTO> mensajes) {
         this.id = id;
-        this.nombre = nombre;
-        this.imagen = imagen;
         this.idParticipantes = idParticipantes;
         this.mensajes = mensajes;
     }
 
-    public ChatDTO(ObjectId id, String nombre, byte[] imagen, List<ObjectId> idParticipantes) {
+    public ChatDTO(ObjectId id, List<ObjectId> idParticipantes) {
         this.id = id;
-        this.nombre = nombre;
-        this.imagen = imagen;
         this.idParticipantes = idParticipantes;
     }
 
-    public ChatDTO(String nombre, byte[] imagen, List<ObjectId> idParticipantes) {
-        this.nombre = nombre;
-        this.imagen = imagen;
+    public ChatDTO(List<ObjectId> idParticipantes) {
         this.idParticipantes = idParticipantes;
     }
     
@@ -67,22 +57,6 @@ public class ChatDTO {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
-    }
-
     public List<ObjectId> getIdParticipantes() {
         return idParticipantes;
     }
@@ -97,6 +71,11 @@ public class ChatDTO {
 
     public void setMensajes(List<MensajeDTO> mensajes) {
         this.mensajes = mensajes;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatDTO{" + "id=" + id + ", idParticipantes=" + idParticipantes + ", mensajes=" + mensajes + '}';
     }
     
     

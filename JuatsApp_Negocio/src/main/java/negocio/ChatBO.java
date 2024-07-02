@@ -30,7 +30,7 @@ public class ChatBO implements IChatBO{
     }
     
     private Chat transformarEnEntidad(ChatDTO chatDTO){
-        Chat chatEntidad = new Chat(chatDTO.getNombre(), chatDTO.getImagen(), chatDTO.getIdParticipantes());
+        Chat chatEntidad = new Chat(chatDTO.getIdParticipantes());
         return chatEntidad;
     }
     

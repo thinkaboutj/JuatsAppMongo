@@ -51,7 +51,6 @@ public class ChatDAO implements IChatDAO{
                     Filters.eq("_id", chat.getId()),
                     new Document("$set", new Document()
                             .append("idParticipantes", chat.getIdParticipantes())
-                            .append("titulo", chat.getNombre())
                             .append("mensajes", chat.getMensajes())
                     )
             );

@@ -7,23 +7,16 @@ package presentacion;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IUsuarioBO;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -167,7 +160,7 @@ public class DlgContactos extends javax.swing.JDialog {
         modeloColumnas.getColumn(indiceEliminar).setCellEditor(new JButtonCellEditor("Eliminar",onEliminarClickListener));
         
     }
-
+    
     public void eliminar(){
         ObjectId idContacto = new ObjectId( (String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 2)));
         try {
