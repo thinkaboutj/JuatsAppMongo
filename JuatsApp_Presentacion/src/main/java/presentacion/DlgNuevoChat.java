@@ -80,15 +80,16 @@ public class DlgNuevoChat extends javax.swing.JDialog {
     
     private void cargarConfiguracionInicialTablaContactos() {
         ActionListener onAgregarClickListener = (ActionEvent e) -> {
-            agregar();
+            chatear();
         };
         int indiceAgregar = 2;
         TableColumnModel modeloColumnas = this.tblContactos.getColumnModel();
         modeloColumnas.getColumn(indiceAgregar).setCellRenderer(new JButtonRenderer("  Chatear  "));
         modeloColumnas.getColumn(indiceAgregar).setCellEditor(new JButtonCellEditor("  Chatear  ",onAgregarClickListener));
     }
-
-    public void agregar() {
+    
+    // para agregar el chat
+    public void chatear() {
         ObjectId idContacto = new ObjectId( (String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 0)));
         List<ObjectId> listaUsuarios = new ArrayList<>();
         
