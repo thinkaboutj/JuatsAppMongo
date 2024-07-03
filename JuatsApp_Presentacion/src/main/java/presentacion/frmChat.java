@@ -5,7 +5,6 @@
 package presentacion;
 
 import DTOs.ChatDTO;
-import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
@@ -17,8 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -219,17 +216,17 @@ public class FrmChat extends javax.swing.JFrame {
         tblChats.setForeground(new java.awt.Color(204, 204, 204));
         tblChats.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Chats"
+                "Foto", "Contacto", "Ver chat"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -244,6 +241,8 @@ public class FrmChat extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblChats);
         if (tblChats.getColumnModel().getColumnCount() > 0) {
             tblChats.getColumnModel().getColumn(0).setResizable(false);
+            tblChats.getColumnModel().getColumn(1).setResizable(false);
+            tblChats.getColumnModel().getColumn(2).setResizable(false);
         }
 
         pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, 690));
@@ -307,8 +306,9 @@ public class FrmChat extends javax.swing.JFrame {
         List<ChatDTO> chats = new ArrayList<>();
         try {
             chats = chatBO.consultarChatsDelUsuario(idUsuarioLogeado);
+            JOptionPane.showMessageDialog(this, chats.toString());
         } catch (NegocioException ex) {
-            Logger.getLogger(FrmChat.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 //

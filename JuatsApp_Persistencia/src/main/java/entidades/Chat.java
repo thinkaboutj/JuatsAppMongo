@@ -13,13 +13,13 @@ import org.bson.types.ObjectId;
 public class Chat {
 
     private ObjectId id;
-    private List<ObjectId> idParticipantes;
+    private List<ObjectId> idParticipantes;  // está pensado para que se cree un chat con los ids de los participantes
     private List<Mensaje> mensajes;
-    
+        
     public Chat(){
     }
 
-    public Chat( List<ObjectId> idParticipantes, List<Mensaje> mensajes) {
+    public Chat(List<ObjectId> idParticipantes, List<Mensaje> mensajes) {
         this.idParticipantes = idParticipantes;
         this.mensajes = mensajes;
     }

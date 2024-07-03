@@ -5,6 +5,7 @@ import entidades.Chat;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
 import java.util.List;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 

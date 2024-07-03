@@ -68,7 +68,7 @@ public class ChatBO implements IChatBO{
             chatsDelUsuario = dao.consultarChatsDelUsuario(idUsuario);
             
             for (int i = 1; i < chatsDelUsuario.size(); i++){
-                ChatDTO chatDTO = new ChatDTO();
+                ChatDTO chatDTO = transformarEnDTO(chatsDelUsuario.get(i));
                 chats.add(chatDTO);
             }
             
