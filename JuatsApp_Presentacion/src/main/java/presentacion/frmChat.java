@@ -5,6 +5,7 @@
 package presentacion;
 
 import DTOs.ChatDTO;
+import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
@@ -16,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -110,7 +113,7 @@ public class FrmChat extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnAgregarContactos = new javax.swing.JButton();
         btnAgregarContactos1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        VerChats = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -175,13 +178,13 @@ public class FrmChat extends javax.swing.JFrame {
         });
         jPanel1.add(btnAgregarContactos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 114, 42));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        VerChats.setText("ver chats");
+        VerChats.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                VerChatsActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, -1, -1));
+        jPanel1.add(VerChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 40, -1, -1));
 
         pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1600, -1));
 
@@ -191,42 +194,42 @@ public class FrmChat extends javax.swing.JFrame {
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1040, Short.MAX_VALUE)
+            .addGap(0, 1000, Short.MAX_VALUE)
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 750, Short.MAX_VALUE)
         );
 
-        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 120, 1040, 750));
+        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 120, 1000, 750));
 
-        btnNuevoChat.setText("Nuevo Chat");
         btnNuevoChat.setBackground(new java.awt.Color(0, 51, 102));
-        btnNuevoChat.setBorder(null);
         btnNuevoChat.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         btnNuevoChat.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoChat.setText("Nuevo Chat");
+        btnNuevoChat.setBorder(null);
         btnNuevoChat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoChatActionPerformed(evt);
             }
         });
-        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 450, 40));
+        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 510, 40));
 
         tblChats.setBackground(new java.awt.Color(0, 102, 153));
         tblChats.setForeground(new java.awt.Color(204, 204, 204));
         tblChats.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Foto", "Contacto", "Ver chat"
+                "Id", "Foto", "Contacto", "Ver chat"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -243,9 +246,10 @@ public class FrmChat extends javax.swing.JFrame {
             tblChats.getColumnModel().getColumn(0).setResizable(false);
             tblChats.getColumnModel().getColumn(1).setResizable(false);
             tblChats.getColumnModel().getColumn(2).setResizable(false);
+            tblChats.getColumnModel().getColumn(3).setResizable(false);
         }
 
-        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, 690));
+        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 510, 690));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -301,16 +305,19 @@ public class FrmChat extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnAgregarContactos1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void VerChatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VerChatsActionPerformed
         List<ChatDTO> chats = new ArrayList<>();
         try {
             chats = chatBO.consultarChatsDelUsuario(idUsuarioLogeado);
-            JOptionPane.showMessageDialog(this, chats.toString());
+
+            for (ChatDTO chat : chats) {
+                System.out.println(chat.toString());
+            }
+
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_VerChatsActionPerformed
 //
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
@@ -325,12 +332,12 @@ public class FrmChat extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton VerChats;
     private javax.swing.JButton btnAgregarContactos;
     private javax.swing.JButton btnAgregarContactos1;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevoChat;
     private javax.swing.JButton btnPerfil;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

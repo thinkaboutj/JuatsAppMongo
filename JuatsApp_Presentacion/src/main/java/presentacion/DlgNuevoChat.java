@@ -68,7 +68,7 @@ public class DlgNuevoChat extends javax.swing.JDialog {
     
     private void cargarContactosEnTabla() {
         try {
-            List<UsuarioDTO> listaContactos = usuarioBO.consultarContactos(idUsuarioLogeado);
+            List<UsuarioDTO> listaContactos = usuarioBO.consultarContactosSinChat(idUsuarioLogeado);
             llenarTablaContactos(listaContactos);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex);

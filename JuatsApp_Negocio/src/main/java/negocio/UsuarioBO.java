@@ -19,6 +19,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -220,7 +221,6 @@ public class UsuarioBO implements IUsuarioBO{
             
             for (int i = 0; i < listaDeUsuarios.size(); i++){
                 UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
-                System.out.println(usuario.toString());
                 usuariosConsultados.add(usuario);
             }
             return usuariosConsultados;
@@ -249,13 +249,31 @@ public class UsuarioBO implements IUsuarioBO{
             
             for (int i = 0; i < listaDeUsuarios.size(); i++){
                 UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
-                System.out.println(usuario.toString());
                 usuariosConsultados.add(usuario);
             }
             return usuariosConsultados;
 
         } catch (PersistenciaException e){
             throw new NegocioException(e);
+        }
+        
+    }
+
+    @Override
+    public List<UsuarioDTO> consultarContactosSinChat(ObjectId idUsuario) throws NegocioException {
+        try {
+            List<UsuarioDTO> usuariosDTO = new ArrayList<>();
+            List<Usuario> usuariosEntidades = new ArrayList<>();
+        
+            usuariosEntidades = dao.consultarContactosSinChat(idUsuario);
+            
+            for (Usuario usuariosEntidade : usuariosEntidades) {
+                usuariosDTO.add(convertirADTO(usuariosEntidade));
+            }
+            
+            return usuariosDTO;
+        } catch (PersistenciaException | NoSuchElementException ex) {
+            throw new NegocioException(ex);
         }
         
     }

@@ -1,5 +1,20 @@
 package dao;
 
+
+
+
+import com.mongodb.client.*;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Filters.*;
+
+
 import Conexion.ConexionBD;
 import entidades.Domicilio;
 import entidades.Usuario;
@@ -13,7 +28,10 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import com.mongodb.MongoException;
+import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.model.Updates;
+import entidades.Chat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +48,12 @@ import java.util.List;
 public class UsuarioDAO implements IUsuarioDAO {
     
     private final MongoCollection<Usuario> usuarioCollection;
+    private final MongoCollection<Document> chatCollection;
+
 
     public UsuarioDAO() {
         this.usuarioCollection = ConexionBD.getInstance().getDatabase().getCollection("usuarios", Usuario.class);
+        this.chatCollection = ConexionBD.getInstance().getDatabase().getCollection("chats");
     }
     
     @Override
@@ -245,6 +266,45 @@ public class UsuarioDAO implements IUsuarioDAO {
         return noContactos;
     }
     
+    @Override
+    public List<Usuario> consultarContactosSinChat(ObjectId idUsuario) throws PersistenciaException {
+        List<Usuario> contactosSinChat = new ArrayList<>();
+        List<ObjectId> contactosUsuario = new ArrayList<>();
+
+        // Crear lista de ObjectIds de los contactos del usuario
+        List<Usuario> contactos = consultarContactos(idUsuario);
+
+        for (Usuario contacto : contactos) {
+            contactosUsuario.add(contacto.getId());
+        }
+
+        // Crear la etapa de agregación para buscar chats que contengan los contactos del usuario
+        List<Bson> etapas = new ArrayList<>();
+        etapas.add(match(in("idParticipantes", contactosUsuario)));
+        etapas.add(group("$idParticipantes"));
+
+        // Ejecutar la agregación para obtener los contactos con los que hay chat
+        List<Document> contactosConChatDocs = new ArrayList<>();
+        chatCollection.aggregate(etapas).into(contactosConChatDocs);
+
+        // Crear lista de ObjectIds de contactos con los que hay chat
+        List<ObjectId> contactosConChatIds = new ArrayList<>();
+        for (Document doc : contactosConChatDocs) {
+            List<ObjectId> idParticipantes = (List<ObjectId>) doc.get("_id");
+            contactosConChatIds.addAll(idParticipantes);
+        }
+
+        // Identificar contactos sin chat comparando con todos los contactos del usuario
+        for (ObjectId contacto : contactosUsuario) {
+            if (!contactosConChatIds.contains(contacto) && !contacto.equals(idUsuario)) {
+                Usuario usuario = consultar(contacto);
+                contactosSinChat.add(usuario);
+            }
+        }
+
+        return contactosSinChat;
+    }
+
     
    
 }

@@ -4,14 +4,16 @@
  */
 package pruebas;
 
-import DTOs.DomicilioDTO;
+import DTOs.ChatDTO;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
+import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import javax.swing.JOptionPane;
+import negocio.ChatBO;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
 
@@ -22,7 +24,7 @@ import org.bson.types.ObjectId;
 public class pruebas {
     
     public static void main (String [] args){
-        
+
     }
     
 }

@@ -44,6 +44,7 @@ public class ChatBO implements IChatBO{
     
     private ChatDTO transformarEnDTO(Chat chat){
         ChatDTO chatDTO = new ChatDTO(chat.getIdParticipantes());
+        chatDTO.setId(chat.getId());
         return chatDTO;
     }
     
@@ -66,12 +67,10 @@ public class ChatBO implements IChatBO{
         
         try {
             chatsDelUsuario = dao.consultarChatsDelUsuario(idUsuario);
-            
-            for (int i = 1; i < chatsDelUsuario.size(); i++){
+            for (int i = 0; i < chatsDelUsuario.size(); i++){
                 ChatDTO chatDTO = transformarEnDTO(chatsDelUsuario.get(i));
                 chats.add(chatDTO);
-            }
-            
+            } 
             return chats;
         } catch (PersistenciaException ex) {
             throw new NegocioException();

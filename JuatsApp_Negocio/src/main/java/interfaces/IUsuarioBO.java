@@ -32,6 +32,7 @@ public interface IUsuarioBO {
     
     public List<UsuarioDTO> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws NegocioException;
 
+    public List<UsuarioDTO> consultarContactosSinChat(ObjectId idUsuario) throws NegocioException;
 
 
 }

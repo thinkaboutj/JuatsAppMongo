@@ -41,6 +41,9 @@ public interface IUsuarioDAO {
     public void eliminarContacto(ObjectId idUsuario, ObjectId idContacto) throws PersistenciaException;
 
     public List<Usuario> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws PersistenciaException;
+    
+    public List<Usuario> consultarContactosSinChat(ObjectId idUsuario) throws PersistenciaException;
+
 
 
 
