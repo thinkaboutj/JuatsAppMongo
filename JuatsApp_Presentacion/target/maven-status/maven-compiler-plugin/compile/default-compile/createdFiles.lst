@@ -3,7 +3,6 @@ presentacion\FrmEditarPerfil$4.class
 utilerias\Utilidades.class
 presentacion\FrmChat$6.class
 presentacion\FrmEditarPerfil$2.class
-presentacion\FrmChat$8.class
 presentacion\Login$1.class
 utilerias\ComboItems.class
 main\Main.class
@@ -22,6 +21,7 @@ presentacion\DlgContactos$1.class
 utilerias\JButtonRenderer.class
 presentacion\FrmRegistroUsuario$3.class
 utilerias\ImageRenderer.class
+presentacion\FrmChat$UsuarioChat.class
 presentacion\FrmChat$2.class
 presentacion\FrmEditarPerfil$5.class
 presentacion\FrmChat$7.class

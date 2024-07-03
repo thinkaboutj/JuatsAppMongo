@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -162,15 +164,26 @@ public class DlgTelefonos extends javax.swing.JDialog {
         
     }
 
-    public void agregarContacto(){
-        ObjectId idContacto = new ObjectId( (String) (tblTelefonos.getValueAt(tblTelefonos.getSelectedRow(), 2)));
-        
+    public void agregarContacto() {
+        ObjectId idContacto = new ObjectId((String) (tblTelefonos.getValueAt(tblTelefonos.getSelectedRow(), 2)));
+
         try {
-            usuarioBO.agregarContacto(idUsuarioLogeado, idContacto);
-            JOptionPane.showMessageDialog(this, "Se ha agregado correctamente el contacto");
-            this.cargarTelefonosEnTabla();
+            UsuarioDTO usuario = usuarioBO.consultarUsuario(idContacto);
+            int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro que quiere agregar como contacto al usuario " + usuario.getUsuario() + " con teléfono " + usuario.getTelefono() + "?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                try {
+                    usuarioBO.agregarContacto(idUsuarioLogeado, idContacto);
+                    JOptionPane.showMessageDialog(this, "Se ha agregado correctamente el contacto");
+                    this.cargarTelefonosEnTabla();
+                } catch (NegocioException ex) {
+                    JOptionPane.showMessageDialog(this, "No se pudo agregar el contacto");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El contacto no fue agregado.");
+            }
         } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "No se pudo agregar el contacto");
+            JOptionPane.showMessageDialog(this, "No se pudo consultar el usuario");
         }
     }
     

@@ -123,8 +123,6 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
     
-    
-    
     private Usuario convertirDocumentoAUsuario(Document doc) {
         ObjectId id = doc.getObjectId("_id");
         String usuario = doc.getString("usuario");

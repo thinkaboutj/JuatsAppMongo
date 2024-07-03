@@ -11,21 +11,27 @@ import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import negocio.ChatBO;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
+import utilerias.ImageRenderer;
+import utilerias.JButtonCellEditor;
+import utilerias.JButtonRenderer;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -34,35 +40,111 @@ import org.bson.types.ObjectId;
  */
 public class FrmChat extends javax.swing.JFrame {
 
-    private ObjectId idUsuarioLogeado;
-    private IUsuarioBO usuarioBO;
-    private IChatBO chatBO;
-
+    private final ObjectId idUsuarioLogeado;
+    private final IUsuarioBO usuarioBO;
+    private final IChatBO chatBO;
+    
+    
     public FrmChat(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
         chatBO = new ChatBO();
 
         this.idUsuarioLogeado = idUsuarioLogeado;
+        cargarMetodosIniciales();
     }
 
-    public void llenarTablaChats() {
-//        listaChats = usuario.getChats();
-//        DefaultTableModel modeloTabla = (DefaultTableModel) this.tblChats.getModel();
-//        // Limpia tabla anterior
-//        modeloTabla.setRowCount(0);
-//        listaChats.forEach(chat -> {
-//            Object[] fila = {
-//                chat.getNombre()
-//            };
-//            modeloTabla.addRow(fila);
-//        });
-//        this.tblChats.updateUI();
+    private void llenarTablaChats(List<UsuarioChat> listaChats) {
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tblChats.getModel();
+        if (modeloTabla.getRowCount() > 0) {
+            for (int i = modeloTabla.getRowCount() - 1; i > -1; i--) {
+                modeloTabla.removeRow(i);
+            }
+        }
+        if (listaChats != null) {
+            listaChats.forEach(row -> {
+                Object[] fila = new Object[4];
+                
+                Icon icono = byteArrayToIcon(row.contacto.getImagen());
+                fila[0] = row.chat.getId().toHexString();
+                fila[1] = icono;
+                fila[2] = row.contacto.getUsuario();
+                
+                modeloTabla.addRow(fila);
+            });
+        }
     }
-
-    public void actualizarChats() {
-        llenarTablaChats();
+    
+    public class UsuarioChat{
+        public UsuarioDTO contacto;
+        public ChatDTO chat;
+        public UsuarioChat(UsuarioDTO contacto, ChatDTO chat){
+            this.contacto = contacto;
+            this.chat = chat;
+        }
     }
+    
+    private void cargarChatsEnTabla() {
+        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
+        List<ChatDTO> chatsDTO = new ArrayList<>();
+        List<UsuarioChat> lista = new ArrayList<>();
+        
+        try {
+            chatsDTO = chatBO.consultarChatsDelUsuario(idUsuarioLogeado);
+            
+            for(int i = 0; i < chatsDTO.size(); i++){
+                UsuarioDTO usuarioAux = new UsuarioDTO();
+                
+                if (chatsDTO.get(i).getIdParticipantes().get(0).equals(idUsuarioLogeado)){
+                    usuarioAux = usuarioBO.consultarUsuario(chatsDTO.get(i).getIdParticipantes().get(1));
+                } else {
+                    usuarioAux = usuarioBO.consultarUsuario(chatsDTO.get(i).getIdParticipantes().get(0));
+                }
+                usuariosDTO.add(usuarioAux); 
+            }
+            
+            for (int i = 0; i < chatsDTO.size(); i++){
+                lista.add(new UsuarioChat(usuariosDTO.get(i), chatsDTO.get(i))); 
+            }
+            
+            
+            llenarTablaChats(lista);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+    
+    protected void cargarMetodosIniciales(){
+        this.cargarConfiguracionInicialTablaChats();
+        this.cargarChatsEnTabla();
+    }
+    
+    private void cargarConfiguracionInicialTablaChats() {
+        ActionListener onVerChatClickListener = (ActionEvent e) -> {
+            verChat();
+        };
+        
+        TableColumn columnaImagen = tblChats.getColumnModel().getColumn(1);
+        columnaImagen.setCellRenderer(new ImageRenderer());  
+        
+        columnaImagen.setCellRenderer(new ImageRenderer());       
+        int indiceVerChat = 3;
+        TableColumnModel modeloColumnas = this.tblChats.getColumnModel();
+        modeloColumnas.getColumn(indiceVerChat).setCellRenderer(new JButtonRenderer("Ver chat"));
+        modeloColumnas.getColumn(indiceVerChat).setCellEditor(new JButtonCellEditor("Ver chat",onVerChatClickListener));
+        
+    }
+    
+    public void verChat(){
+        ObjectId idChat = new ObjectId( ((String)(tblChats.getValueAt(tblChats.getSelectedRow(), 0))));
+        JOptionPane.showMessageDialog(this, "hola");
+        
+    }
+    
+    
+    
+    
+    
 
     // convertir el arreglo de bytes de la imagen del usuario consultado
     // para asi poder mostrar la imagen
@@ -78,8 +160,7 @@ public class FrmChat extends javax.swing.JFrame {
         }
         return null;
     }
-
-
+    
     // convertir el icono del label a un arreglo de bytes
     public static byte[] iconToByteArray(Icon icon) {
         if (icon instanceof ImageIcon) {
@@ -101,7 +182,11 @@ public class FrmChat extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
+    
+    
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -113,7 +198,6 @@ public class FrmChat extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnAgregarContactos = new javax.swing.JButton();
         btnAgregarContactos1 = new javax.swing.JButton();
-        VerChats = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -178,14 +262,6 @@ public class FrmChat extends javax.swing.JFrame {
         });
         jPanel1.add(btnAgregarContactos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 114, 42));
 
-        VerChats.setText("ver chats");
-        VerChats.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                VerChatsActionPerformed(evt);
-            }
-        });
-        jPanel1.add(VerChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 40, -1, -1));
-
         pnBackground.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1600, -1));
 
         panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
@@ -225,11 +301,11 @@ public class FrmChat extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Id", "Foto", "Contacto", "Ver chat"
+                "Id del chat", "Foto", "Contacto", "Ver chat"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -270,6 +346,7 @@ public class FrmChat extends javax.swing.JFrame {
         // TODO add your handling code here:
         DlgNuevoChat frmNuevoChat = new DlgNuevoChat(this, true, idUsuarioLogeado);
         frmNuevoChat.setVisible(true);
+        cargarChatsEnTabla();
     }//GEN-LAST:event_btnNuevoChatActionPerformed
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
@@ -280,12 +357,10 @@ public class FrmChat extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void tblChatsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblChatsMouseClicked
-        // TODO add your handling code here:
 
     }//GEN-LAST:event_tblChatsMouseClicked
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        // TODO add your handling code here:
         Login frame = new Login();
         frame.setVisible(true);
 
@@ -293,32 +368,16 @@ public class FrmChat extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnAgregarContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactosActionPerformed
-        // TODO add your handling code here:
         DlgTelefonos dialog = new DlgTelefonos(this, true, idUsuarioLogeado);
         dialog.setVisible(true);
+        cargarChatsEnTabla();
     }//GEN-LAST:event_btnAgregarContactosActionPerformed
 
     private void btnAgregarContactos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactos1ActionPerformed
-        // TODO add your handling code here:
         DlgContactos frame = new DlgContactos(this, true, idUsuarioLogeado);
         frame.setVisible(true);
-        
     }//GEN-LAST:event_btnAgregarContactos1ActionPerformed
 
-    private void VerChatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VerChatsActionPerformed
-        List<ChatDTO> chats = new ArrayList<>();
-        try {
-            chats = chatBO.consultarChatsDelUsuario(idUsuarioLogeado);
-
-            for (ChatDTO chat : chats) {
-                System.out.println(chat.toString());
-            }
-
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        }
-    }//GEN-LAST:event_VerChatsActionPerformed
-//
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
 //        pnlChat.setSize(620, 430);
@@ -332,7 +391,6 @@ public class FrmChat extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton VerChats;
     private javax.swing.JButton btnAgregarContactos;
     private javax.swing.JButton btnAgregarContactos1;
     private javax.swing.JButton btnCerrarSesion;

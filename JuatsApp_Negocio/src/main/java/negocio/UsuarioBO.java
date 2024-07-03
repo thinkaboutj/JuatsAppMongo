@@ -228,9 +228,8 @@ public class UsuarioBO implements IUsuarioBO{
         } catch (PersistenciaException e){
             throw new NegocioException(e);
         }
-        
     }
-
+    
     @Override
     public void eliminarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
         try {
@@ -239,24 +238,21 @@ public class UsuarioBO implements IUsuarioBO{
             throw new NegocioException(ex);
         }
     }
-
+    
     @Override
     public List<UsuarioDTO> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws NegocioException {
         
         try{
             List<Usuario> listaDeUsuarios = dao.consultarTelefonosQueNoTieneEnContactos(idUsuario);
             List<UsuarioDTO> usuariosConsultados = new ArrayList<>();
-            
             for (int i = 0; i < listaDeUsuarios.size(); i++){
                 UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
                 usuariosConsultados.add(usuario);
             }
             return usuariosConsultados;
-
         } catch (PersistenciaException e){
             throw new NegocioException(e);
         }
-        
     }
 
     @Override
@@ -264,7 +260,7 @@ public class UsuarioBO implements IUsuarioBO{
         try {
             List<UsuarioDTO> usuariosDTO = new ArrayList<>();
             List<Usuario> usuariosEntidades = new ArrayList<>();
-        
+            
             usuariosEntidades = dao.consultarContactosSinChat(idUsuario);
             
             for (Usuario usuariosEntidade : usuariosEntidades) {
