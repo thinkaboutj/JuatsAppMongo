@@ -72,17 +72,17 @@ public class DlgContactos extends javax.swing.JDialog {
 
         tblContactos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Foto", "Telefono", "Id", "Eliminar"
+                "Foto", "Usuario", "Telefono", "Id", "Eliminar"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true
+                false, true, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -93,8 +93,9 @@ public class DlgContactos extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tblContactos);
         if (tblContactos.getColumnModel().getColumnCount() > 0) {
             tblContactos.getColumnModel().getColumn(0).setResizable(false);
-            tblContactos.getColumnModel().getColumn(1).setResizable(false);
+            tblContactos.getColumnModel().getColumn(2).setResizable(false);
             tblContactos.getColumnModel().getColumn(3).setResizable(false);
+            tblContactos.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 670, 500));
@@ -123,11 +124,12 @@ public class DlgContactos extends javax.swing.JDialog {
         }
         if (listaContactos != null) {
             listaContactos.forEach(row -> {
-                Object[] fila = new Object[4];
+                Object[] fila = new Object[5];
                 Icon icono = byteArrayToIcon(row.getImagen());
                 fila[0] = icono;
-                fila[1] = row.getTelefono();
-                fila[2] = row.getId();
+                fila[1] = row.getUsuario();
+                fila[2] = row.getTelefono();
+                fila[3] = row.getId();
                 modeloTabla.addRow(fila);
             });
         }
@@ -153,7 +155,7 @@ public class DlgContactos extends javax.swing.JDialog {
         };
         TableColumn columnaImagen = tblContactos.getColumnModel().getColumn(0);
         columnaImagen.setCellRenderer(new ImageRenderer());
-        int indiceEliminar = 3;
+        int indiceEliminar = 4;
         TableColumnModel modeloColumnas = this.tblContactos.getColumnModel();
         modeloColumnas.getColumn(indiceEliminar).setCellRenderer(new JButtonRenderer("Eliminar"));
         modeloColumnas.getColumn(indiceEliminar).setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
@@ -161,7 +163,7 @@ public class DlgContactos extends javax.swing.JDialog {
     }
 
     public void eliminar() {
-        ObjectId idContacto = new ObjectId((String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 2)));
+        ObjectId idContacto = new ObjectId((String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 3)));
         try {
             int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro que quiere eliminar el contacto?", "Confirmación", JOptionPane.YES_NO_OPTION);
 

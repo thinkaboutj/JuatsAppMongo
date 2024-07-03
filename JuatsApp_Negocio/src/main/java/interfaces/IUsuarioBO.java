@@ -34,5 +34,6 @@ public interface IUsuarioBO {
 
     public List<UsuarioDTO> consultarContactosSinChat(ObjectId idUsuario) throws NegocioException;
 
+    public boolean esContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException;
 
 }

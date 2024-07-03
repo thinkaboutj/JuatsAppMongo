@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -41,7 +43,7 @@ import utilerias.JButtonRenderer;
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
-public class FrmChat extends javax.swing.JFrame {
+public class frmChat extends javax.swing.JFrame {
 
     private final ObjectId idUsuarioLogeado;
     private final IUsuarioBO usuarioBO;
@@ -51,7 +53,7 @@ public class FrmChat extends javax.swing.JFrame {
 
     private String txtRuta;
 
-    public FrmChat(ObjectId idUsuarioLogeado) {
+    public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
         chatBO = new ChatBO();
@@ -72,9 +74,22 @@ public class FrmChat extends javax.swing.JFrame {
                 Object[] fila = new Object[4];
 
                 Icon icono = byteArrayToIcon(row.contacto.getImagen());
+                
+                
                 fila[0] = row.chat.getId().toHexString();
                 fila[1] = icono;
-                fila[2] = row.contacto.getUsuario();
+                
+                
+                try {
+                    if(usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(row.contacto.getId()))){
+                        fila[2] = row.contacto.getUsuario();
+                    } else {
+                        fila[2] = row.contacto.getTelefono();
+                    }
+                } catch (NegocioException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+                
 
                 modeloTabla.addRow(fila);
             });
@@ -412,6 +427,7 @@ public class FrmChat extends javax.swing.JFrame {
     private void btnVerContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerContactosActionPerformed
         DlgContactos frame = new DlgContactos(this, true, idUsuarioLogeado);
         frame.setVisible(true);
+        cargarChatsEnTabla();
     }//GEN-LAST:event_btnVerContactosActionPerformed
 
     private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed

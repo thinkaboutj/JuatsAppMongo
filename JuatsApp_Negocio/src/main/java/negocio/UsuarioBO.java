@@ -254,7 +254,7 @@ public class UsuarioBO implements IUsuarioBO{
             throw new NegocioException(e);
         }
     }
-
+    
     @Override
     public List<UsuarioDTO> consultarContactosSinChat(ObjectId idUsuario) throws NegocioException {
         try {
@@ -269,6 +269,17 @@ public class UsuarioBO implements IUsuarioBO{
             
             return usuariosDTO;
         } catch (PersistenciaException | NoSuchElementException ex) {
+            throw new NegocioException(ex);
+        }
+        
+    }
+
+    @Override
+    public boolean esContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
+        
+        try {
+            return dao.esContacto(idUsuario, idContacto);
+        } catch (PersistenciaException ex) {
             throw new NegocioException(ex);
         }
         

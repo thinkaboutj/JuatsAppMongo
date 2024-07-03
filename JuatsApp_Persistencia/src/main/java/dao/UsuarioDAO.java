@@ -302,7 +302,28 @@ public class UsuarioDAO implements IUsuarioDAO {
 
         return contactosSinChat;
     }
+    
+    @Override
+    public boolean esContacto(ObjectId idUsuario, ObjectId idContacto) throws PersistenciaException {
+        try {
+            Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
 
+            if (usuario != null) {
+                List<ObjectId> contactosIds = usuario.getContactos();
+                if (contactosIds != null && contactosIds.contains(idContacto)) {
+                    return true;
+                }
+            } else {
+                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
+            }
+        } catch (MongoException e) {
+            throw new PersistenciaException("No fue posible verificar el contacto del usuario.", e);
+        }
+
+        return false;
+    }
+
+    
     
    
 }
