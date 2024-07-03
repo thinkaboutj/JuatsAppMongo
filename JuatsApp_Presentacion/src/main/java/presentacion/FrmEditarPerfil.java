@@ -30,13 +30,12 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class FrmEditarPerfil extends javax.swing.JFrame {
-    
+
     private IUsuarioBO usuarioBO;
     private UsuarioDTO usuarioLogeado;
     private ObjectId idUsuarioLogeado;
     private String txtRuta;
-    
-    
+
     public FrmEditarPerfil(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
@@ -44,7 +43,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         this.idUsuarioLogeado = idUsuarioLogeado;
         consultarDatosDelUsuarioYLlenarCamposDeTexto();
     }
-    
+
     // convertir el arreglo de bytes de la imagen del usuario consultado
     // para asi poder mostrar la imagen
     public static Icon byteArrayToIcon(byte[] bytes) {
@@ -81,37 +80,34 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         }
         return null;
     }
-    
-    
-    private void consultarDatosDelUsuarioYLlenarCamposDeTexto(){
+
+    private void consultarDatosDelUsuarioYLlenarCamposDeTexto() {
         try {
             usuarioLogeado = usuarioBO.consultarUsuario(idUsuarioLogeado);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No fue posible consultar sus datos");
         }
-        
-        try{
+
+        try {
             byte[] imagenBytes = usuarioLogeado.getImagen();
             Icon icon = byteArrayToIcon(imagenBytes);
             lblImagen.setIcon(icon);
-        } catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e);
         }
-        
+
         txtUsuario.setText(usuarioLogeado.getUsuario());
         txtContrasena.setText(usuarioLogeado.getContrasena());
         txtTelefono.setText(usuarioLogeado.getTelefono());
-        txtSexo.setText(usuarioLogeado.getTelefono());
-        
-        
+        cbxGenero.setSelectedItem(usuarioLogeado.getSexo());
+
         dcFechaCumple.setDate(usuarioLogeado.getFechaNacimiento());
-        
+
         txtCalle.setText(usuarioLogeado.getDomicilio().getCalle());
         txtColonia.setText(usuarioLogeado.getDomicilio().getColonia());
         txtCodigoPostal.setText(usuarioLogeado.getDomicilio().getCodigoPostal());
         txtNumero.setText(usuarioLogeado.getDomicilio().getNumero());
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -144,7 +140,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         dcFechaCumple = new com.github.lgooddatepicker.components.DatePicker();
         txtUsuario = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        txtSexo = new javax.swing.JTextField();
+        cbxGenero = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Usuario");
@@ -206,9 +202,9 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         jLabel4.setText("Numero:");
         pnlBackground.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 390, -1, -1));
 
+        jLabel6.setText("Genero");
         jLabel6.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Sexo:");
         pnlBackground.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, -1, -1));
 
         txtCalle.addActionListener(new java.awt.event.ActionListener() {
@@ -295,7 +291,9 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Teléfono:");
         pnlBackground.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
-        pnlBackground.add(txtSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 80, 30));
+
+        cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hombre", "Mujer", "Robot", "Ninja", "otro" }));
+        pnlBackground.add(cbxGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 200, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -324,18 +322,18 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         usuarioLogeado.setId(idUsuarioLogeado.toHexString());
         usuarioLogeado.setContrasena(String.valueOf(txtContrasena.getPassword()));
         usuarioLogeado.setFechaNacimiento(dcFechaCumple.getDate());
-        usuarioLogeado.setSexo(txtSexo.getText());
+        usuarioLogeado.setSexo(cbxGenero.getSelectedItem().toString());
         usuarioLogeado.setUsuario(txtUsuario.getText());
         usuarioLogeado.setTelefono(txtTelefono.getText());
-        
+
         DomicilioDTO domicilioDTO = new DomicilioDTO();
         domicilioDTO.setCalle(txtCalle.getText());
         domicilioDTO.setColonia(txtColonia.getText());
         domicilioDTO.setCodigoPostal(txtCodigoPostal.getText());
         domicilioDTO.setNumero(txtNumero.getText());
-        
+
         usuarioLogeado.setDomicilio(domicilioDTO);
-        
+
         try {
             usuarioBO.actualizar(usuarioLogeado);
             this.dispose();
@@ -352,14 +350,14 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
     private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed
         File archivo;
         JFileChooser flcAbrirArchivo = new JFileChooser();
-        flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen","jpg","jpeg","png") );
+        flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen", "jpg", "jpeg", "png"));
         int respuesta = flcAbrirArchivo.showOpenDialog(this);
 
-        if (respuesta == JFileChooser.APPROVE_OPTION ){
-            archivo= flcAbrirArchivo.getSelectedFile();
+        if (respuesta == JFileChooser.APPROVE_OPTION) {
+            archivo = flcAbrirArchivo.getSelectedFile();
             txtRuta = archivo.getAbsolutePath();
-            Image foto= getToolkit().getImage(txtRuta);
-            foto=foto.getScaledInstance(262, 234, 1);
+            Image foto = getToolkit().getImage(txtRuta);
+            foto = foto.getScaledInstance(262, 234, 1);
             lblImagen.setIcon(new ImageIcon(foto));
         }
     }//GEN-LAST:event_btnCargarImagenActionPerformed
@@ -371,7 +369,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
         } else {
             txtContrasena.setEchoChar('*');
         }
-        
+
     }//GEN-LAST:event_verContrasenaActionPerformed
 
 
@@ -380,6 +378,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCargarImagen;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> cbxGenero;
     private com.github.lgooddatepicker.components.DatePicker dcFechaCumple;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -400,7 +399,6 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
     private javax.swing.JTextField txtColonia;
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtNumero;
-    private javax.swing.JTextField txtSexo;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JCheckBox verContrasena;

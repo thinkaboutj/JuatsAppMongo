@@ -61,7 +61,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         try {
             usuarioCollection.insertOne(usuario);
         } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible agregar el usuario.", e);
+            throw new PersistenciaException(e);
         }
     }
 

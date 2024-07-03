@@ -31,20 +31,19 @@ import utilerias.JButtonRenderer;
  * @author crazy
  */
 public class DlgContactos extends javax.swing.JDialog {
-    
+
     private IUsuarioBO usuarioBO;
     private ObjectId idUsuarioLogeado;
-    
-    
+
     public DlgContactos(java.awt.Frame parent, boolean modal, ObjectId idUsuarioLogeado) {
         super(parent, modal);
         initComponents();
         usuarioBO = new UsuarioBO();
         this.idUsuarioLogeado = idUsuarioLogeado;
-        
+
         cargarMetodosIniciales();
     }
-    
+
     // metodo para convertir los bytes de la imagen guardada en la base de datos a icono
     public static ImageIcon byteArrayToIcon(byte[] imageData) {
         if (imageData != null) {
@@ -58,7 +57,7 @@ public class DlgContactos extends javax.swing.JDialog {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -116,7 +115,7 @@ public class DlgContactos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void llenarTablaContactos(List<UsuarioDTO> listaContactos) {
-        DefaultTableModel  modeloTabla = (DefaultTableModel)  this.tblContactos.getModel();
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tblContactos.getModel();
         if (modeloTabla.getRowCount() > 0) {
             for (int i = modeloTabla.getRowCount() - 1; i > -1; i--) {
                 modeloTabla.removeRow(i);
@@ -133,7 +132,7 @@ public class DlgContactos extends javax.swing.JDialog {
             });
         }
     }
-     
+
     private void cargarContactosEnTabla() {
         try {
             List<UsuarioDTO> listaContactos = usuarioBO.consultarContactos(idUsuarioLogeado);
@@ -142,45 +141,48 @@ public class DlgContactos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, ex);
         }
     }
-    
-    protected void cargarMetodosIniciales(){
+
+    protected void cargarMetodosIniciales() {
         this.cargarConfiguracionInicialTablaContactos();
         this.cargarContactosEnTabla();
     }
-    
+
     private void cargarConfiguracionInicialTablaContactos() {
         ActionListener onEliminarClickListener = (ActionEvent e) -> {
             eliminar();
         };
         TableColumn columnaImagen = tblContactos.getColumnModel().getColumn(0);
-        columnaImagen.setCellRenderer(new ImageRenderer());       
+        columnaImagen.setCellRenderer(new ImageRenderer());
         int indiceEliminar = 3;
         TableColumnModel modeloColumnas = this.tblContactos.getColumnModel();
         modeloColumnas.getColumn(indiceEliminar).setCellRenderer(new JButtonRenderer("Eliminar"));
-        modeloColumnas.getColumn(indiceEliminar).setCellEditor(new JButtonCellEditor("Eliminar",onEliminarClickListener));
-        
+        modeloColumnas.getColumn(indiceEliminar).setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+
     }
-    
-    public void eliminar(){
-        ObjectId idContacto = new ObjectId( (String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 2)));
+
+    public void eliminar() {
+        ObjectId idContacto = new ObjectId((String) (tblContactos.getValueAt(tblContactos.getSelectedRow(), 2)));
         try {
-            usuarioBO.eliminarContacto(idUsuarioLogeado, idContacto);
-            JOptionPane.showMessageDialog(this, "Contacto eliminado");
-            this.cargarContactosEnTabla();
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "No se pudo eliminar su contacto");
+            int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro que quiere eliminar el contacto?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                try {
+                    usuarioBO.eliminarContacto(idUsuarioLogeado, idContacto);
+                    JOptionPane.showMessageDialog(this, "Contacto eliminado correctamente");
+                    this.cargarContactosEnTabla();
+                } catch (NegocioException ex) {
+                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el contacto");
+                }
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al intentar eliminar el contacto");
         }
     }
-    
-    
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblContactos;
     // End of variables declaration//GEN-END:variables
-
-
 
 }

@@ -92,7 +92,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         dcFechaCumple = new com.github.lgooddatepicker.components.DatePicker();
         txtUsuario = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        txtSexo = new javax.swing.JTextField();
+        cbxGenero = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Usuario");
@@ -154,9 +154,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jLabel4.setText("Numero:");
         pnlBackground.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 390, -1, -1));
 
+        jLabel6.setText("Genero:");
         jLabel6.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Sexo:");
         pnlBackground.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, -1, -1));
 
         txtCalle.addActionListener(new java.awt.event.ActionListener() {
@@ -243,7 +243,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Teléfono:");
         pnlBackground.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
-        pnlBackground.add(txtSexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 80, 30));
+
+        cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hombre", "Mujer", "Robot", "Ninja", "otro" }));
+        pnlBackground.add(cbxGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 200, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -271,7 +273,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         byte[] bytesImagen = iconToByteArray(lblImagen.getIcon());
         usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
         usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
-        usuarioDTO.setSexo(txtSexo.getText());
+        usuarioDTO.setSexo(cbxGenero.getSelectedItem().toString());
         usuarioDTO.setUsuario(txtUsuario.getText());
         usuarioDTO.setTelefono(txtTelefono.getText());
         usuarioDTO.setImagen(bytesImagen);
@@ -289,7 +291,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
             this.dispose();
         } catch (NegocioException ex) {
-            JOptionPane.showConfirmDialog(this, ex);
+            JOptionPane.showMessageDialog(this, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -329,6 +331,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCargarImagen;
+    private javax.swing.JComboBox<String> cbxGenero;
     private com.github.lgooddatepicker.components.DatePicker dcFechaCumple;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -349,7 +352,6 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JTextField txtColonia;
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtNumero;
-    private javax.swing.JTextField txtSexo;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JCheckBox verContrasena;
