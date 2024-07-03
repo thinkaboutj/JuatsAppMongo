@@ -67,8 +67,20 @@ public class ChatDAO implements IChatDAO{
     }
     
     
+    @Override
+    public Chat consultar(ObjectId id) throws PersistenciaException {
+        try {
+            return chatCollection.find(Filters.eq("_id", id)).first();
+        } catch (MongoException e) {
+            throw new PersistenciaException("No fue posible consultar el chat.", e);
+        }
+    }
     
-    
+    @Override
+    public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException {
+        
+    }
+
    
 
     

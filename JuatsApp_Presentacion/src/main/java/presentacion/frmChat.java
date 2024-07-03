@@ -16,13 +16,16 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -44,6 +47,9 @@ public class FrmChat extends javax.swing.JFrame {
     private final IUsuarioBO usuarioBO;
     private final IChatBO chatBO;
     
+    private ChatDTO chatActual;    
+    
+    private String txtRuta;
     
     public FrmChat(ObjectId idUsuarioLogeado) {
         initComponents();
@@ -137,7 +143,7 @@ public class FrmChat extends javax.swing.JFrame {
     
     public void verChat(){
         ObjectId idChat = new ObjectId( ((String)(tblChats.getValueAt(tblChats.getSelectedRow(), 0))));
-        JOptionPane.showMessageDialog(this, "hola");
+        
         
     }
     
@@ -199,9 +205,15 @@ public class FrmChat extends javax.swing.JFrame {
         btnAgregarContactos = new javax.swing.JButton();
         btnAgregarContactos1 = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblChats = new javax.swing.JTable();
+        Enviar = new javax.swing.JButton();
+        btnCargarImagen = new javax.swing.JButton();
+        lblImagen = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat");
@@ -266,18 +278,28 @@ public class FrmChat extends javax.swing.JFrame {
 
         panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1018, Short.MAX_VALUE)
+                .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 120, 1000, 750));
+        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 1030, 560));
 
         btnNuevoChat.setBackground(new java.awt.Color(0, 51, 102));
         btnNuevoChat.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
@@ -326,6 +348,26 @@ public class FrmChat extends javax.swing.JFrame {
         }
 
         pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 510, 690));
+
+        Enviar.setText("Enviar");
+        pnBackground.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, -1, -1));
+
+        btnCargarImagen.setText("Subir Imagen");
+        btnCargarImagen.setBackground(new java.awt.Color(0, 51, 102));
+        btnCargarImagen.setForeground(new java.awt.Color(255, 255, 255));
+        btnCargarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarImagenActionPerformed(evt);
+            }
+        });
+        pnBackground.add(btnCargarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 820, 120, 30));
+
+        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
+        pnBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 680, 140, 140));
+
+        jTextField1.setText("Tu mensaje aqui...");
+        pnBackground.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 730, 380, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -378,6 +420,21 @@ public class FrmChat extends javax.swing.JFrame {
         frame.setVisible(true);
     }//GEN-LAST:event_btnAgregarContactos1ActionPerformed
 
+    private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed
+        File archivo;
+        JFileChooser flcAbrirArchivo = new JFileChooser();
+        flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen","jpg","jpeg","png") );
+        int respuesta = flcAbrirArchivo.showOpenDialog(this);
+
+        if (respuesta == JFileChooser.APPROVE_OPTION ){
+            archivo= flcAbrirArchivo.getSelectedFile();
+            txtRuta = archivo.getAbsolutePath();
+            Image foto= getToolkit().getImage(txtRuta);
+            foto=foto.getScaledInstance(262, 234, 1);
+            lblImagen.setIcon(new ImageIcon(foto));
+        }
+    }//GEN-LAST:event_btnCargarImagenActionPerformed
+
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
 //        pnlChat.setSize(620, 430);
@@ -391,14 +448,20 @@ public class FrmChat extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Enviar;
     private javax.swing.JButton btnAgregarContactos;
     private javax.swing.JButton btnAgregarContactos1;
+    private javax.swing.JButton btnCargarImagen;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevoChat;
     private javax.swing.JButton btnPerfil;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
     public javax.swing.JTable tblChats;

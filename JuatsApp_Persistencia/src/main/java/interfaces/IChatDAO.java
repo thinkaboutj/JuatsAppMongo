@@ -2,6 +2,7 @@
 package interfaces;
 
 import entidades.Chat;
+import entidades.Mensaje;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
 import java.util.List;
@@ -20,6 +21,11 @@ public interface IChatDAO {
     public void agregar(Chat chat) throws PersistenciaException;
     
     public List<Chat> consultarChatsDelUsuario(ObjectId idUsuario) throws PersistenciaException;
+    
+    public Chat consultar(ObjectId id) throws PersistenciaException;
+    
+    public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException;
+
 
 
 }
