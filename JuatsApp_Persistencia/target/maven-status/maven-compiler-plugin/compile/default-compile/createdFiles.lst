@@ -1,12 +1,10 @@
-interfaces\IChatDAO.class
-interfaces\IMensajeDAO.class
-Conexion\ConexionBD.class
-excepciones\PersistenciaException.class
 pruebas\prueba.class
+interfaces\IChatDAO.class
 entidades\Chat.class
-dao\MensajeDAO.class
+Conexion\ConexionBD.class
 entidades\Domicilio.class
 dao\UsuarioDAO.class
+excepciones\PersistenciaException.class
 interfaces\IUsuarioDAO.class
 entidades\Mensaje.class
 dao\ChatDAO.class

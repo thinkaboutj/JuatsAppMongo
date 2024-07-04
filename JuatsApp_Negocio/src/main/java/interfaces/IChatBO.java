@@ -5,6 +5,7 @@
 package interfaces;
 
 import DTOs.ChatDTO;
+import DTOs.MensajeDTO;
 import excepciones.NegocioException;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -18,6 +19,18 @@ public interface IChatBO {
     public void agregar(ChatDTO chat) throws NegocioException;
     
    public List<ChatDTO> consultarChatsDelUsuario(ObjectId idUsuario) throws NegocioException;
+    
+    public ChatDTO consultar(ObjectId id) throws NegocioException;
+    
+    public void enviarMensaje(ObjectId idChat, MensajeDTO mensaje) throws NegocioException;
 
+    public List<MensajeDTO> obtenerMensajes(ObjectId chatId) throws NegocioException;
+    
+    public List<MensajeDTO> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws NegocioException;
+
+   
+   
+   
+   
     
 }

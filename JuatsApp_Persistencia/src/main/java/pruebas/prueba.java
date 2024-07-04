@@ -7,10 +7,13 @@ package pruebas;
 import dao.ChatDAO;
 import dao.UsuarioDAO;
 import entidades.Chat;
+import entidades.Mensaje;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
 import interfaces.IChatDAO;
 import interfaces.IUsuarioDAO;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -27,13 +30,14 @@ public class prueba {
 
     public static void main(String[] args) {
         IChatDAO chatDAO = new ChatDAO();
-        ObjectId id = new ObjectId("6684baebc0f95c1d815dcd27");
+        ObjectId idChat = new ObjectId("6685da47bfce5874ab2aadd4");
+        Chat chat = new Chat();
         
-        List<Chat> chats = new ArrayList<>();
+        ObjectId idUsuario = new ObjectId("6684baebc0f95c1d815dcd27");
+        Mensaje mensaje = new Mensaje(idUsuario, "Mensajeeee", LocalDateTime.now());
         
         try {
-            chats = chatDAO.consultarChatsDelUsuario(id);
-            System.out.println(chats);
+            System.out.println(chatDAO.obtenerMensajesOrdenadosPorFecha(idChat));
         } catch (PersistenciaException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

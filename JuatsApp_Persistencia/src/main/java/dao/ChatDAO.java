@@ -2,24 +2,15 @@ package dao;
 
 import Conexion.ConexionBD;
 import com.mongodb.MongoException;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Aggregates;
-import static com.mongodb.client.model.Aggregates.lookup;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Aggregates.project;
-import static com.mongodb.client.model.Aggregates.unwind;
 import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.in;
-import static com.mongodb.client.model.Filters.not;
-import static com.mongodb.client.model.Projections.computed;
-import static com.mongodb.client.model.Projections.fields;
-import static com.mongodb.client.model.Projections.include;
+import com.mongodb.client.model.Updates;
 import entidades.Chat;
 import entidades.Mensaje;
 import excepciones.PersistenciaException;
 import interfaces.IChatDAO;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +27,13 @@ import org.bson.types.ObjectId;
 public class ChatDAO implements IChatDAO{
 
     private final MongoCollection<Chat> chatCollection;
+    private final MongoCollection<Mensaje> mensajeCollection;
 
 
     public ChatDAO() {
         this.chatCollection = ConexionBD.getInstance().getDatabase().getCollection("chats", Chat.class);
+        this.mensajeCollection = ConexionBD.getInstance().getDatabase().getCollection("mensajes", Mensaje.class);
+
     }
 
     @Override
@@ -78,11 +72,43 @@ public class ChatDAO implements IChatDAO{
     
     @Override
     public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException {
-        
+        try {
+            chatCollection.updateOne(new Document("_id", idChat), Updates.push("mensajes", mensaje));
+        } catch (Exception e) {
+            throw new PersistenciaException(e);
+        }
+    } 
+    
+    @Override
+    public List<Mensaje> obtenerMensajes(ObjectId chatId) throws PersistenciaException {
+        try {
+            Chat chat = chatCollection.find(Filters.eq("_id", chatId)).first();
+
+            List<Mensaje> mensajesConsultados = chat.getMensajes();
+            
+            return mensajesConsultados;
+        } catch (Exception e) {
+            throw new PersistenciaException("No fue posible obtener los mensajes del chat.", e);
+        }
     }
+    
+    @Override
+    public List<Mensaje> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws PersistenciaException {
+        try {
+            Chat chat = chatCollection.find(Filters.eq("_id", chatId)).first();
+            List<Mensaje> mensajes = chat.getMensajes();
 
-   
+            mensajes.sort((d1, d2) -> {
+                LocalDateTime fecha1 = d1.getFecha_de_registro();
+                LocalDateTime fecha2 = d2.getFecha_de_registro();
+                return fecha1.compareTo(fecha2);
+            });
 
+            return mensajes;
+        } catch (Exception e) {
+            throw new PersistenciaException("No fue posible obtener los mensajes del chat.", e);
+        }
+    }
     
     
     

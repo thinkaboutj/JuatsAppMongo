@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import entidades.Mensaje;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
 import java.util.List;

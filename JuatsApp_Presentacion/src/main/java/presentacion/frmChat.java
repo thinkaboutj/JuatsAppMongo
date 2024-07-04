@@ -61,6 +61,52 @@ public class frmChat extends javax.swing.JFrame {
         this.idUsuarioLogeado = idUsuarioLogeado;
         cargarMetodosIniciales();
     }
+    
+    // convertir el arreglo de bytes de la imagen del usuario consultado
+    // para asi poder mostrar la imagen
+    public static Icon byteArrayToIcon(byte[] bytes) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(bais);
+            if (bufferedImage != null) {
+                return new ImageIcon(bufferedImage);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // convertir el icono del label a un arreglo de bytes
+    public static byte[] iconToByteArray(Icon icon) {
+        if (icon instanceof ImageIcon) {
+            Image image = ((ImageIcon) icon).getImage();
+            BufferedImage bufferedImage = new BufferedImage(
+                    image.getWidth(null),
+                    image.getHeight(null),
+                    BufferedImage.TYPE_INT_RGB
+            );
+            Graphics g = bufferedImage.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                ImageIO.write(bufferedImage, "jpg", baos);
+                return baos.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    
+    public class UsuarioChat {
+        public UsuarioDTO contacto;
+        public ChatDTO chat;
+        public UsuarioChat(UsuarioDTO contacto, ChatDTO chat) {
+            this.contacto = contacto;
+            this.chat = chat;
+        }
+    }
 
     private void llenarTablaChats(List<UsuarioChat> listaChats) {
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tblChats.getModel();
@@ -74,12 +120,8 @@ public class frmChat extends javax.swing.JFrame {
                 Object[] fila = new Object[4];
 
                 Icon icono = byteArrayToIcon(row.contacto.getImagen());
-                
-                
                 fila[0] = row.chat.getId().toHexString();
-                fila[1] = icono;
-                
-                
+                fila[1] = icono;                
                 try {
                     if(usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(row.contacto.getId()))){
                         fila[2] = row.contacto.getUsuario();
@@ -89,23 +131,11 @@ public class frmChat extends javax.swing.JFrame {
                 } catch (NegocioException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                
-
                 modeloTabla.addRow(fila);
             });
         }
     }
 
-    public class UsuarioChat {
-
-        public UsuarioDTO contacto;
-        public ChatDTO chat;
-
-        public UsuarioChat(UsuarioDTO contacto, ChatDTO chat) {
-            this.contacto = contacto;
-            this.chat = chat;
-        }
-    }
 
     private void cargarChatsEnTabla() {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
@@ -145,10 +175,8 @@ public class frmChat extends javax.swing.JFrame {
         ActionListener onVerChatClickListener = (ActionEvent e) -> {
             verChat();
         };
-
         TableColumn columnaImagen = tblChats.getColumnModel().getColumn(1);
         columnaImagen.setCellRenderer(new ImageRenderer());
-
         columnaImagen.setCellRenderer(new ImageRenderer());
         int indiceVerChat = 3;
         TableColumnModel modeloColumnas = this.tblChats.getColumnModel();
@@ -162,42 +190,6 @@ public class frmChat extends javax.swing.JFrame {
 
     }
 
-    // convertir el arreglo de bytes de la imagen del usuario consultado
-    // para asi poder mostrar la imagen
-    public static Icon byteArrayToIcon(byte[] bytes) {
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        try {
-            BufferedImage bufferedImage = ImageIO.read(bais);
-            if (bufferedImage != null) {
-                return new ImageIcon(bufferedImage);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // convertir el icono del label a un arreglo de bytes
-    public static byte[] iconToByteArray(Icon icon) {
-        if (icon instanceof ImageIcon) {
-            Image image = ((ImageIcon) icon).getImage();
-            BufferedImage bufferedImage = new BufferedImage(
-                    image.getWidth(null),
-                    image.getHeight(null),
-                    BufferedImage.TYPE_INT_RGB
-            );
-            Graphics g = bufferedImage.createGraphics();
-            g.drawImage(image, 0, 0, null);
-            g.dispose();
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                ImageIO.write(bufferedImage, "jpg", baos);
-                return baos.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -211,8 +203,10 @@ public class frmChat extends javax.swing.JFrame {
         btnAgregarContactos = new javax.swing.JButton();
         btnVerContactos = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTable2 = new javax.swing.JTable();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblChats = new javax.swing.JTable();
@@ -287,25 +281,64 @@ public class frmChat extends javax.swing.JFrame {
 
         panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "imagen", "texto", "fecha hora"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "imagen", "texto", "fecha hora", "Editar"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1018, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(39, 39, 39)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(36, 36, 36)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 1030, 560));
@@ -469,7 +502,9 @@ public class frmChat extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel panelPrincipal;

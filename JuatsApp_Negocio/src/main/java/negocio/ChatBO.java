@@ -5,17 +5,15 @@
 package negocio;
 
 import DTOs.ChatDTO;
-import com.mongodb.MongoException;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Filters.in;
+import DTOs.MensajeDTO;
 import dao.ChatDAO;
 import entidades.Chat;
+import entidades.Mensaje;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IChatBO;
 import interfaces.IChatDAO;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +46,12 @@ public class ChatBO implements IChatBO{
         return chatDTO;
     }
     
+    private MensajeDTO transformarEnDTO(Mensaje mensaje){
+        return new MensajeDTO(mensaje.getIdUsuario(), mensaje.getTexto(), mensaje.getImagen(), mensaje.getFecha_de_registro());
+    }
+    private Mensaje transformarEnEntidad(MensajeDTO mensaje){
+        return new Mensaje(mensaje.getIdUsuario(), mensaje.getTexto(), mensaje.getImagen(), mensaje.getFecha_de_registro());
+    }
     
     @Override
     public void agregar(ChatDTO chatDTO) throws NegocioException {
@@ -75,8 +79,54 @@ public class ChatBO implements IChatBO{
         } catch (PersistenciaException ex) {
             throw new NegocioException();
         }
+    }
+
+    @Override
+    public ChatDTO consultar(ObjectId id) throws NegocioException {        
+        try {
+            return transformarEnDTO(dao.consultar(id));
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+    }
+
+    @Override
+    public void enviarMensaje(ObjectId idChat, MensajeDTO mensaje) throws NegocioException {
         
-        
+        try {
+            dao.enviarMensaje(idChat, transformarEnEntidad(mensaje));
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+    }
+
+    @Override
+    public List<MensajeDTO> obtenerMensajes(ObjectId chatId) throws NegocioException {
+        try {
+            List<Mensaje> mensajes = dao.obtenerMensajes(chatId);
+            List<MensajeDTO> mensajesDTO = new ArrayList<>();
+            
+            for(int i = 0; i < mensajes.size(); i++){
+                mensajesDTO.add(transformarEnDTO(mensajes.get(i)));
+            }
+            return mensajesDTO;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+    }
+
+    @Override
+    public List<MensajeDTO> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws NegocioException {
+        try {
+            List<Mensaje> mensajes = dao.obtenerMensajesOrdenadosPorFecha(chatId);
+            List<MensajeDTO> mensajesDTO = new ArrayList<>();
+            for(int i = 0; i < mensajes.size(); i++){
+                mensajesDTO.add(transformarEnDTO(mensajes.get(i)));
+            }
+            return mensajesDTO;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }   
     }
     
 

@@ -26,6 +26,10 @@ public interface IChatDAO {
     
     public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException;
 
+    public List<Mensaje> obtenerMensajes(ObjectId chatId) throws PersistenciaException;
+    
+    public List<Mensaje> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws PersistenciaException;
 
+    
 
 }

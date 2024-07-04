@@ -1,6 +1,6 @@
 package DTOs;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.bson.types.ObjectId;
 
 /**
@@ -10,41 +10,34 @@ import org.bson.types.ObjectId;
  */
 public class MensajeDTO {
     
-    private ObjectId id;
     private ObjectId idUsuario;
     private String texto;
-    private byte[] imagen; // Arreglo de bytes para la imagen
-    private LocalDate fecha_de_registro;
-    
+    private byte[] imagen; 
+    private LocalDateTime fecha_de_registro;
+
     public MensajeDTO() {
     }
     
-    public MensajeDTO(ObjectId id, ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
-        this.id = id;
+    public MensajeDTO(ObjectId idUsuario, String texto, byte[] imagen,  LocalDateTime fecha_de_registro) {
+        this.idUsuario = idUsuario;
+        this.texto = texto;
+        this.imagen = imagen;
+        this.fecha_de_registro = fecha_de_registro;
+    }
+    
+    public MensajeDTO(ObjectId idUsuario, String texto, LocalDateTime fecha_de_registro) {
         this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public MensajeDTO(ObjectId id, ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
-        this.id = id;
+    public MensajeDTO(ObjectId idUsuario, byte[] imagen, LocalDateTime fecha_de_registro) {
         this.idUsuario = idUsuario;
+        this.texto = null;
         this.imagen = imagen;
-        this.fecha_de_registro = fecha_de_registro;
-    }
-    
-    
-    public MensajeDTO(ObjectId idUsuario, String texto, LocalDate fecha_de_registro) {
-        this.idUsuario = idUsuario;
-        this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
     }
 
-    public MensajeDTO(ObjectId idUsuario, byte[] imagen, LocalDate fecha_de_registro) {
-        this.idUsuario = idUsuario;
-        this.imagen = imagen;
-        this.fecha_de_registro = fecha_de_registro;
-    }
 
     public ObjectId getUsuarioId() {
         return idUsuario;
@@ -70,20 +63,12 @@ public class MensajeDTO {
         this.imagen = imagen;
     }
 
-    public LocalDate getFecha_de_registro() {
+    public LocalDateTime getFecha_de_registro() {
         return fecha_de_registro;
     }
 
-    public void setFecha_de_registro(LocalDate fecha_de_registro) {
+    public void setFecha_de_registro(LocalDateTime fecha_de_registro) {
         this.fecha_de_registro = fecha_de_registro;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
     }
 
     public ObjectId getIdUsuario() {
@@ -94,7 +79,10 @@ public class MensajeDTO {
         this.idUsuario = idUsuario;
     }
 
-    
+    @Override
+    public String toString() {
+        return "MensajeDTO{" + "idUsuario=" + idUsuario + ", texto=" + texto + ", imagen=" + imagen + ", fecha_de_registro=" + fecha_de_registro + '}';
+    }
     
 
 }
