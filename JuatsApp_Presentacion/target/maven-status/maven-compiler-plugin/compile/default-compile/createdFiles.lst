@@ -5,6 +5,7 @@ presentacion\FrmEditarPerfil$2.class
 utilerias\ComboItems.class
 main\Main.class
 presentacion\FrmRegistroUsuario$4.class
+presentacion\FrameEliminar.class
 presentacion\frmChat$6.class
 presentacion\DlgNuevoChat.class
 presentacion\PnlChat$1.class
@@ -14,10 +15,8 @@ presentacion\DlgTelefonos.class
 presentacion\frmChat$3.class
 utilerias\JButtonCellEditor.class
 presentacion\DlgContactos$1.class
-presentacion\frmChat$PanelMensajes$MensajeBurbuja.class
 presentacion\frmChat$5.class
 presentacion\Login.class
-presentacion\frmChat$PanelMensajes.class
 presentacion\FrmEditarPerfil.class
 presentacion\frmChat$UsuarioChat.class
 presentacion\frmChat$2.class
@@ -29,15 +28,18 @@ presentacion\frmChat.class
 presentacion\frmChat$4.class
 presentacion\FrmEditarPerfil$4.class
 presentacion\Login$1.class
+presentacion\FrameEditar$1.class
 presentacion\frmChat$8.class
 utilerias\JButtonCell.class
 presentacion\DlgContactos.class
 utilerias\JButtonRenderer.class
 presentacion\FrmRegistroUsuario$3.class
 utilerias\ImageRenderer.class
+presentacion\FrameEditar.class
 presentacion\FrmEditarPerfil$5.class
 presentacion\frmChat$1.class
 presentacion\FrmEditarPerfil$1.class
 utilerias\RoundedBorder.class
 presentacion\frmChat$7.class
+presentacion\FrameEliminar$1.class
 presentacion\Login$2.class

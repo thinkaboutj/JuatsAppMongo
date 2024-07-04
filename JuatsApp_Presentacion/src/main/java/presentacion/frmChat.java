@@ -15,16 +15,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -242,8 +238,8 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-  private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
+  
+    private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     pnlMensajes.removeAll();
     pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
@@ -265,7 +261,8 @@ public class frmChat extends javax.swing.JFrame {
             wrapperPanel.setLayout(new BorderLayout());
             wrapperPanel.setOpaque(false);
             
-            if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
+            boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
+            if (esMensajePropio) {
                 panelMensaje.setBackground(new Color(0, 51, 102)); // Azul oscuro original
                 txtMensaje.setForeground(Color.WHITE);
                 wrapperPanel.add(panelMensaje, BorderLayout.EAST);
@@ -278,6 +275,35 @@ public class frmChat extends javax.swing.JFrame {
             panelMensaje.add(txtMensaje, BorderLayout.CENTER);
             panelMensaje.setMaximumSize(new Dimension(400, 1500)); // Limitar el ancho máximo
             
+            // Agregar MouseListener al panelMensaje si es mensaje propio
+            if (esMensajePropio) {
+                panelMensaje.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        int option = JOptionPane.showOptionDialog(null, 
+                            "¿Qué deseas hacer con este mensaje?", 
+                            "Opciones de Mensaje", 
+                            JOptionPane.YES_NO_CANCEL_OPTION, 
+                            JOptionPane.QUESTION_MESSAGE, 
+                            null, 
+                            new String[]{"Editar", "Eliminar", "Cancelar"}, 
+                            "Cancelar");
+                        
+                        if (option == JOptionPane.YES_OPTION) {
+                            // Lógica para redirigir a frame de editar
+                            // Ejemplo:
+                            FrameEditar frameEditar = new FrameEditar(mensaje);
+                            frameEditar.setVisible(true);
+                        } else if (option == JOptionPane.NO_OPTION) {
+                            // Lógica para redirigir a frame de eliminar
+                            // Ejemplo:
+                            FrameEliminar frameEliminar = new FrameEliminar(mensaje);
+                            frameEliminar.setVisible(true);
+                        }
+                    }
+                });
+            }
+
             pnlMensajes.add(wrapperPanel);
             pnlMensajes.add(Box.createVerticalStrut(10)); // Espacio entre mensajes
         }
@@ -295,113 +321,7 @@ public class frmChat extends javax.swing.JFrame {
         }
     });
 }
-   public class PanelMensajes extends JPanel {
-    private static final int ANCHO_MENSAJE = 300;
-    private static final int RADIO_ESQUINA = 15;
-    private static final int PADDING = 10;
 
-    public void cargarMensajesEnPanel(List<MensajeDTO> mensajes, String idUsuarioLogeado) {
-        removeAll();
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(new Color(230, 230, 230)); // Fondo gris claro
-
-        if (mensajes != null && !mensajes.isEmpty()) {
-            for (MensajeDTO mensaje : mensajes) {
-                JPanel wrapperPanel = new JPanel(new FlowLayout(
-                        mensaje.getIdUsuario().equals(idUsuarioLogeado) ? FlowLayout.RIGHT : FlowLayout.LEFT));
-                wrapperPanel.setOpaque(false);
-
-                MensajeBurbuja burbuja = new MensajeBurbuja(mensaje.getTexto(), 
-                        mensaje.getIdUsuario().equals(idUsuarioLogeado));
-                wrapperPanel.add(burbuja);
-
-                add(wrapperPanel);
-                add(Box.createVerticalStrut(10)); // Espacio entre mensajes
-            }
-        }
-
-        add(Box.createVerticalGlue());
-        revalidate();
-        repaint();
-
-        SwingUtilities.invokeLater(() -> {
-            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
-            if (scrollPane != null) {
-                JScrollBar vertical = scrollPane.getVerticalScrollBar();
-                vertical.setValue(vertical.getMaximum());
-            }
-        });
-    }
-
-    private class MensajeBurbuja extends JPanel {
-        private String texto;
-        private boolean esMensajePropio;
-
-        public MensajeBurbuja(String texto, boolean esMensajePropio) {
-            this.texto = texto;
-            this.esMensajePropio = esMensajePropio;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            int width = getWidth();
-            int height = getHeight();
-
-            // Dibujar el fondo redondeado
-            g2d.setColor(esMensajePropio ? new Color(0, 51, 102) : Color.WHITE);
-            g2d.fill(new RoundRectangle2D.Float(0, 0, width, height, RADIO_ESQUINA, RADIO_ESQUINA));
-
-            // Dibujar el texto
-            g2d.setColor(esMensajePropio ? Color.WHITE : Color.BLACK);
-            g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-            drawString(g2d, texto, PADDING, PADDING, width - 2 * PADDING);
-
-            g2d.dispose();
-        }
-
-        private void drawString(Graphics2D g, String text, int x, int y, int width) {
-            FontMetrics fm = g.getFontMetrics();
-            int lineHeight = fm.getHeight();
-
-            String[] words = text.split("\\s+");
-            StringBuilder line = new StringBuilder();
-
-            for (String word : words) {
-                if (fm.stringWidth(line + " " + word) < width) {
-                    line.append(word).append(" ");
-                } else {
-                    g.drawString(line.toString(), x, y);
-                    y += lineHeight;
-                    line = new StringBuilder(word + " ");
-                }
-            }
-            g.drawString(line.toString(), x, y);
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            FontMetrics fm = getFontMetrics(getFont());
-            int lines = 1;
-            int lineWidth = 0;
-            for (String word : texto.split("\\s+")) {
-                int wordWidth = fm.stringWidth(word + " ");
-                if (lineWidth + wordWidth > ANCHO_MENSAJE - 2 * PADDING) {
-                    lines++;
-                    lineWidth = wordWidth;
-                } else {
-                    lineWidth += wordWidth;
-                }
-            }
-            int height = lines * fm.getHeight() + 2 * PADDING;
-            return new Dimension(ANCHO_MENSAJE, height);
-        }
-    }
-}
   
   @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
