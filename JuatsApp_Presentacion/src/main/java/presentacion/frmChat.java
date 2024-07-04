@@ -235,41 +235,48 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
+    pnlMensajes.removeAll();
+    pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
-    private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
-        pnlMensajes.removeAll();
-
-        if (mensajes != null && !mensajes.isEmpty()) {
-            for (MensajeDTO mensaje : mensajes) {
-                JPanel panelMensaje = new JPanel();
-                panelMensaje.setLayout(new BorderLayout());
-
-                JLabel lblMensaje = new JLabel(mensaje.getTexto());
-                lblMensaje.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
-                if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
-                    panelMensaje.setBackground(new Color(200, 230, 255));
-                    panelMensaje.add(lblMensaje, BorderLayout.EAST);
-                } else {
-                    panelMensaje.setBackground(new Color(230, 230, 230));
-                    panelMensaje.add(lblMensaje, BorderLayout.WEST);
-                }
-
-                pnlMensajes.add(panelMensaje);
+    if (mensajes != null && !mensajes.isEmpty()) {
+        for (MensajeDTO mensaje : mensajes) {
+            JPanel panelMensaje = new JPanel();
+            panelMensaje.setLayout(new BorderLayout());
+            JLabel lblMensaje = new JLabel(mensaje.getTexto());
+            lblMensaje.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            
+            if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
+                panelMensaje.setBackground(new Color(0, 51, 102)); // Color azul oscuro
+                lblMensaje.setForeground(Color.WHITE);
+                panelMensaje.add(lblMensaje, BorderLayout.CENTER);
+                JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                wrapper.setOpaque(false);
+                wrapper.add(panelMensaje);
+                pnlMensajes.add(wrapper);
+            } else {
+                panelMensaje.setBackground(new Color(230, 230, 230)); // Gris claro
+                panelMensaje.add(lblMensaje, BorderLayout.CENTER);
+                JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                wrapper.setOpaque(false);
+                wrapper.add(panelMensaje);
+                pnlMensajes.add(wrapper);
             }
         }
+    }
 
-        pnlMensajes.revalidate();
-        pnlMensajes.repaint();
+    pnlMensajes.revalidate();
+    pnlMensajes.repaint();
 
-        // Scroll hasta el último mensaje
+    // Scroll hasta el último mensaje
+    SwingUtilities.invokeLater(() -> {
         JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
         if (scrollPane != null) {
             JScrollBar vertical = scrollPane.getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());
         }
-    }
-
+    });
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
