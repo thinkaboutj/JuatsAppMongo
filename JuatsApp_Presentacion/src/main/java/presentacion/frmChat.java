@@ -12,6 +12,7 @@ import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -235,7 +237,8 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
+    
+    private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     pnlMensajes.removeAll();
     pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
@@ -243,8 +246,12 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         for (MensajeDTO mensaje : mensajes) {
             JPanel panelMensaje = new JPanel();
             panelMensaje.setLayout(new BorderLayout());
-            JLabel lblMensaje = new JLabel(mensaje.getTexto());
+            JLabel lblMensaje = new JLabel("<html><body style='width: 150px'>" + mensaje.getTexto() + "</body></html>");
             lblMensaje.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            
+            // Establecer un tamaño mínimo para el panel de mensaje
+            panelMensaje.setMinimumSize(new Dimension(200, 40));
+            panelMensaje.setMaximumSize(new Dimension(300, 1000));
             
             if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
                 panelMensaje.setBackground(new Color(0, 51, 102)); // Color azul oscuro
@@ -262,8 +269,14 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 wrapper.add(panelMensaje);
                 pnlMensajes.add(wrapper);
             }
+            
+            // Añadir un pequeño espacio vertical entre mensajes
+            pnlMensajes.add(Box.createVerticalStrut(10));
         }
     }
+    
+    // Añadir un panel de relleno al final para empujar los mensajes hacia arriba
+    pnlMensajes.add(Box.createVerticalGlue());
 
     pnlMensajes.revalidate();
     pnlMensajes.repaint();
@@ -277,6 +290,7 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         }
     });
 }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
