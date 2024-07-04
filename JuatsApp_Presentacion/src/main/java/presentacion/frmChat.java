@@ -208,7 +208,17 @@ public class frmChat extends javax.swing.JFrame {
                 JLabel lblContacto = new JLabel();
                 Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
                 lblContacto.setIcon(icono);
-                lblContacto.setText(usuarioChat.contacto.getUsuario());
+                
+                try {
+                    if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))){
+                        lblContacto.setText(usuarioChat.contacto.getUsuario());
+                    } else {
+                        lblContacto.setText(usuarioChat.contacto.getTelefono());
+                    }
+                } catch (NegocioException ex){
+                    JOptionPane.showMessageDialog(this, "no se pudo");
+                }
+                
                 lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
                 lblContacto.addMouseListener(new MouseAdapter() {
                     @Override
@@ -240,87 +250,87 @@ public class frmChat extends javax.swing.JFrame {
     }
   
     private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
-    pnlMensajes.removeAll();
-    pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
+        pnlMensajes.removeAll();
+        pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
-    if (mensajes != null && !mensajes.isEmpty()) {
-        for (MensajeDTO mensaje : mensajes) {
-            JPanel panelMensaje = new JPanel();
-            panelMensaje.setLayout(new BorderLayout());
-            panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-            
-            JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
-            txtMensaje.setEditable(false);
-            txtMensaje.setLineWrap(true);
-            txtMensaje.setWrapStyleWord(true);
-            txtMensaje.setOpaque(false);
-            txtMensaje.setBorder(null);
-            txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16)); // Aumentar el tamaño de la fuente
-            
-            JPanel wrapperPanel = new JPanel();
-            wrapperPanel.setLayout(new BorderLayout());
-            wrapperPanel.setOpaque(false);
-            
-            boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
-            if (esMensajePropio) {
-                panelMensaje.setBackground(new Color(0, 51, 102)); // Azul oscuro original
-                txtMensaje.setForeground(Color.WHITE);
-                wrapperPanel.add(panelMensaje, BorderLayout.EAST);
-            } else {
-                panelMensaje.setBackground(new Color(230, 230, 230)); // Gris claro
-                txtMensaje.setForeground(Color.BLACK);
-                wrapperPanel.add(panelMensaje, BorderLayout.WEST);
-            }
-            
-            panelMensaje.add(txtMensaje, BorderLayout.CENTER);
-            panelMensaje.setMaximumSize(new Dimension(400, 1500)); // Limitar el ancho máximo
-            
-            // Agregar MouseListener al panelMensaje si es mensaje propio
-            if (esMensajePropio) {
-                panelMensaje.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        int option = JOptionPane.showOptionDialog(null, 
-                            "¿Qué deseas hacer con este mensaje?", 
-                            "Opciones de Mensaje", 
-                            JOptionPane.YES_NO_CANCEL_OPTION, 
-                            JOptionPane.QUESTION_MESSAGE, 
-                            null, 
-                            new String[]{"Editar", "Eliminar", "Cancelar"}, 
-                            "Cancelar");
-                        
-                        if (option == JOptionPane.YES_OPTION) {
-                            // Lógica para redirigir a frame de editar
-                            // Ejemplo:
-                            FrameEditar frameEditar = new FrameEditar(mensaje);
-                            frameEditar.setVisible(true);
-                        } else if (option == JOptionPane.NO_OPTION) {
-                            // Lógica para redirigir a frame de eliminar
-                            // Ejemplo:
-                            FrameEliminar frameEliminar = new FrameEliminar(mensaje);
-                            frameEliminar.setVisible(true);
+        if (mensajes != null && !mensajes.isEmpty()) {
+            for (MensajeDTO mensaje : mensajes) {
+                JPanel panelMensaje = new JPanel();
+                panelMensaje.setLayout(new BorderLayout());
+                panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+
+                JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
+                txtMensaje.setEditable(false);
+                txtMensaje.setLineWrap(true);
+                txtMensaje.setWrapStyleWord(true);
+                txtMensaje.setOpaque(false);
+                txtMensaje.setBorder(null);
+                txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16)); // Aumentar el tamaño de la fuente
+
+                JPanel wrapperPanel = new JPanel();
+                wrapperPanel.setLayout(new BorderLayout());
+                wrapperPanel.setOpaque(false);
+
+                boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
+                if (esMensajePropio) {
+                    panelMensaje.setBackground(new Color(0, 51, 102)); // Azul oscuro original
+                    txtMensaje.setForeground(Color.WHITE);
+                    wrapperPanel.add(panelMensaje, BorderLayout.EAST);
+                } else {
+                    panelMensaje.setBackground(new Color(230, 230, 230)); // Gris claro
+                    txtMensaje.setForeground(Color.BLACK);
+                    wrapperPanel.add(panelMensaje, BorderLayout.WEST);
+                }
+
+                panelMensaje.add(txtMensaje, BorderLayout.CENTER);
+                panelMensaje.setMaximumSize(new Dimension(400, 1500)); // Limitar el ancho máximo
+
+                // Agregar MouseListener al panelMensaje si es mensaje propio
+                if (esMensajePropio) {
+                    panelMensaje.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            int option = JOptionPane.showOptionDialog(null, 
+                                "¿Qué deseas hacer con este mensaje?", 
+                                "Opciones de Mensaje", 
+                                JOptionPane.YES_NO_CANCEL_OPTION, 
+                                JOptionPane.QUESTION_MESSAGE, 
+                                null, 
+                                new String[]{"Editar", "Eliminar", "Cancelar"}, 
+                                "Cancelar");
+
+                            if (option == JOptionPane.YES_OPTION) {
+                                // Lógica para redirigir a frame de editar
+                                // Ejemplo:
+                                FrameEditar frameEditar = new FrameEditar(mensaje);
+                                frameEditar.setVisible(true);
+                            } else if (option == JOptionPane.NO_OPTION) {
+                                // Lógica para redirigir a frame de eliminar
+                                // Ejemplo:
+                                FrameEliminar frameEliminar = new FrameEliminar(mensaje);
+                                frameEliminar.setVisible(true);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+                pnlMensajes.add(wrapperPanel);
+                pnlMensajes.add(Box.createVerticalStrut(10)); // Espacio entre mensajes
             }
-
-            pnlMensajes.add(wrapperPanel);
-            pnlMensajes.add(Box.createVerticalStrut(10)); // Espacio entre mensajes
         }
+
+        pnlMensajes.add(Box.createVerticalGlue());
+        pnlMensajes.revalidate();
+        pnlMensajes.repaint();
+
+        SwingUtilities.invokeLater(() -> {
+            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
+            if (scrollPane != null) {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            }
+        });
     }
-    
-    pnlMensajes.add(Box.createVerticalGlue());
-    pnlMensajes.revalidate();
-    pnlMensajes.repaint();
-
-    SwingUtilities.invokeLater(() -> {
-        JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
-        if (scrollPane != null) {
-            JScrollBar vertical = scrollPane.getVerticalScrollBar();
-            vertical.setValue(vertical.getMaximum());
-        }
-    });
-}
 
   
   @SuppressWarnings("unchecked")

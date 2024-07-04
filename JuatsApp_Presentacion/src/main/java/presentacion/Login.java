@@ -56,7 +56,7 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setText("Teléfono: ");
         pnBackground.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
 
-        txtTelefonoLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        txtTelefonoLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         pnBackground.add(txtTelefonoLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 240, -1));
         pnBackground.add(txtContrasenaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 240, -1));
 
