@@ -5,6 +5,7 @@
 package presentacion;
 
 import DTOs.ChatDTO;
+import DTOs.MensajeDTO;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IChatBO;
@@ -18,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -182,12 +184,110 @@ public class frmChat extends javax.swing.JFrame {
         TableColumnModel modeloColumnas = this.tblChats.getColumnModel();
         modeloColumnas.getColumn(indiceVerChat).setCellRenderer(new JButtonRenderer("Ver chat"));
         modeloColumnas.getColumn(indiceVerChat).setCellEditor(new JButtonCellEditor("Ver chat", onVerChatClickListener));
-
+        
     }
 
+    
+    private void llenarTablasMensajes(List<MensajeDTO> listaMensajes) {
+        DefaultTableModel modeloTablaDelWey = (DefaultTableModel) this.tblMensajesDelOtroWey.getModel();
+        DefaultTableModel modeloTablaMios = (DefaultTableModel) this.tblMensajesMios.getModel();
+        if (modeloTablaDelWey.getRowCount() > 0) {
+            for (int i = modeloTablaDelWey.getRowCount() - 1; i > -1; i--) {
+                modeloTablaDelWey.removeRow(i);
+            }
+        }
+        if (modeloTablaMios.getRowCount() > 0) {
+            for (int i = modeloTablaMios.getRowCount() - 1; i > -1; i--) {
+                modeloTablaMios.removeRow(i);
+            }
+        }
+        if (listaMensajes != null) {
+            for (int i = 0; i < listaMensajes.size(); i++){
+                if(listaMensajes.get(i).getIdUsuario().equals(idUsuarioLogeado)){
+                    
+                    listaMensajes.forEach(row -> {
+                        Object[] fila = new Object[4];
+                        Icon icono = byteArrayToIcon(row.getImagen());
+                        fila[0] = icono;
+                        fila[1] = row.getTexto();
+                        fila[2] = row.getFecha_de_registro();
+                        modeloTablaMios.addRow(fila);
+                    });
+                    listaMensajes.forEach(row -> {
+                        Object[] fila = new Object[3];
+                        Icon icono = byteArrayToIcon(null);
+                        fila[0] = icono;
+                        fila[1] = null;
+                        fila[2] = null;
+                        modeloTablaDelWey.addRow(fila);
+                    });
+                } else {
+                    listaMensajes.forEach(row -> {
+                        Object[] fila = new Object[3];
+                        Icon icono = byteArrayToIcon(row.getImagen());
+                        fila[0] = icono;
+                        fila[1] = row.getTexto();
+                        fila[2] = row.getFecha_de_registro();
+                        modeloTablaDelWey.addRow(fila);
+                    });
+                    listaMensajes.forEach(row -> {
+                        Object[] fila = new Object[4];
+                        fila[0] = null;
+                        fila[1] = null;
+                        fila[2] = null;
+                        modeloTablaMios.addRow(fila);
+                    });
+                }
+            }
+        }        
+    }
+
+    private void cargarMensajesEnTablas() {
+        try {
+            List<MensajeDTO> listaMensajes = chatBO.obtenerMensajesOrdenadosPorFecha(chatActual.getId());
+            llenarTablasMensajes(listaMensajes);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    protected void cargarMetodosInicialesDeLaTablaDeMensajes() {
+        this.cargarConfiguracionInicialTablaMensajes();
+        this.cargarMensajesEnTablas();
+    }
+
+    private void cargarConfiguracionInicialTablaMensajes() {
+        ActionListener onEditarClickListener = (ActionEvent e) -> {
+            editar();
+        };
+        
+        TableColumn columnaImagen = tblMensajesMios.getColumnModel().getColumn(0);
+        columnaImagen.setCellRenderer(new ImageRenderer());
+        
+        TableColumn columnaImagen2 = tblMensajesDelOtroWey.getColumnModel().getColumn(0);
+        columnaImagen.setCellRenderer(new ImageRenderer());
+        
+        int indiceEditar = 3;
+        
+        TableColumnModel modeloColumnas = this.tblMensajesMios.getColumnModel();
+        modeloColumnas.getColumn(indiceEditar).setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceEditar).setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+    }    
+    
+    public void editar(){
+        JOptionPane.showMessageDialog(this, "hola");
+        
+    }
+    
     public void verChat() {
         ObjectId idChat = new ObjectId(((String) (tblChats.getValueAt(tblChats.getSelectedRow(), 0))));
-
+        try {
+            this.chatActual = chatBO.consultar(idChat);
+            cargarMetodosInicialesDeLaTablaDeMensajes();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo consultar el chat");
+        }
     }
 
 
@@ -204,16 +304,16 @@ public class frmChat extends javax.swing.JFrame {
         btnVerContactos = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblMensajesDelOtroWey = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblMensajesMios = new javax.swing.JTable();
         btnNuevoChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblChats = new javax.swing.JTable();
         Enviar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
         lblImagen = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtMensaje = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat");
@@ -281,7 +381,7 @@ public class frmChat extends javax.swing.JFrame {
 
         panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblMensajesDelOtroWey.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -293,21 +393,21 @@ public class frmChat extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
+        jScrollPane3.setViewportView(tblMensajesDelOtroWey);
+        if (tblMensajesDelOtroWey.getColumnModel().getColumnCount() > 0) {
+            tblMensajesDelOtroWey.getColumnModel().getColumn(0).setResizable(false);
+            tblMensajesDelOtroWey.getColumnModel().getColumn(1).setResizable(false);
+            tblMensajesDelOtroWey.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblMensajesMios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -317,8 +417,22 @@ public class frmChat extends javax.swing.JFrame {
             new String [] {
                 "imagen", "texto", "fecha hora", "Editar"
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblMensajesMios);
+        if (tblMensajesMios.getColumnModel().getColumnCount() > 0) {
+            tblMensajesMios.getColumnModel().getColumn(0).setResizable(false);
+            tblMensajesMios.getColumnModel().getColumn(1).setResizable(false);
+            tblMensajesMios.getColumnModel().getColumn(2).setResizable(false);
+            tblMensajesMios.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -392,6 +506,11 @@ public class frmChat extends javax.swing.JFrame {
         pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 510, 690));
 
         Enviar.setText("Enviar");
+        Enviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EnviarActionPerformed(evt);
+            }
+        });
         pnBackground.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, -1, -1));
 
         btnCargarImagen.setText("Subir Imagen");
@@ -408,8 +527,13 @@ public class frmChat extends javax.swing.JFrame {
         lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
         pnBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 680, 140, 140));
 
-        jTextField1.setText("Tu mensaje aqui...");
-        pnBackground.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 730, 380, -1));
+        txtMensaje.setText("Tu mensaje aqui...");
+        txtMensaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMensajeActionPerformed(evt);
+            }
+        });
+        pnBackground.add(txtMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 730, 380, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -478,6 +602,25 @@ public class frmChat extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCargarImagenActionPerformed
 
+    private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
+        // TODO add your handling code here:
+        byte[] array = iconToByteArray(lblImagen.getIcon());
+        
+        MensajeDTO mensajeDTO = new MensajeDTO(idUsuarioLogeado, txtMensaje.getText(), array, LocalDateTime.now());
+        
+        try {
+            chatBO.enviarMensaje(this.chatActual.getId(), mensajeDTO);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Si se hizo");
+        }
+        cargarMetodosInicialesDeLaTablaDeMensajes();
+        
+    }//GEN-LAST:event_EnviarActionPerformed
+
+    private void txtMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMensajeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMensajeActionPerformed
+
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
 //        pnlChat.setSize(620, 430);
@@ -503,12 +646,12 @@ public class frmChat extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
     public javax.swing.JTable tblChats;
+    private javax.swing.JTable tblMensajesDelOtroWey;
+    private javax.swing.JTable tblMensajesMios;
+    private javax.swing.JTextField txtMensaje;
     // End of variables declaration//GEN-END:variables
 }

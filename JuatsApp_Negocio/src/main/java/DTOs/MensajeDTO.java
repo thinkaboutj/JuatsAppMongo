@@ -29,6 +29,8 @@ public class MensajeDTO {
         this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
+        byte[] byteArray = {1};
+        this.imagen = byteArray;
     }
 
     public MensajeDTO(ObjectId idUsuario, byte[] imagen, LocalDateTime fecha_de_registro) {

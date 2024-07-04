@@ -31,6 +31,8 @@ public class Mensaje {
         this.idUsuario = idUsuario;
         this.texto = texto;
         this.fecha_de_registro = fecha_de_registro;
+        byte[] byteArray = {1}; // Array con valores específicos
+        this.imagen = byteArray;
     }
 
     public Mensaje(ObjectId idUsuario, byte[] imagen, LocalDateTime fecha_de_registro) {
