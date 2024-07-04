@@ -14,8 +14,10 @@ presentacion\DlgTelefonos.class
 presentacion\frmChat$3.class
 utilerias\JButtonCellEditor.class
 presentacion\DlgContactos$1.class
+presentacion\frmChat$PanelMensajes$MensajeBurbuja.class
 presentacion\frmChat$5.class
 presentacion\Login.class
+presentacion\frmChat$PanelMensajes.class
 presentacion\FrmEditarPerfil.class
 presentacion\frmChat$UsuarioChat.class
 presentacion\frmChat$2.class
