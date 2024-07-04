@@ -10,7 +10,9 @@ import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -31,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -39,7 +42,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -50,6 +56,7 @@ import org.bson.types.ObjectId;
 import utilerias.ImageRenderer;
 import utilerias.JButtonCellEditor;
 import utilerias.JButtonRenderer;
+import utilerias.RoundedBorder;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -120,29 +127,6 @@ public class frmChat extends javax.swing.JFrame {
         }
     }
 
-    private void llenarPanelChats(List<UsuarioChat> listaChats) {
-        pnlChats.removeAll();
-        if (listaChats != null) {
-            for (UsuarioChat usuarioChat : listaChats) {
-                JLabel lblContacto = new JLabel();
-                Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
-                lblContacto.setIcon(icono);
-                lblContacto.setText(usuarioChat.contacto.getUsuario());
-                lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
-                lblContacto.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        chatActual = usuarioChat.chat;
-                        verChat();
-                    }
-                });
-                pnlChats.add(lblContacto);
-            }
-        }
-        pnlChats.revalidate();
-        pnlChats.repaint();
-    }
-
     private void cargarChatsEnPanel() {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<ChatDTO> chatsDTO = new ArrayList<>();
@@ -177,17 +161,14 @@ public class frmChat extends javax.swing.JFrame {
     protected void cargarMetodosIniciales() {
         this.cargarConfiguracionInicialPanelChats();
         this.cargarChatsEnPanel();
-
-        cargarChatsEnPanel();
-        //cargarMensajesEnPanel();
         cargarMensajesEnPanel(listaMensajes);
     }
 
     private void cargarConfiguracionInicialPanelChats() {
         pnlChats.setLayout(new BoxLayout(pnlChats, BoxLayout.Y_AXIS));
+        pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
     }
 
-    // Método para llenar los paneles de mensajes
     private void llenarPanelesMensajes(List<MensajeDTO> listaMensajes) {
         pnlMensajes.removeAll();
         if (listaMensajes != null) {
@@ -221,35 +202,99 @@ public class frmChat extends javax.swing.JFrame {
 
     }
 
-    private void verChat() {
-    if (chatActual != null) {
-        try {
-            List<MensajeDTO> mensajes = chatBO.obtenerMensajesOrdenadosPorFecha(chatActual.getId());
-            cargarMensajesEnPanel(mensajes);
-        } catch (NegocioException ex) {
-            ex.printStackTrace(); // Imprime la traza de la excepción para depurar
-            JOptionPane.showMessageDialog(this, "Error al cargar los mensajes del chat: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    private void llenarPanelChats(List<UsuarioChat> listaChats) {
+        pnlChats.removeAll();
+        if (listaChats != null) {
+            for (UsuarioChat usuarioChat : listaChats) {
+                JLabel lblContacto = new JLabel();
+                Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
+                lblContacto.setIcon(icono);
+                lblContacto.setText(usuarioChat.contacto.getUsuario());
+                lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
+                lblContacto.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        chatActual = usuarioChat.chat;
+                        verChat();
+                    }
+                });
+                pnlChats.add(lblContacto);
+            }
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "No se pudo cargar el chat actual.", "Error", JOptionPane.ERROR_MESSAGE);
+        pnlChats.revalidate();
+        pnlChats.repaint();
     }
-}
 
+    private void verChat() {
+        if (chatActual != null) {
+            try {
+                List<MensajeDTO> mensajes = chatBO.obtenerMensajesOrdenadosPorFecha(chatActual.getId());
+                cargarMensajesEnPanel(mensajes);
+                System.out.println("Número de mensajes cargados: " + mensajes.size());
+            } catch (NegocioException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al cargar los mensajes del chat: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         pnlMensajes.removeAll();
+        pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
-        if (mensajes != null) {
+        if (mensajes != null && !mensajes.isEmpty()) {
             for (MensajeDTO mensaje : mensajes) {
                 JPanel panelMensaje = new JPanel();
-                panelMensaje.setLayout(new FlowLayout(FlowLayout.LEFT));
+                panelMensaje.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+                panelMensaje.setOpaque(false);
 
-                JLabel lblMensaje = new JLabel(mensaje.getTexto());
-                panelMensaje.add(lblMensaje);
+                JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
+                txtMensaje.setEditable(false);
+                txtMensaje.setWrapStyleWord(true);
+                txtMensaje.setLineWrap(true);
+                txtMensaje.setOpaque(true);
+                txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14)); // Ajusta el tamaño según necesites
 
+                // Calcula el ancho preferido (ajusta 250 según tus necesidades)
+                int preferredWidth = Math.min(250, txtMensaje.getPreferredSize().width);
+                txtMensaje.setSize(preferredWidth, Short.MAX_VALUE);
+                Dimension preferredSize = txtMensaje.getPreferredSize();
+                txtMensaje.setSize(preferredWidth, preferredSize.height);
+
+                if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
+                    txtMensaje.setBackground(new Color(0, 51, 102));
+                    txtMensaje.setForeground(Color.WHITE);
+                    panelMensaje.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                } else {
+                    txtMensaje.setBackground(new Color(230, 230, 230));
+                    txtMensaje.setForeground(Color.BLACK);
+                }
+
+                // Redondear las esquinas del textarea
+                txtMensaje.setBorder(BorderFactory.createCompoundBorder(
+                        new RoundedBorder(10, txtMensaje.getBackground()),
+                        BorderFactory.createEmptyBorder(8, 12, 8, 12)
+                ));
+
+                panelMensaje.add(txtMensaje);
                 pnlMensajes.add(panelMensaje);
+                pnlMensajes.add(Box.createVerticalStrut(5)); // Espacio entre mensajes
             }
         }
+
+        pnlMensajes.revalidate();
+        pnlMensajes.repaint();
+
+        // Scroll hasta el último mensaje
+        SwingUtilities.invokeLater(() -> {
+            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
+            if (scrollPane != null) {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -264,6 +309,7 @@ public class frmChat extends javax.swing.JFrame {
         btnAgregarContactos = new javax.swing.JButton();
         btnVerContactos = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
+        jScrollPane = new javax.swing.JScrollPane();
         pnlMensajes = new javax.swing.JPanel();
         btnNuevoChat = new javax.swing.JButton();
         Enviar = new javax.swing.JButton();
@@ -342,28 +388,30 @@ public class frmChat extends javax.swing.JFrame {
         pnlMensajes.setLayout(pnlMensajesLayout);
         pnlMensajesLayout.setHorizontalGroup(
             pnlMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 967, Short.MAX_VALUE)
+            .addGap(0, 949, Short.MAX_VALUE)
         );
         pnlMensajesLayout.setVerticalGroup(
             pnlMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 491, Short.MAX_VALUE)
+            .addGap(0, 497, Short.MAX_VALUE)
         );
+
+        jScrollPane.setViewportView(pnlMensajes);
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnlMensajes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(17, 17, 17))
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
+                .addGap(21, 21, 21))
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(pnlMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(51, 51, 51)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, 990, 560));
@@ -491,16 +539,26 @@ public class frmChat extends javax.swing.JFrame {
 
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         // TODO add your handling code here:
+        if (chatActual == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un chat primero.");
+            return;
+        }
+
         byte[] array = iconToByteArray(lblImagen.getIcon());
 
         MensajeDTO mensajeDTO = new MensajeDTO(idUsuarioLogeado, txtMensaje.getText(), array, LocalDateTime.now());
 
         try {
             chatBO.enviarMensaje(this.chatActual.getId(), mensajeDTO);
+            // Limpiar el campo de mensaje y la imagen después de enviar
+            txtMensaje.setText("");
+            lblImagen.setIcon(new ImageIcon(getClass().getResource("/images/JuatsConejo.png")));
+
+            // Recargar los mensajes inmediatamente después de enviar
+            verChat();
         } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "Si se hizo");
+            JOptionPane.showMessageDialog(this, "Error al enviar el mensaje: " + ex.getMessage());
         }
-        cargarMetodosIniciales();
 
     }//GEN-LAST:event_EnviarActionPerformed
 
@@ -530,6 +588,7 @@ public class frmChat extends javax.swing.JFrame {
     private javax.swing.JButton btnVerContactos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
