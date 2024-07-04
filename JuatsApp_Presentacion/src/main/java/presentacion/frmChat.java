@@ -12,7 +12,6 @@ import interfaces.IChatBO;
 import interfaces.IUsuarioBO;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -33,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -43,7 +41,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -56,7 +53,6 @@ import org.bson.types.ObjectId;
 import utilerias.ImageRenderer;
 import utilerias.JButtonCellEditor;
 import utilerias.JButtonRenderer;
-import utilerias.RoundedBorder;
 
 /**
  * Frame donde se muestran los chats del usuario
@@ -242,45 +238,24 @@ public class frmChat extends javax.swing.JFrame {
 
     private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         pnlMensajes.removeAll();
-        pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
         if (mensajes != null && !mensajes.isEmpty()) {
             for (MensajeDTO mensaje : mensajes) {
                 JPanel panelMensaje = new JPanel();
-                panelMensaje.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-                panelMensaje.setOpaque(false);
+                panelMensaje.setLayout(new BorderLayout());
 
-                JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
-                txtMensaje.setEditable(false);
-                txtMensaje.setWrapStyleWord(true);
-                txtMensaje.setLineWrap(true);
-                txtMensaje.setOpaque(true);
-                txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14)); // Ajusta el tamaño según necesites
-
-                // Calcula el ancho preferido (ajusta 250 según tus necesidades)
-                int preferredWidth = Math.min(250, txtMensaje.getPreferredSize().width);
-                txtMensaje.setSize(preferredWidth, Short.MAX_VALUE);
-                Dimension preferredSize = txtMensaje.getPreferredSize();
-                txtMensaje.setSize(preferredWidth, preferredSize.height);
+                JLabel lblMensaje = new JLabel(mensaje.getTexto());
+                lblMensaje.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
                 if (mensaje.getIdUsuario().equals(idUsuarioLogeado)) {
-                    txtMensaje.setBackground(new Color(0, 51, 102));
-                    txtMensaje.setForeground(Color.WHITE);
-                    panelMensaje.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+                    panelMensaje.setBackground(new Color(200, 230, 255));
+                    panelMensaje.add(lblMensaje, BorderLayout.EAST);
                 } else {
-                    txtMensaje.setBackground(new Color(230, 230, 230));
-                    txtMensaje.setForeground(Color.BLACK);
+                    panelMensaje.setBackground(new Color(230, 230, 230));
+                    panelMensaje.add(lblMensaje, BorderLayout.WEST);
                 }
 
-                // Redondear las esquinas del textarea
-                txtMensaje.setBorder(BorderFactory.createCompoundBorder(
-                        new RoundedBorder(10, txtMensaje.getBackground()),
-                        BorderFactory.createEmptyBorder(8, 12, 8, 12)
-                ));
-
-                panelMensaje.add(txtMensaje);
                 pnlMensajes.add(panelMensaje);
-                pnlMensajes.add(Box.createVerticalStrut(5)); // Espacio entre mensajes
             }
         }
 
@@ -288,13 +263,11 @@ public class frmChat extends javax.swing.JFrame {
         pnlMensajes.repaint();
 
         // Scroll hasta el último mensaje
-        SwingUtilities.invokeLater(() -> {
-            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
-            if (scrollPane != null) {
-                JScrollBar vertical = scrollPane.getVerticalScrollBar();
-                vertical.setValue(vertical.getMaximum());
-            }
-        });
+        JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
+        if (scrollPane != null) {
+            JScrollBar vertical = scrollPane.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        }
     }
 
     @SuppressWarnings("unchecked")
