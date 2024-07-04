@@ -3,18 +3,7 @@ package dao;
 
 
 
-import com.mongodb.client.*;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.mongodb.client.model.Aggregates.*;
-import static com.mongodb.client.model.Filters.*;
-
-
 import Conexion.ConexionBD;
 import entidades.Domicilio;
 import entidades.Usuario;
@@ -31,11 +20,8 @@ import com.mongodb.MongoException;
 import static com.mongodb.client.model.Aggregates.match;
 import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.model.Updates;
-import entidades.Chat;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 /**
  * Clase de acceso a datos para la entidad Usuario.
@@ -238,19 +224,12 @@ public class UsuarioDAO implements IUsuarioDAO {
         List<Usuario> noContactos = new ArrayList<>();
 
         try {
-            // Obtener el usuario por su ObjectId
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
-
             if (usuario != null) {
-                // Obtener la lista de ObjectIds de los contactos
                 List<ObjectId> contactosIds = usuario.getContactos();
-
-                // Obtener todos los usuarios de la base de datos
                 List<Usuario> todosUsuarios = usuarioCollection.find().into(new ArrayList<>());
-
-                // Filtrar los usuarios que no están en la lista de contactos
                 for (Usuario usuarioActual : todosUsuarios) {
-                    if (contactosIds == null || !contactosIds.contains(usuarioActual.getId())) {
+                    if ((contactosIds == null || !contactosIds.contains(usuarioActual.getId())) && !usuarioActual.getId().equals(idUsuario)) {
                         noContactos.add(usuarioActual);
                     }
                 }
@@ -263,7 +242,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
         return noContactos;
     }
-    
+
     @Override
     public List<Usuario> consultarContactosSinChat(ObjectId idUsuario) throws PersistenciaException {
         List<Usuario> contactosSinChat = new ArrayList<>();

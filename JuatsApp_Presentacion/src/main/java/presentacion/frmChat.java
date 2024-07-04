@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -54,12 +55,15 @@ public class frmChat extends javax.swing.JFrame {
     private ChatDTO chatActual;
 
     private String txtRuta;
+    private Icon iconoBlanco;
 
     public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
         usuarioBO = new UsuarioBO();
         chatBO = new ChatBO();
-
+        
+        iconoBlanco = (new javax.swing.ImageIcon(getClass().getResource("/images/blanco.png")));
+        
         this.idUsuarioLogeado = idUsuarioLogeado;
         cargarMetodosIniciales();
     }
@@ -215,8 +219,7 @@ public class frmChat extends javax.swing.JFrame {
                     });
                     listaMensajes.forEach(row -> {
                         Object[] fila = new Object[3];
-                        Icon icono = byteArrayToIcon(null);
-                        fila[0] = icono;
+                        fila[0] = iconoBlanco;
                         fila[1] = null;
                         fila[2] = null;
                         modeloTablaDelWey.addRow(fila);
@@ -232,7 +235,8 @@ public class frmChat extends javax.swing.JFrame {
                     });
                     listaMensajes.forEach(row -> {
                         Object[] fila = new Object[4];
-                        fila[0] = null;
+                        
+                        fila[0] = iconoBlanco;
                         fila[1] = null;
                         fila[2] = null;
                         modeloTablaMios.addRow(fila);
@@ -265,7 +269,7 @@ public class frmChat extends javax.swing.JFrame {
         columnaImagen.setCellRenderer(new ImageRenderer());
         
         TableColumn columnaImagen2 = tblMensajesDelOtroWey.getColumnModel().getColumn(0);
-        columnaImagen.setCellRenderer(new ImageRenderer());
+        columnaImagen2.setCellRenderer(new ImageRenderer());
         
         int indiceEditar = 3;
         
