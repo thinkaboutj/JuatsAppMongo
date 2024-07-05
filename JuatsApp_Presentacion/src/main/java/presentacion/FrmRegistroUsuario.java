@@ -28,10 +28,10 @@ import negocio.UsuarioBO;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class FrmRegistroUsuario extends javax.swing.JFrame {
-
+    
     private IUsuarioBO usuarioBO;
     private String txtRuta;
-
+    
     public FrmRegistroUsuario() {
         initComponents();
         usuarioBO = new UsuarioBO();
@@ -58,7 +58,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
     public void registrar() {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
 
@@ -103,21 +103,21 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
 
         // Asignar el domicilio al usuarioDTO
         usuarioDTO.setDomicilio(domicilioDTO);
-
+        
         try {
             // Intentar registrar el usuario
             usuarioBO.registrarUsuario(usuarioDTO);
             JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
-
+            
             Login login = new Login();
-
+            
             login.setVisible(true);
             this.dispose();
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al registrar usuario", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -334,6 +334,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        
+        Login login = new Login();
+        login.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -342,7 +345,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         JFileChooser flcAbrirArchivo = new JFileChooser();
         flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen", "jpg", "jpeg", "png"));
         int respuesta = flcAbrirArchivo.showOpenDialog(this);
-
+        
         if (respuesta == JFileChooser.APPROVE_OPTION) {
             archivo = flcAbrirArchivo.getSelectedFile();
             txtRuta = archivo.getAbsolutePath();
