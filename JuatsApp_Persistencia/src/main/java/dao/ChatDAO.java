@@ -11,6 +11,7 @@ import entidades.Mensaje;
 import excepciones.PersistenciaException;
 import interfaces.IChatDAO;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +70,8 @@ public class ChatDAO implements IChatDAO{
     @Override
     public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException {
         try {
+            ZoneId zone = ZoneId.of("America/Mazatlan");
+            mensaje.setFecha_de_registro(LocalDateTime.now(zone));
             chatCollection.updateOne(new Document("_id", idChat), Updates.push("mensajes", mensaje));
         } catch (Exception e) {
             throw new PersistenciaException(e);
