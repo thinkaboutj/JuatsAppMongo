@@ -669,11 +669,11 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(169, 169, 169))
         );
 
-        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 750, 520));
+        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 100, 750, 420));
 
         btnNuevoChat.setBackground(new java.awt.Color(0, 51, 102));
         btnNuevoChat.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
@@ -745,7 +745,7 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 .addContainerGap())
         );
 
-        pnBackground.add(pnlEscribir, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 620, 750, 100));
+        pnBackground.add(pnlEscribir, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 520, 750, 100));
 
         panelContenedor.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -776,11 +776,11 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         panelContenedorLayout.setVerticalGroup(
             panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelContenedorLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 5, Short.MAX_VALUE))
         );
 
-        pnBackground.add(panelContenedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 320, 580));
+        pnBackground.add(panelContenedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 320, 480));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -792,7 +792,9 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
