@@ -70,6 +70,7 @@ public class frmChat extends javax.swing.JFrame {
     List<MensajeDTO> listaMensajes;
     private ChatDTO chatActual;
     private String txtRuta;
+    private UsuarioDTO contactoActual;  // Variable de instancia para almacenar el contacto actual
 
     public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
@@ -77,6 +78,27 @@ public class frmChat extends javax.swing.JFrame {
         chatBO = new ChatBO();
         this.idUsuarioLogeado = idUsuarioLogeado;
         cargarMetodosIniciales();
+        ocultarComponentes();
+    }
+
+    public void ocultarComponentes() {
+
+        lblImagen.setVisible(false);
+        btnEnviar.setVisible(false);
+        btnCargarImagen.setVisible(false);
+        txtMensaje.setVisible(false);
+        panelPrincipal.setVisible(false);
+        pnlEscribir.setVisible(false);
+    }
+
+    public void cargComponentes() {
+
+        lblImagen.setVisible(true);
+        btnEnviar.setVisible(true);
+        btnCargarImagen.setVisible(true);
+        txtMensaje.setVisible(true);
+        panelPrincipal.setVisible(true);
+        pnlEscribir.setVisible(true);
     }
 
     // Convertir el arreglo de bytes de la imagen del usuario consultado para así poder mostrar la imagen
@@ -224,6 +246,7 @@ public class frmChat extends javax.swing.JFrame {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         chatActual = usuarioChat.chat;
+                        contactoActual = usuarioChat.contacto; // Guarda la información del contacto actual
                         verChat();
                     }
                 });
@@ -239,6 +262,16 @@ public class frmChat extends javax.swing.JFrame {
             try {
                 List<MensajeDTO> mensajes = chatBO.obtenerMensajesOrdenadosPorFecha(chatActual.getId());
                 cargarMensajesEnPanel(mensajes);
+                if (contactoActual != null) {
+
+                    cargComponentes();
+                    String nombre = contactoActual.getUsuario();
+
+                    String telefono = contactoActual.getTelefono();
+                    lblNombreContacto.setText(telefono);
+                } else {
+                    lblNombreContacto.setText("Contacto desconocido");
+                }
                 System.out.println("Número de mensajes cargados: " + mensajes.size());
             } catch (NegocioException ex) {
                 ex.printStackTrace();
@@ -248,17 +281,19 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     pnlMensajes.removeAll();
     pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
+
     if (mensajes != null && !mensajes.isEmpty()) {
         for (MensajeDTO mensaje : mensajes) {
             JPanel panelMensaje = new JPanel();
             panelMensaje.setLayout(new BorderLayout());
             panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-            
+
             JTextArea txtMensaje = null;
-            
+
             // Agregamos el texto si existe
             if (mensaje.getTexto() != null && !mensaje.getTexto().isEmpty()) {
                 txtMensaje = new JTextArea(mensaje.getTexto());
@@ -270,7 +305,7 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16));
                 panelMensaje.add(txtMensaje, BorderLayout.NORTH);
             }
-            
+
             // Agregamos la imagen si existe y no es solo 1 byte
             if (mensaje.getImagen() != null && mensaje.getImagen().length > 1) {
                 ImageIcon imageIcon = new ImageIcon(mensaje.getImagen());
@@ -278,11 +313,12 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 JLabel lblImagen = new JLabel(new ImageIcon(image));
                 panelMensaje.add(lblImagen, BorderLayout.CENTER);
             }
-            
+
             JPanel wrapperPanel = new JPanel();
             wrapperPanel.setLayout(new BorderLayout());
             wrapperPanel.setOpaque(false);
             boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
+
             if (esMensajePropio) {
                 panelMensaje.setBackground(new Color(0, 51, 102));
                 if (txtMensaje != null) {
@@ -296,22 +332,24 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 }
                 wrapperPanel.add(panelMensaje, BorderLayout.WEST);
             }
-            
-            panelMensaje.setMaximumSize(new Dimension(400, 1500));
-            
+
+            // Fijar tamaño fijo para cada mensaje
+            wrapperPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+            // Añadir evento de clic solo si el mensaje es propio
             if (esMensajePropio) {
                 panelMensaje.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        int option = JOptionPane.showOptionDialog(null, 
-                            "¿Qué deseas hacer con este mensaje?", 
-                            "Opciones de Mensaje", 
-                            JOptionPane.YES_NO_CANCEL_OPTION, 
-                            JOptionPane.QUESTION_MESSAGE, 
-                            null, 
-                            new String[]{"Editar", "Eliminar", "Cancelar"}, 
-                            "Cancelar");
-                        
+                        int option = JOptionPane.showOptionDialog(null,
+                                "¿Qué deseas hacer con este mensaje?",
+                                "Opciones de Mensaje",
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                new String[]{"Editar", "Eliminar", "Cancelar"},
+                                "Cancelar");
+
                         if (option == JOptionPane.YES_OPTION) {
                             DlgEditar editar = new DlgEditar(null, true, chatActual.getId(), mensaje);
                             editar.setVisible(true);
@@ -325,14 +363,16 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                     }
                 });
             }
-            
+
             pnlMensajes.add(wrapperPanel);
             pnlMensajes.add(Box.createVerticalStrut(10));
         }
     }
+
     pnlMensajes.add(Box.createVerticalGlue());
     pnlMensajes.revalidate();
     pnlMensajes.repaint();
+
     SwingUtilities.invokeLater(() -> {
         JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
         if (scrollPane != null) {
@@ -341,6 +381,8 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         }
     });
 }
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -355,13 +397,16 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         panelPrincipal = new javax.swing.JPanel();
         jScrollPane = new javax.swing.JScrollPane();
         pnlMensajes = new javax.swing.JPanel();
+        lblNombreContacto = new javax.swing.JLabel();
+        lblTelefono = new javax.swing.JLabel();
         btnNuevoChat = new javax.swing.JButton();
-        Enviar = new javax.swing.JButton();
-        btnCargarImagen = new javax.swing.JButton();
         pnlChats = new javax.swing.JPanel();
+        pnlEscribir = new javax.swing.JPanel();
+        btnCargarImagen = new javax.swing.JButton();
         lblImagen = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtMensaje = new javax.swing.JTextArea();
+        btnEnviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat");
@@ -386,17 +431,17 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         });
         jPanel1.add(btnPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 81, 75));
 
-        btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.setBackground(new java.awt.Color(255, 255, 255));
-        btnCerrarSesion.setBorder(null);
         btnCerrarSesion.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         btnCerrarSesion.setForeground(new java.awt.Color(0, 0, 0));
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.setBorder(null);
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarSesionActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(1390, 30, 141, 36));
+        jPanel1.add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(1340, 40, 141, 36));
 
         jLabel1.setFont(new java.awt.Font("Roboto Black", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -433,11 +478,11 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         pnlMensajes.setLayout(pnlMensajesLayout);
         pnlMensajesLayout.setHorizontalGroup(
             pnlMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 949, Short.MAX_VALUE)
+            .addGap(0, 1027, Short.MAX_VALUE)
         );
         pnlMensajesLayout.setVerticalGroup(
             pnlMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 497, Short.MAX_VALUE)
+            .addGap(0, 528, Short.MAX_VALUE)
         );
 
         jScrollPane.setViewportView(pnlMensajes);
@@ -450,16 +495,29 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane)
                 .addGap(21, 21, 21))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(lblTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(363, 363, 363))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(lblNombreContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(379, 379, 379))))
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(jScrollPane)
+                .addContainerGap(10, Short.MAX_VALUE)
+                .addComponent(lblNombreContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, 990, 560));
+        pnBackground.add(panelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 1080, 570));
 
         btnNuevoChat.setBackground(new java.awt.Color(0, 51, 102));
         btnNuevoChat.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
@@ -471,15 +529,22 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 btnNuevoChatActionPerformed(evt);
             }
         });
-        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 440, 40));
+        pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 460, 40));
 
-        Enviar.setText("Enviar");
-        Enviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EnviarActionPerformed(evt);
-            }
-        });
-        pnBackground.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 730, -1, -1));
+        javax.swing.GroupLayout pnlChatsLayout = new javax.swing.GroupLayout(pnlChats);
+        pnlChats.setLayout(pnlChatsLayout);
+        pnlChatsLayout.setHorizontalGroup(
+            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 460, Short.MAX_VALUE)
+        );
+        pnlChatsLayout.setVerticalGroup(
+            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 690, Short.MAX_VALUE)
+        );
+
+        pnBackground.add(pnlChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 460, 690));
+
+        pnlEscribir.setBackground(new java.awt.Color(255, 255, 255));
 
         btnCargarImagen.setBackground(new java.awt.Color(0, 51, 102));
         btnCargarImagen.setForeground(new java.awt.Color(255, 255, 255));
@@ -489,37 +554,63 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
                 btnCargarImagenActionPerformed(evt);
             }
         });
-        pnBackground.add(btnCargarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 820, 120, 30));
-
-        javax.swing.GroupLayout pnlChatsLayout = new javax.swing.GroupLayout(pnlChats);
-        pnlChats.setLayout(pnlChatsLayout);
-        pnlChatsLayout.setHorizontalGroup(
-            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 440, Short.MAX_VALUE)
-        );
-        pnlChatsLayout.setVerticalGroup(
-            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
-        );
-
-        pnBackground.add(pnlChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 440, 580));
-        pnBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 700, 130, 100));
 
         txtMensaje.setColumns(20);
         txtMensaje.setRows(5);
         jScrollPane1.setViewportView(txtMensaje);
 
-        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 710, 610, 130));
+        btnEnviar.setBackground(new java.awt.Color(0, 51, 102));
+        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviar.setText("Enviar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlEscribirLayout = new javax.swing.GroupLayout(pnlEscribir);
+        pnlEscribir.setLayout(pnlEscribirLayout);
+        pnlEscribirLayout.setHorizontalGroup(
+            pnlEscribirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEscribirLayout.createSequentialGroup()
+                .addGap(74, 74, 74)
+                .addGroup(pnlEscribirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCargarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59))
+        );
+        pnlEscribirLayout.setVerticalGroup(
+            pnlEscribirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEscribirLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnlEscribirLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlEscribirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addGroup(pnlEscribirLayout.createSequentialGroup()
+                        .addComponent(btnCargarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        pnBackground.add(pnlEscribir, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 690, 1080, 160));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 1600, Short.MAX_VALUE)
+            .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 1539, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
+            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
         );
 
         pack();
@@ -556,7 +647,40 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         cargarChatsEnPanel();
     }//GEN-LAST:event_btnVerContactosActionPerformed
 
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        // TODO add your handling code here:
+
+        if (chatActual == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un chat primero.");
+            return;
+        }
+
+        // Validación para asegurar que ni el texto del mensaje ni la imagen estén vacíos
+        if (txtMensaje.getText().trim().isEmpty() && lblImagen.getIcon() == null) {
+            JOptionPane.showMessageDialog(this, "El mensaje no puede estar vacío.");
+            return;
+        }
+
+        byte[] array = iconToByteArray(lblImagen.getIcon());
+
+        MensajeDTO mensajeDTO = new MensajeDTO(idUsuarioLogeado, txtMensaje.getText(), array, LocalDateTime.now());
+
+        try {
+            chatBO.enviarMensaje(this.chatActual.getId(), mensajeDTO);
+            // Limpiar el campo de mensaje y la imagen después de enviar
+            txtMensaje.setText("");
+            lblImagen.setIcon(null);
+
+            // Recargar los mensajes inmediatamente después de enviar
+            verChat();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al enviar el mensaje: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
     private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed
+        // TODO add your handling code here:
+
         File archivo;
         JFileChooser flcAbrirArchivo = new JFileChooser();
         flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen", "jpg", "jpeg", "png"));
@@ -571,31 +695,6 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         }
     }//GEN-LAST:event_btnCargarImagenActionPerformed
 
-    private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
-        // TODO add your handling code here:
-        if (chatActual == null) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un chat primero.");
-            return;
-        }
-
-        //ojito aqui validacion
-        byte[] array = iconToByteArray(lblImagen.getIcon());
-
-        MensajeDTO mensajeDTO = new MensajeDTO(idUsuarioLogeado, txtMensaje.getText(), array, LocalDateTime.now());
-
-        try {
-            chatBO.enviarMensaje(this.chatActual.getId(), mensajeDTO);
-            // Limpiar el campo de mensaje y la imagen después de enviar
-            txtMensaje.setText("");
-
-            // Recargar los mensajes inmediatamente después de enviar
-            verChat();
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "Error al enviar el mensaje: " + ex.getMessage());
-        }
-
-    }//GEN-LAST:event_EnviarActionPerformed
-
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
 //        pnlChat.setSize(620, 430);
@@ -609,10 +708,10 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Enviar;
     private javax.swing.JButton btnAgregarContactos;
     private javax.swing.JButton btnCargarImagen;
     private javax.swing.JButton btnCerrarSesion;
+    private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnNuevoChat;
     private javax.swing.JButton btnPerfil;
     private javax.swing.JButton btnVerContactos;
@@ -621,9 +720,12 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblImagen;
+    private javax.swing.JLabel lblNombreContacto;
+    private javax.swing.JLabel lblTelefono;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
     private javax.swing.JPanel pnlChats;
+    private javax.swing.JPanel pnlEscribir;
     private javax.swing.JPanel pnlMensajes;
     private javax.swing.JTextArea txtMensaje;
     // End of variables declaration//GEN-END:variables

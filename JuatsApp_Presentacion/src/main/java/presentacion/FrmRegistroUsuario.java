@@ -22,18 +22,16 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import negocio.UsuarioBO;
 
-
-
 /**
  * Frame para registrar usuarios
  *
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class FrmRegistroUsuario extends javax.swing.JFrame {
-    
+
     private IUsuarioBO usuarioBO;
     private String txtRuta;
-    
+
     public FrmRegistroUsuario() {
         initComponents();
         usuarioBO = new UsuarioBO();
@@ -60,7 +58,66 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         }
         return null;
     }
-    
+
+    public void registrar() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+
+        // Validación de campos vacíos
+        if (txtUsuario.getText().isEmpty() || txtContrasena.getPassword().length == 0
+                || dcFechaCumple.getDate() == null || txtTelefono.getText().isEmpty()
+                || txtCalle.getText().isEmpty() || txtColonia.getText().isEmpty()
+                || txtCodigoPostal.getText().isEmpty() || txtNumero.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Sale del método si hay campos vacíos
+        }
+
+        // Validación de teléfono
+        if (!txtTelefono.getText().matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this, "Formato de teléfono incorrecto (10 dígitos numéricos)", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Sale del método si el teléfono no tiene el formato correcto
+        }
+
+        // Validación de código postal
+        if (!txtCodigoPostal.getText().matches("\\d{5}")) {
+            JOptionPane.showMessageDialog(this, "Formato de código postal incorrecto (5 dígitos numéricos)", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Sale del método si el código postal no tiene el formato correcto
+        }
+
+        // Convertir el icono del label a un arreglo de bytes
+        byte[] bytesImagen = iconToByteArray(lblImagen.getIcon());
+
+        // Setear los datos del usuarioDTO
+        usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
+        usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
+        usuarioDTO.setSexo(cbxGenero.getSelectedItem().toString());
+        usuarioDTO.setUsuario(txtUsuario.getText());
+        usuarioDTO.setTelefono(txtTelefono.getText());
+        usuarioDTO.setImagen(bytesImagen);
+
+        // Crear el domicilioDTO
+        DomicilioDTO domicilioDTO = new DomicilioDTO();
+        domicilioDTO.setCalle(txtCalle.getText());
+        domicilioDTO.setColonia(txtColonia.getText());
+        domicilioDTO.setCodigoPostal(txtCodigoPostal.getText());
+        domicilioDTO.setNumero(txtNumero.getText());
+
+        // Asignar el domicilio al usuarioDTO
+        usuarioDTO.setDomicilio(domicilioDTO);
+
+        try {
+            // Intentar registrar el usuario
+            usuarioBO.registrarUsuario(usuarioDTO);
+            JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
+
+            Login login = new Login();
+
+            login.setVisible(true);
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al registrar usuario", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -87,8 +144,9 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
         verContrasena = new javax.swing.JCheckBox();
-        JLDireccion = new javax.swing.JLabel();
         lblImagen = new javax.swing.JLabel();
+        JLDireccion = new javax.swing.JLabel();
+        lblDecoracion = new javax.swing.JLabel();
         dcFechaCumple = new com.github.lgooddatepicker.components.DatePicker();
         txtUsuario = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -230,11 +288,14 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         pnlBackground.add(verContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 220, -1, -1));
-        pnlBackground.add(JLDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 120, 20));
 
         lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
-        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 60, 140, 140));
+        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 70, 140, 140));
+        pnlBackground.add(JLDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 120, 20));
+
+        lblDecoracion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDecoracion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
+        pnlBackground.add(lblDecoracion, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 70, 140, 140));
         pnlBackground.add(dcFechaCumple, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
         pnlBackground.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 300, 30));
 
@@ -268,31 +329,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        
-        byte[] bytesImagen = iconToByteArray(lblImagen.getIcon());
-        usuarioDTO.setContrasena(String.valueOf(txtContrasena.getPassword()));
-        usuarioDTO.setFechaNacimiento(dcFechaCumple.getDate());
-        usuarioDTO.setSexo(cbxGenero.getSelectedItem().toString());
-        usuarioDTO.setUsuario(txtUsuario.getText());
-        usuarioDTO.setTelefono(txtTelefono.getText());
-        usuarioDTO.setImagen(bytesImagen);
-        
-        DomicilioDTO domicilioDTO = new DomicilioDTO();
-        domicilioDTO.setCalle(txtCalle.getText());
-        domicilioDTO.setColonia(txtColonia.getText());
-        domicilioDTO.setCodigoPostal(txtCodigoPostal.getText());
-        domicilioDTO.setNumero(txtNumero.getText());
-        
-        usuarioDTO.setDomicilio(domicilioDTO);
-        
-        try {
-            usuarioBO.registrarUsuario(usuarioDTO);
-            JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
-            this.dispose();
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        }
+        registrar();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -303,14 +340,14 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed
         File archivo;
         JFileChooser flcAbrirArchivo = new JFileChooser();
-        flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen","jpg","jpeg","png") );
+        flcAbrirArchivo.setFileFilter(new FileNameExtensionFilter("archivo de imagen", "jpg", "jpeg", "png"));
         int respuesta = flcAbrirArchivo.showOpenDialog(this);
 
-        if (respuesta == JFileChooser.APPROVE_OPTION ){
-            archivo= flcAbrirArchivo.getSelectedFile();
+        if (respuesta == JFileChooser.APPROVE_OPTION) {
+            archivo = flcAbrirArchivo.getSelectedFile();
             txtRuta = archivo.getAbsolutePath();
-            Image foto= getToolkit().getImage(txtRuta);
-            foto=foto.getScaledInstance(262, 234, 1);
+            Image foto = getToolkit().getImage(txtRuta);
+            foto = foto.getScaledInstance(262, 234, 1);
             lblImagen.setIcon(new ImageIcon(foto));
         }
     }//GEN-LAST:event_btnCargarImagenActionPerformed
@@ -322,7 +359,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         } else {
             txtContrasena.setEchoChar('*');
         }
-        
+
     }//GEN-LAST:event_verContrasenaActionPerformed
 
 
@@ -345,6 +382,7 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblDecoracion;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel pnlBackground;
     private javax.swing.JTextField txtCalle;

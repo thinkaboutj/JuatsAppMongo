@@ -178,6 +178,7 @@ public class DlgEditar extends javax.swing.JDialog {
         
         try {
             bo.editarMensaje(chatActual, mensaje);
+            dispose();
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "No se pudo editar el mensaje");
         }

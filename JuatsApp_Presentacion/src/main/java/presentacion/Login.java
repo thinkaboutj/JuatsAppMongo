@@ -3,10 +3,11 @@ package presentacion;
 import DTOs.UsuarioDTO;
 import excepciones.NegocioException;
 import interfaces.IUsuarioBO;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import negocio.UsuarioBO;
 import org.bson.types.ObjectId;
-
 
 /**
  * Frama para iniciar sesion y es el frame principal de la app
@@ -14,14 +15,66 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class Login extends javax.swing.JFrame {
-    
+
     private IUsuarioBO usuarioBO;
-    
+
     public Login() {
         initComponents();
         usuarioBO = new UsuarioBO();
+        lblRegistrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                abrirRegistro();
+            }
+        });
     }
-    
+
+    private void abrirRegistro() {
+        // Abrir el frame de registro
+        FrmRegistroUsuario frmRegistroUsuario = new FrmRegistroUsuario();
+        frmRegistroUsuario.setVisible(true);
+
+        // Cerrar el frame de login
+        this.dispose();
+    }
+
+    public void ingresar() {
+        String telefono = txtTelefonoLogin.getText().trim();
+        String contrasena = String.valueOf(txtContrasenaLogin.getPassword());
+
+        if (telefono.isEmpty() || contrasena.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Verificar longitud del teléfono
+        if (telefono.length() != 10) {
+            JOptionPane.showMessageDialog(this, "El número de teléfono debe tener 10 dígitos.");
+            return;
+        }
+
+        // Verificar que el teléfono contenga solo números
+        if (!telefono.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "El número de teléfono solo debe contener números.");
+            return;
+        }
+
+        // Intentar realizar el login
+        UsuarioDTO usuarioLogin = new UsuarioDTO();
+        try {
+            usuarioLogin = usuarioBO.login(contrasena, telefono);
+
+            // Si el login es exitoso, abrir la ventana del chat u otra ventana
+            frmChat frame = new frmChat(new ObjectId(usuarioLogin.getId()));
+            frame.setVisible(true);
+
+            // Cerrar la ventana actual de login
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -33,8 +86,8 @@ public class Login extends javax.swing.JFrame {
         txtTelefonoLogin = new javax.swing.JTextField();
         txtContrasenaLogin = new javax.swing.JPasswordField();
         btnIngresar = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        btnRegistrar = new javax.swing.JButton();
+        lblRegistrar = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Login");
@@ -44,21 +97,21 @@ public class Login extends javax.swing.JFrame {
         pnBackground.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/LogoConejo.png"))); // NOI18N
-        pnBackground.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 20, 220, 160));
+        pnBackground.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 220, 160));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Contraseña:");
-        pnBackground.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 250, -1, -1));
+        pnBackground.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Teléfono: ");
-        pnBackground.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        pnBackground.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 280, -1, -1));
 
         txtTelefonoLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        pnBackground.add(txtTelefonoLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 240, -1));
-        pnBackground.add(txtContrasenaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 240, -1));
+        pnBackground.add(txtTelefonoLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 240, -1));
+        pnBackground.add(txtContrasenaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 240, -1));
 
         btnIngresar.setBackground(new java.awt.Color(0, 51, 102));
         btnIngresar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -70,39 +123,29 @@ public class Login extends javax.swing.JFrame {
                 btnIngresarActionPerformed(evt);
             }
         });
-        pnBackground.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 90, 40));
+        pnBackground.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 380, 90, 40));
 
-        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel4.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel4.setText("¿No tienes Cuenta?");
-        pnBackground.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 340, -1, -1));
+        lblRegistrar.setBackground(new java.awt.Color(0, 0, 0));
+        lblRegistrar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        lblRegistrar.setForeground(new java.awt.Color(0, 102, 204));
+        lblRegistrar.setText("Registrate");
+        pnBackground.add(lblRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 450, -1, -1));
 
-        btnRegistrar.setBackground(new java.awt.Color(0, 51, 102));
-        btnRegistrar.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnRegistrar.setForeground(new java.awt.Color(255, 255, 255));
-        btnRegistrar.setText("Registrar");
-        btnRegistrar.setBorder(null);
-        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarActionPerformed(evt);
-            }
-        });
-        pnBackground.add(btnRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 370, 100, 40));
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("¿No tienes Cuenta?");
+        pnBackground.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 450, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 1067, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
         );
 
         pack();
@@ -111,33 +154,18 @@ public class Login extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
-        UsuarioDTO usuarioLogin = new UsuarioDTO();
-        try {
-            usuarioLogin = usuarioBO.login(String.valueOf(txtContrasenaLogin.getPassword()), txtTelefonoLogin.getText());
-            
-            frmChat frame = new frmChat(new ObjectId(usuarioLogin.getId()));
-            frame.setVisible(true);
-            
-            this.dispose();
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-        
+    
+        ingresar();
     }//GEN-LAST:event_btnIngresarActionPerformed
-
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        FrmRegistroUsuario frmRegistroUsuario = new FrmRegistroUsuario();
-        frmRegistroUsuario.setVisible(true);
-    }//GEN-LAST:event_btnRegistrarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
-    private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel lblRegistrar;
     private javax.swing.JPanel pnBackground;
     private javax.swing.JPasswordField txtContrasenaLogin;
     private javax.swing.JTextField txtTelefonoLogin;
