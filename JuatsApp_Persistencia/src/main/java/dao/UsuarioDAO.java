@@ -47,6 +47,13 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public void agregar(Usuario usuario) throws PersistenciaException {
         try {
+            Document query = new Document("telefono", usuario.getTelefono());
+            Usuario usuarioExistente = usuarioCollection.find(query).first();
+
+            if (usuarioExistente != null) {
+                throw new PersistenciaException("Ya existe un usuario con este telefono registrado");
+            }
+            
             usuarioCollection.insertOne(usuario);
         } catch (MongoException e) {
             throw new PersistenciaException(e);
