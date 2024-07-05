@@ -13,11 +13,9 @@ import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IChatBO;
 import interfaces.IChatDAO;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 
@@ -114,7 +112,7 @@ public class ChatBO implements IChatBO{
             throw new NegocioException(ex);
         }
     }
-
+    
     @Override
     public List<MensajeDTO> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws NegocioException {
         try {
@@ -127,6 +125,24 @@ public class ChatBO implements IChatBO{
         } catch (PersistenciaException ex) {
             throw new NegocioException(ex);
         }   
+    }
+
+    @Override
+    public void editarMensaje(ObjectId idChat, MensajeDTO mensaje) throws NegocioException {
+        try {
+            dao.editarMensaje(idChat, transformarEnEntidad(mensaje));
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
+    }
+
+    @Override
+    public void eliminarMensaje(ObjectId idChat, LocalDateTime fechaDeRegistro) throws NegocioException {
+        try {
+            dao.eliminarMensaje(idChat, fechaDeRegistro);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException(ex);
+        }
     }
     
 

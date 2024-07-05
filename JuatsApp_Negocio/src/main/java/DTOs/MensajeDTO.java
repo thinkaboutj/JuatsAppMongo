@@ -40,7 +40,6 @@ public class MensajeDTO {
         this.fecha_de_registro = fecha_de_registro;
     }
 
-
     public ObjectId getUsuarioId() {
         return idUsuario;
     }

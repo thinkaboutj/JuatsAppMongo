@@ -30,14 +30,14 @@ public class prueba {
 
     public static void main(String[] args) {
         IChatDAO chatDAO = new ChatDAO();
-        ObjectId idChat = new ObjectId("6685da47bfce5874ab2aadd4");
-        Chat chat = new Chat();
+        
+        ObjectId idChat = new ObjectId("66872a1be4373941285731d2");
         
         ObjectId idUsuario = new ObjectId("6684baebc0f95c1d815dcd27");
         Mensaje mensaje = new Mensaje(idUsuario, "Mensajeeee", LocalDateTime.now());
         
         try {
-            System.out.println(chatDAO.obtenerMensajesOrdenadosPorFecha(idChat));
+            chatDAO.enviarMensaje(idChat, mensaje);
         } catch (PersistenciaException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

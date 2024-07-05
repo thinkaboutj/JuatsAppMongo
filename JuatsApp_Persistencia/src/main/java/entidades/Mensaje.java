@@ -10,7 +10,8 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class Mensaje {
-
+    
+    private ObjectId id;
     private ObjectId idUsuario;
     private String texto;
     private byte[] imagen; 
@@ -25,7 +26,6 @@ public class Mensaje {
         this.imagen = imagen;
         this.fecha_de_registro = fecha_de_registro;
     }
-    
     
     public Mensaje(ObjectId idUsuario, String texto, LocalDateTime fecha_de_registro) {
         this.idUsuario = idUsuario;

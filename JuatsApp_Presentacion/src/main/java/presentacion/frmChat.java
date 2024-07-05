@@ -298,22 +298,23 @@ public class frmChat extends javax.swing.JFrame {
                                 null, 
                                 new String[]{"Editar", "Eliminar", "Cancelar"}, 
                                 "Cancelar");
-
+                            
+                            // si la opcion elegida es Editar
                             if (option == JOptionPane.YES_OPTION) {
-                                // Lógica para redirigir a frame de editar
-                                // Ejemplo:
-                                FrameEditar frameEditar = new FrameEditar(mensaje);
-                                frameEditar.setVisible(true);
+                                DlgEditar editar = new DlgEditar(null, true, chatActual.getId(), mensaje);
+                                editar.setVisible(true);
+                                
+                            // si la opcion elegida es eliminar    
                             } else if (option == JOptionPane.NO_OPTION) {
-                                // Lógica para redirigir a frame de eliminar
-                                // Ejemplo:
-                                FrameEliminar frameEliminar = new FrameEliminar(mensaje);
-                                frameEliminar.setVisible(true);
+                                try {
+                                    chatBO.eliminarMensaje(chatActual.getId(), mensaje.getFecha_de_registro());
+                                } catch (NegocioException ex) {
+                                    JOptionPane.showMessageDialog(null, "No se pudo eliminar el mensaje");
+                                }
                             }
                         }
                     });
                 }
-
                 pnlMensajes.add(wrapperPanel);
                 pnlMensajes.add(Box.createVerticalStrut(10)); // Espacio entre mensajes
             }
@@ -523,18 +524,14 @@ public class frmChat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoChatActionPerformed
-        // TODO add your handling code here:
         DlgNuevoChat frmNuevoChat = new DlgNuevoChat(this, true, idUsuarioLogeado);
         frmNuevoChat.setVisible(true);
-        // cargarChatsEnTabla();
         cargarChatsEnPanel();
     }//GEN-LAST:event_btnNuevoChatActionPerformed
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
-        // TODO add your handling code here:
         FrmEditarPerfil frame = new FrmEditarPerfil(idUsuarioLogeado);
         frame.setVisible(true);
-
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -547,14 +544,12 @@ public class frmChat extends javax.swing.JFrame {
     private void btnAgregarContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarContactosActionPerformed
         DlgTelefonos dialog = new DlgTelefonos(this, true, idUsuarioLogeado);
         dialog.setVisible(true);
-        // cargarChatsEnTabla();
         cargarChatsEnPanel();
     }//GEN-LAST:event_btnAgregarContactosActionPerformed
 
     private void btnVerContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerContactosActionPerformed
         DlgContactos frame = new DlgContactos(this, true, idUsuarioLogeado);
         frame.setVisible(true);
-        // cargarChatsEnTabla();
         cargarChatsEnPanel();
     }//GEN-LAST:event_btnVerContactosActionPerformed
 

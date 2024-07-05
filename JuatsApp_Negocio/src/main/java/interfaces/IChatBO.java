@@ -7,6 +7,7 @@ package interfaces;
 import DTOs.ChatDTO;
 import DTOs.MensajeDTO;
 import excepciones.NegocioException;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.bson.types.ObjectId;
 
@@ -18,7 +19,7 @@ public interface IChatBO {
     
     public void agregar(ChatDTO chat) throws NegocioException;
     
-   public List<ChatDTO> consultarChatsDelUsuario(ObjectId idUsuario) throws NegocioException;
+    public List<ChatDTO> consultarChatsDelUsuario(ObjectId idUsuario) throws NegocioException;
     
     public ChatDTO consultar(ObjectId id) throws NegocioException;
     
@@ -28,9 +29,9 @@ public interface IChatBO {
     
     public List<MensajeDTO> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws NegocioException;
 
-   
-   
-   
-   
+    public void editarMensaje(ObjectId idChat, MensajeDTO mensaje) throws NegocioException;
+    
+    public void eliminarMensaje(ObjectId idChat, LocalDateTime fechaDeRegistro) throws NegocioException;
+
     
 }

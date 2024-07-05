@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import entidades.Chat;
 import entidades.Mensaje;
 import excepciones.PersistenciaException;
@@ -60,7 +61,6 @@ public class ChatDAO implements IChatDAO{
         }
     }
     
-    
     @Override
     public Chat consultar(ObjectId id) throws PersistenciaException {
         try {
@@ -73,6 +73,7 @@ public class ChatDAO implements IChatDAO{
     @Override
     public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException {
         try {
+            mensajeCollection.insertOne(mensaje);
             chatCollection.updateOne(new Document("_id", idChat), Updates.push("mensajes", mensaje));
         } catch (Exception e) {
             throw new PersistenciaException(e);
@@ -110,7 +111,33 @@ public class ChatDAO implements IChatDAO{
         }
     }
     
+    @Override
+    public void editarMensaje(ObjectId idChat, Mensaje mensajeEditado) throws PersistenciaException {
+        try {
+            Bson filtrarChat = Filters.eq("_id", idChat);
+            Bson filtrarMensaje = Filters.eq("mensajes.fecha_de_registro", mensajeEditado.getFecha_de_registro());
+            Bson editarMensaje = Updates.combine(Updates.set("mensajes.$.texto", mensajeEditado.getTexto()), Updates.set("mensajes.$.imagen", mensajeEditado.getImagen()));
+            
+            chatCollection.updateOne(Filters.and(filtrarChat, filtrarMensaje), editarMensaje);
+        } catch (MongoException e) {
+            throw new PersistenciaException("No fue posible actualizar el mensaje.", e);
+        }
+    }
     
+    @Override
+    public void eliminarMensaje(ObjectId idChat, LocalDateTime fechaDeRegistro) throws PersistenciaException {
+        try {
+            Bson filtrarChat = Filters.eq("_id", idChat);
+            Bson filtrarMensaje = Filters.eq("mensajes.fecha_de_registro", fechaDeRegistro);
+            Bson editar = Updates.pull("mensajes", new Document("fecha_de_registro", fechaDeRegistro));
+
+            chatCollection.updateOne(Filters.and(filtrarChat, filtrarMensaje),editar);
+        } catch (MongoException e) {
+            throw new PersistenciaException("No fue posible eliminar el mensaje.", e);
+        }
+    }
+
     
+
     
 }

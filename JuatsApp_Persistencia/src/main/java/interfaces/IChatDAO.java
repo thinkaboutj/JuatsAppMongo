@@ -5,6 +5,7 @@ import entidades.Chat;
 import entidades.Mensaje;
 import entidades.Usuario;
 import excepciones.PersistenciaException;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -29,6 +30,11 @@ public interface IChatDAO {
     public List<Mensaje> obtenerMensajes(ObjectId chatId) throws PersistenciaException;
     
     public List<Mensaje> obtenerMensajesOrdenadosPorFecha(ObjectId chatId) throws PersistenciaException;
+
+    public void editarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException;
+    
+    public void eliminarMensaje(ObjectId idChat, LocalDateTime fechaDeRegistro) throws PersistenciaException;
+
 
     
 

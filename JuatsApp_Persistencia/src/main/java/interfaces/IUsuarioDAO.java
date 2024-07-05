@@ -21,8 +21,6 @@ public interface IUsuarioDAO {
 
     public void agregar(Usuario usuario) throws PersistenciaException;
 
-    public List<Usuario> consultarTodos() throws PersistenciaException;
-
     public Usuario consultar(ObjectId idUsuario) throws PersistenciaException;
 
     public Usuario consultar(String telefono) throws PersistenciaException;

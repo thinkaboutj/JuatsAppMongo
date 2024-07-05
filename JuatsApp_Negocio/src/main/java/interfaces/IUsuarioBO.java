@@ -21,9 +21,7 @@ public interface IUsuarioBO {
     public UsuarioDTO consultarUsuario(ObjectId idUsuario) throws NegocioException;
     
     public void actualizar(UsuarioDTO usuarioDTO) throws NegocioException;
-    
-    public List<UsuarioDTO> consultarTodos() throws NegocioException;
-    
+        
     public void agregarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException;
     
     public List<UsuarioDTO> consultarContactos(ObjectId idUsuario) throws NegocioException;

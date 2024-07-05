@@ -2,7 +2,6 @@ DTOs\DomicilioDTO.class
 interfaces\IUsuarioBO.class
 DTOs\ChatDTO.class
 Encriptadores\EncriptadorAES.class
-interfaces\IMensajeBO.class
 negocio\UsuarioBO.class
 DTOs\MensajeDTO.class
 DTOs\UsuarioDTO.class

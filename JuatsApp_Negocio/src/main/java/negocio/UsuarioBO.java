@@ -63,8 +63,9 @@ public class UsuarioBO implements IUsuarioBO{
         return usuarioDTO;    
     }
     
-    
-    // se usa para agregar
+    /**
+    *   Se usa para agregar un usuario 
+    */
     public Usuario convertirAEntidad(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
         
@@ -76,8 +77,7 @@ public class UsuarioBO implements IUsuarioBO{
         usuario.setUsuario(usuarioDTO.getUsuario());  
         
         usuario.setContactos(new ArrayList<ObjectId>());
-        
-        
+
         Domicilio domicilio = new Domicilio();
         domicilio.setCalle(usuarioDTO.getDomicilio().getCalle());
         domicilio.setNumero(usuarioDTO.getDomicilio().getNumero());
@@ -88,10 +88,13 @@ public class UsuarioBO implements IUsuarioBO{
         return usuario;
     }
     
-    // este metodo esta pensado para que tambien convierta el id
-    // entonces este metodo se usa para actualizar, y el de arriba que es 
-    // convertirAEntidad el normalito que está arriba, ese se usa para agregar
-    // debido a que no hace nada con el id
+    /**
+    * este metodo esta pensado para que tambien convierta el id
+    * entonces este metodo se usa para actualizar, y el de arriba que es 
+    * debido a que no hace nada con el id
+    * 
+    * @return Usuario retorna un usuario convertido de dto a entidad
+    */
     public Usuario convertirAEntidadConID(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
         
@@ -114,6 +117,9 @@ public class UsuarioBO implements IUsuarioBO{
         return usuario;
     }
     
+    /**
+    *   Es para registrar un usuario
+    */
     @Override
     public void registrarUsuario(UsuarioDTO usuarioDTO) throws NegocioException {
         String contrasenaEncriptada;
@@ -127,7 +133,17 @@ public class UsuarioBO implements IUsuarioBO{
             throw new NegocioException(ex);
         }
     }
-
+    
+    /**
+     * Método para autenticar a un usuario utilizando su contraseña y teléfono.
+     * Encripta la contraseña proporcionada y verifica las credenciales en la base de datos.
+     *
+     * @param contrasena La contraseña en texto plano proporcionada por el usuario.
+     * @param telefono El número de teléfono del usuario.
+     * @return Un objeto UsuarioDTO que representa al usuario autenticado.
+     * @throws NegocioException Si ocurre algún error durante el proceso de autenticación,
+     *         incluyendo errores de persistencia, encriptación o si el usuario no es encontrado.
+     */
     @Override
     public UsuarioDTO login(String contrasena, String telefono) throws NegocioException {
         String contrasenaEncriptada;
@@ -146,10 +162,15 @@ public class UsuarioBO implements IUsuarioBO{
         } catch (PersistenciaException | UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
             throw new NegocioException(ex);
         }
-        
     }
     
-    
+   /**
+    *   El metodo esta pensado para consultar todas las cosas del usuario y poder mostrarlas en el frame de editar el perfil
+    *   El metodo desencripta la contrasena para poder mostrarla en el frame si es que el usuario la quiere modificar
+    *   @param idUsuario se busca el usuario por su ObjectId
+    *   @return UsuarioDTO regresa el con todos sus atributos
+    *   @throws Negocio
+    */
     @Override
     public UsuarioDTO consultarUsuario(ObjectId idUsuario) throws NegocioException {
         String contrasenaDecriptada;
@@ -180,28 +201,12 @@ public class UsuarioBO implements IUsuarioBO{
         }
         
     }
-
-    @Override
-    public List<UsuarioDTO> consultarTodos() throws NegocioException {
-        
-        try{
-            List<Usuario> listaDeUsuarios = dao.consultarTodos();
-            List<UsuarioDTO> usuariosConsultados = new ArrayList<>();
-
-
-            for (int i = 0; i < listaDeUsuarios.size(); i++){
-                UsuarioDTO usuario = convertirADTO(listaDeUsuarios.get(i));
-                System.out.println(usuario.toString());
-                usuariosConsultados.add(usuario);
-            }
-            return usuariosConsultados;
-
-        } catch (PersistenciaException e){
-            throw new NegocioException(e);
-        }
-        
-    }
-
+    
+    /**
+    *   El metodo agrega un usuario a la lista de contactos de otro usuario
+    *   @param idUsuario ObjectId del usuario al que se le va a agregar el contacto a su lista
+    *   @param idContacto ObjectId del contacto que se le va a agregar
+    */
     @Override
     public void agregarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
         try {
@@ -211,8 +216,11 @@ public class UsuarioBO implements IUsuarioBO{
         }
         
     }
-
-    @Override
+    
+    /**
+    *   
+    *   @param idUsuario ObjectId del contacto que se le va a agregar
+    */    @Override
     public List<UsuarioDTO> consultarContactos(ObjectId idUsuario) throws NegocioException {
         
         try{

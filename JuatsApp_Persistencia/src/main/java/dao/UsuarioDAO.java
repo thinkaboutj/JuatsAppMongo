@@ -42,6 +42,10 @@ public class UsuarioDAO implements IUsuarioDAO {
         this.chatCollection = ConexionBD.getInstance().getDatabase().getCollection("chats");
     }
     
+    
+    /**
+    *   Es para registrar un usuario
+    */
     @Override
     public void agregar(Usuario usuario) throws PersistenciaException {
         try {
@@ -51,14 +55,6 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
 
-    @Override
-    public List<Usuario> consultarTodos() throws PersistenciaException {
-        try {
-            return usuarioCollection.find().into(new ArrayList<>());
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar los usuarios.", e);
-        }
-    }
 
     @Override
     public Usuario consultar(ObjectId idUsuario) throws PersistenciaException {
