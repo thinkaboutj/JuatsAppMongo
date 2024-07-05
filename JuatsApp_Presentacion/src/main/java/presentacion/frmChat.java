@@ -46,6 +46,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -71,6 +72,7 @@ public class frmChat extends javax.swing.JFrame {
     private ChatDTO chatActual;
     private String txtRuta;
     private UsuarioDTO contactoActual;  // Variable de instancia para almacenar el contacto actual
+    private Timer mensajeTimer;
 
     public frmChat(ObjectId idUsuarioLogeado) {
         initComponents();
@@ -79,6 +81,16 @@ public class frmChat extends javax.swing.JFrame {
         this.idUsuarioLogeado = idUsuarioLogeado;
         cargarMetodosIniciales();
         ocultarComponentes();
+        
+        
+        mensajeTimer = new Timer(500, new ActionListener() { // Actualizar cada 5 segundos
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                verChat();
+            }
+        });
+        mensajeTimer.start();
+        
     }
 
     public void ocultarComponentes() {
