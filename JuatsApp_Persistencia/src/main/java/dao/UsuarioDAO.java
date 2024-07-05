@@ -122,13 +122,6 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public void actualizar(Usuario usuario) throws PersistenciaException {
         try {
-            Document query = new Document("telefono", usuario.getTelefono());
-            Usuario usuarioExistente = usuarioCollection.find(query).first();
-
-            if (usuarioExistente != null) {
-                throw new PersistenciaException("Ya existe un usuario con este telefono registrado");
-            }
-            
             usuarioCollection.replaceOne(Filters.eq("_id", usuario.getId()), usuario);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible actualizar el usuario.", e);
