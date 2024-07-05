@@ -40,6 +40,11 @@ public class UsuarioBO implements IUsuarioBO{
         encriptador = new EncriptadorAES();
     }
     
+   /**
+    *   
+    *   @return UsuarioDTO convertido
+    *   @return usuario a convetir
+    */
     public UsuarioDTO convertirADTO(Usuario usuario){
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         
@@ -63,8 +68,10 @@ public class UsuarioBO implements IUsuarioBO{
         return usuarioDTO;    
     }
     
-    /**
+   /**
     *   Se usa para agregar un usuario 
+    *   @return Usuario convertido
+    *   @return usuarioDTO a convetir
     */
     public Usuario convertirAEntidad(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
@@ -88,12 +95,13 @@ public class UsuarioBO implements IUsuarioBO{
         return usuario;
     }
     
-    /**
+   /**
     * este metodo esta pensado para que tambien convierta el id
     * entonces este metodo se usa para actualizar, y el de arriba que es 
     * debido a que no hace nada con el id
     * 
     * @return Usuario retorna un usuario convertido de dto a entidad
+    * @param usuarioDTO 
     */
     public Usuario convertirAEntidadConID(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
@@ -117,8 +125,11 @@ public class UsuarioBO implements IUsuarioBO{
         return usuario;
     }
     
-    /**
-    *   Es para registrar un usuario
+   /**
+    *   Registra un usuario, esta pensado para ser usado en el frmRegistroUsuario  
+    * 
+    *   @param usuarioDTO usuario a registrar
+    *   @throws NegocioException cacha excepcion de la persistencia, y excepciones del algoritmo al momento de encriptar
     */
     @Override
     public void registrarUsuario(UsuarioDTO usuarioDTO) throws NegocioException {
@@ -169,7 +180,7 @@ public class UsuarioBO implements IUsuarioBO{
     *   El metodo desencripta la contrasena para poder mostrarla en el frame si es que el usuario la quiere modificar
     *   @param idUsuario se busca el usuario por su ObjectId
     *   @return UsuarioDTO regresa el con todos sus atributos
-    *   @throws Negocio
+    *   @throws NegocioException tira la excepcion que se cache de persistencia o de desencriptacion
     */
     @Override
     public UsuarioDTO consultarUsuario(ObjectId idUsuario) throws NegocioException {
@@ -184,9 +195,13 @@ public class UsuarioBO implements IUsuarioBO{
         } catch (PersistenciaException | UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
             throw new NegocioException(ex);
         }
-        
     }
     
+   /**
+    *   El metodo esta pensado para ser usado en el Frame de editar perfil
+    *   @param usuarioDTO el usuario que se va a actualizar con sus datos modificados
+    *   @throws NegocioException tira la excepcion que se cache de persistencia o de encriptacion al momento de encriptar la contrasena
+    */ 
     @Override
     public void actualizar(UsuarioDTO usuarioDTO) throws NegocioException {
         String contrasenaEncriptada;
@@ -202,10 +217,12 @@ public class UsuarioBO implements IUsuarioBO{
         
     }
     
-    /**
+   /**
     *   El metodo agrega un usuario a la lista de contactos de otro usuario
+    *   El metodo esta pensado para ser usado en el DlgTelefonos
     *   @param idUsuario ObjectId del usuario al que se le va a agregar el contacto a su lista
-    *   @param idContacto ObjectId del contacto que se le va a agregar
+    *   @param idContacto ObjectId del contacto
+    *   @throws NegocioException cacha excepciones de persistencia
     */
     @Override
     public void agregarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
@@ -214,13 +231,15 @@ public class UsuarioBO implements IUsuarioBO{
         } catch (PersistenciaException ex) {
             throw new NegocioException(ex);
         }
-        
     }
     
-    /**
-    *   
-    *   @param idUsuario ObjectId del contacto que se le va a agregar
-    */    @Override
+   /**
+    *   El metodo es para consultar los contactos que tiene un usuario
+    *   esta pensado para ser usado en el dialog de ver contactos
+    *   @param idUsuario ObjectId del usuario del que queremos sus contactos
+    *   @throws NegocioException cacha excepciones de persistencia
+    */
+    @Override
     public List<UsuarioDTO> consultarContactos(ObjectId idUsuario) throws NegocioException {
         
         try{
@@ -238,6 +257,13 @@ public class UsuarioBO implements IUsuarioBO{
         }
     }
     
+   /**
+    *   El metodo es para consultar los contactos que tiene un usuario
+    *   esta pensado para ser usado en el dialog de ver contactos
+    *   @param idUsuario ObjectId del usuario 
+    *   @param idContacto ObjectId del contacto que se eliminará
+    *   @throws NegocioException cacha excepciones de persistencia
+    */
     @Override
     public void eliminarContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
         try {
@@ -247,6 +273,12 @@ public class UsuarioBO implements IUsuarioBO{
         }
     }
     
+   /**
+    *   El metodo esta pensado para ser usado en el DlgTelefonos, para para poder agregar contactos
+    *   @return List regresa una lista de todos los usuarios que están en la base de datos, pero que el usuario no tiene agregados como contactos
+    *   @param idUsuario ObjectId del usuario 
+    *   @throws NegocioException cacha excepciones de persistencia
+    */
     @Override
     public List<UsuarioDTO> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws NegocioException {
         
@@ -263,6 +295,12 @@ public class UsuarioBO implements IUsuarioBO{
         }
     }
     
+   /**
+    *   El metodo esta pensado para ser usado en el DlgNuevoChat, donde consulte los contactos sin chat y pueda empezar uno nuevo
+    *   @return List regresa una lista de todos los usuarios que el usuario tiene agregados como contactos, pero que no tiene chat aun con ellos
+    *   @param idUsuario ObjectId del usuario del que queremos sus contactos sin chat
+    *   @throws NegocioException cacha excepciones de persistencia
+    */
     @Override
     public List<UsuarioDTO> consultarContactosSinChat(ObjectId idUsuario) throws NegocioException {
         try {
@@ -281,10 +319,17 @@ public class UsuarioBO implements IUsuarioBO{
         }
         
     }
-
+    
+   /**
+    *   El metodo esta pensado para ser usado en el el frmChat, de tal manera que consultemos primero el frame consulte los chats del usuario
+    *   y respues consulte el participante del chat y verifique si es contacto, si no es contacto, el frame mostraria solo el numero de telefono de la persona
+    *   @return esContacto regresa booleano si lo tiene como contacto
+    *   @param idUsuario ObjectId del usuario que queremos consultar 
+    *   @param idContacto ObjectId del otro usuario, para verificar si es contacto
+    *   @throws NegocioException cacha excepciones de persistencia
+    */
     @Override
     public boolean esContacto(ObjectId idUsuario, ObjectId idContacto) throws NegocioException {
-        
         try {
             return dao.esContacto(idUsuario, idContacto);
         } catch (PersistenciaException ex) {
@@ -292,10 +337,6 @@ public class UsuarioBO implements IUsuarioBO{
         }
         
     }
-    
-    
-    
-
     
 
    
