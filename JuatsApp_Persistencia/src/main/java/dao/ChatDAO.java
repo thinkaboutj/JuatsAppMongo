@@ -28,13 +28,10 @@ import org.bson.types.ObjectId;
 public class ChatDAO implements IChatDAO{
 
     private final MongoCollection<Chat> chatCollection;
-    private final MongoCollection<Mensaje> mensajeCollection;
 
 
     public ChatDAO() {
         this.chatCollection = ConexionBD.getInstance().getDatabase().getCollection("chats", Chat.class);
-        this.mensajeCollection = ConexionBD.getInstance().getDatabase().getCollection("mensajes", Mensaje.class);
-
     }
 
     @Override
@@ -73,7 +70,6 @@ public class ChatDAO implements IChatDAO{
     @Override
     public void enviarMensaje(ObjectId idChat, Mensaje mensaje) throws PersistenciaException {
         try {
-            mensajeCollection.insertOne(mensaje);
             chatCollection.updateOne(new Document("_id", idChat), Updates.push("mensajes", mensaje));
         } catch (Exception e) {
             throw new PersistenciaException(e);
