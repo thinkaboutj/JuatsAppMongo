@@ -20,7 +20,9 @@ public class ConexionBD {
 
     private static ConexionBD instance;
     private MongoClient mongoClient;
-    private final String direccion = "mongodb://localhost:27017/";
+    //private final String direccion = "mongodb://localhost:27017/";
+
+    private final String direccion = "mongodb+srv://jesus:123conexion@cluster0.nvhps40.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
     private final String nombreBD = "JuatsApp";
 
     public ConexionBD() {
