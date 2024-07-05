@@ -130,7 +130,13 @@ public class UsuarioDTO {
     }
 
     public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
+        if(imagen == null){
+            byte[] byteArray = {1};
+            this.imagen = byteArray;
+        } else {
+            this.imagen = imagen;
+        }
+        
     }
 
     public LocalDate getFechaNacimiento() {

@@ -282,7 +282,7 @@ public class FrmEditarPerfil extends javax.swing.JFrame {
 
         lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
-        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 70, 110, 110));
+        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 60, 150, 150));
         pnlBackground.add(dcFechaCumple, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
         pnlBackground.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 300, 30));
 

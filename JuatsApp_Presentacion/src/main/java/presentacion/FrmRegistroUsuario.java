@@ -144,9 +144,8 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
         verContrasena = new javax.swing.JCheckBox();
-        lblImagen = new javax.swing.JLabel();
         JLDireccion = new javax.swing.JLabel();
-        lblDecoracion = new javax.swing.JLabel();
+        lblImagen = new javax.swing.JLabel();
         dcFechaCumple = new com.github.lgooddatepicker.components.DatePicker();
         txtUsuario = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -288,14 +287,11 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         pnlBackground.add(verContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 220, -1, -1));
-
-        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 70, 140, 140));
         pnlBackground.add(JLDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 120, 20));
 
-        lblDecoracion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDecoracion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
-        pnlBackground.add(lblDecoracion, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 70, 140, 140));
+        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
+        pnlBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 70, 140, 140));
         pnlBackground.add(dcFechaCumple, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
         pnlBackground.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 300, 30));
 
@@ -385,7 +381,6 @@ public class FrmRegistroUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblDecoracion;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel pnlBackground;
     private javax.swing.JTextField txtCalle;
