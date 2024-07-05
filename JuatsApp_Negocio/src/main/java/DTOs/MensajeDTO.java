@@ -9,22 +9,29 @@ import org.bson.types.ObjectId;
  * @author Jesus Medina (╹ڡ╹ ) ID:00000247527
  */
 public class MensajeDTO {
-    
+
     private ObjectId idUsuario;
     private String texto;
-    private byte[] imagen; 
+    private byte[] imagen;
     private LocalDateTime fecha_de_registro;
 
     public MensajeDTO() {
     }
-    
-    public MensajeDTO(ObjectId idUsuario, String texto, byte[] imagen,  LocalDateTime fecha_de_registro) {
+
+    public MensajeDTO(ObjectId idUsuario, String texto, byte[] imagen, LocalDateTime fecha_de_registro) {
         this.idUsuario = idUsuario;
         this.texto = texto;
-        this.imagen = imagen;
+        byte[] byteArray = {1}; // Array con valores específicos
+
+        if (imagen == null) {
+            this.imagen = byteArray;
+        } else {
+            this.imagen = imagen;
+
+        }
         this.fecha_de_registro = fecha_de_registro;
     }
-    
+
     public MensajeDTO(ObjectId idUsuario, String texto, LocalDateTime fecha_de_registro) {
         this.idUsuario = idUsuario;
         this.texto = texto;
@@ -84,6 +91,5 @@ public class MensajeDTO {
     public String toString() {
         return "MensajeDTO{" + "idUsuario=" + idUsuario + ", texto=" + texto + ", imagen=" + imagen + ", fecha_de_registro=" + fecha_de_registro + '}';
     }
-    
 
 }

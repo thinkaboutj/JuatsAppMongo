@@ -208,17 +208,17 @@ public class frmChat extends javax.swing.JFrame {
                 JLabel lblContacto = new JLabel();
                 Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
                 lblContacto.setIcon(icono);
-                
+
                 try {
-                    if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))){
+                    if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))) {
                         lblContacto.setText(usuarioChat.contacto.getUsuario());
                     } else {
                         lblContacto.setText(usuarioChat.contacto.getTelefono());
                     }
-                } catch (NegocioException ex){
+                } catch (NegocioException ex) {
                     JOptionPane.showMessageDialog(this, "no se pudo");
                 }
-                
+
                 lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
                 lblContacto.addMouseListener(new MouseAdapter() {
                     @Override
@@ -248,43 +248,57 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-  private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
+private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     pnlMensajes.removeAll();
     pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
-
     if (mensajes != null && !mensajes.isEmpty()) {
         for (MensajeDTO mensaje : mensajes) {
             JPanel panelMensaje = new JPanel();
             panelMensaje.setLayout(new BorderLayout());
             panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-
-            JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
-            txtMensaje.setEditable(false);
-            txtMensaje.setLineWrap(true);
-            txtMensaje.setWrapStyleWord(true);
-            txtMensaje.setOpaque(false);
-            txtMensaje.setBorder(null);
-            txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16));
-
+            
+            JTextArea txtMensaje = null;
+            
+            // Agregamos el texto si existe
+            if (mensaje.getTexto() != null && !mensaje.getTexto().isEmpty()) {
+                txtMensaje = new JTextArea(mensaje.getTexto());
+                txtMensaje.setEditable(false);
+                txtMensaje.setLineWrap(true);
+                txtMensaje.setWrapStyleWord(true);
+                txtMensaje.setOpaque(false);
+                txtMensaje.setBorder(null);
+                txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16));
+                panelMensaje.add(txtMensaje, BorderLayout.NORTH);
+            }
+            
+            // Agregamos la imagen si existe y no es solo 1 byte
+            if (mensaje.getImagen() != null && mensaje.getImagen().length > 1) {
+                ImageIcon imageIcon = new ImageIcon(mensaje.getImagen());
+                Image image = imageIcon.getImage().getScaledInstance(200, -1, Image.SCALE_SMOOTH);
+                JLabel lblImagen = new JLabel(new ImageIcon(image));
+                panelMensaje.add(lblImagen, BorderLayout.CENTER);
+            }
+            
             JPanel wrapperPanel = new JPanel();
             wrapperPanel.setLayout(new BorderLayout());
             wrapperPanel.setOpaque(false);
-
             boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
             if (esMensajePropio) {
                 panelMensaje.setBackground(new Color(0, 51, 102));
-                txtMensaje.setForeground(Color.WHITE);
+                if (txtMensaje != null) {
+                    txtMensaje.setForeground(Color.WHITE);
+                }
                 wrapperPanel.add(panelMensaje, BorderLayout.EAST);
             } else {
                 panelMensaje.setBackground(new Color(230, 230, 230));
-                txtMensaje.setForeground(Color.BLACK);
+                if (txtMensaje != null) {
+                    txtMensaje.setForeground(Color.BLACK);
+                }
                 wrapperPanel.add(panelMensaje, BorderLayout.WEST);
             }
-
-            panelMensaje.add(txtMensaje, BorderLayout.CENTER);
+            
             panelMensaje.setMaximumSize(new Dimension(400, 1500));
-
+            
             if (esMensajePropio) {
                 panelMensaje.addMouseListener(new MouseAdapter() {
                     @Override
@@ -311,15 +325,14 @@ public class frmChat extends javax.swing.JFrame {
                     }
                 });
             }
+            
             pnlMensajes.add(wrapperPanel);
             pnlMensajes.add(Box.createVerticalStrut(10));
         }
     }
-
     pnlMensajes.add(Box.createVerticalGlue());
     pnlMensajes.revalidate();
     pnlMensajes.repaint();
-
     SwingUtilities.invokeLater(() -> {
         JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
         if (scrollPane != null) {
@@ -328,8 +341,7 @@ public class frmChat extends javax.swing.JFrame {
         }
     });
 }
-  
-  @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -346,9 +358,10 @@ public class frmChat extends javax.swing.JFrame {
         btnNuevoChat = new javax.swing.JButton();
         Enviar = new javax.swing.JButton();
         btnCargarImagen = new javax.swing.JButton();
-        lblImagen = new javax.swing.JLabel();
-        txtMensaje = new javax.swing.JTextField();
         pnlChats = new javax.swing.JPanel();
+        lblImagen = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtMensaje = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat");
@@ -435,14 +448,14 @@ public class frmChat extends javax.swing.JFrame {
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
+                .addComponent(jScrollPane)
                 .addGap(21, 21, 21))
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addGap(51, 51, 51)
-                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                .addComponent(jScrollPane)
                 .addContainerGap())
         );
 
@@ -466,29 +479,17 @@ public class frmChat extends javax.swing.JFrame {
                 EnviarActionPerformed(evt);
             }
         });
-        pnBackground.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, -1, -1));
+        pnBackground.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 730, -1, -1));
 
-        btnCargarImagen.setText("Subir Imagen");
         btnCargarImagen.setBackground(new java.awt.Color(0, 51, 102));
         btnCargarImagen.setForeground(new java.awt.Color(255, 255, 255));
+        btnCargarImagen.setText("Subir Imagen");
         btnCargarImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCargarImagenActionPerformed(evt);
             }
         });
         pnBackground.add(btnCargarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 820, 120, 30));
-
-        lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/JuatsConejo.png"))); // NOI18N
-        pnBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 680, 140, 140));
-
-        txtMensaje.setText("Tu mensaje aqui...");
-        txtMensaje.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMensajeActionPerformed(evt);
-            }
-        });
-        pnBackground.add(txtMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 730, 380, -1));
 
         javax.swing.GroupLayout pnlChatsLayout = new javax.swing.GroupLayout(pnlChats);
         pnlChats.setLayout(pnlChatsLayout);
@@ -502,6 +503,13 @@ public class frmChat extends javax.swing.JFrame {
         );
 
         pnBackground.add(pnlChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 440, 580));
+        pnBackground.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 700, 130, 100));
+
+        txtMensaje.setColumns(20);
+        txtMensaje.setRows(5);
+        jScrollPane1.setViewportView(txtMensaje);
+
+        pnBackground.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 710, 610, 130));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -570,6 +578,7 @@ public class frmChat extends javax.swing.JFrame {
             return;
         }
 
+        //ojito aqui validacion
         byte[] array = iconToByteArray(lblImagen.getIcon());
 
         MensajeDTO mensajeDTO = new MensajeDTO(idUsuarioLogeado, txtMensaje.getText(), array, LocalDateTime.now());
@@ -578,7 +587,6 @@ public class frmChat extends javax.swing.JFrame {
             chatBO.enviarMensaje(this.chatActual.getId(), mensajeDTO);
             // Limpiar el campo de mensaje y la imagen después de enviar
             txtMensaje.setText("");
-            lblImagen.setIcon(new ImageIcon(getClass().getResource("/images/JuatsConejo.png")));
 
             // Recargar los mensajes inmediatamente después de enviar
             verChat();
@@ -587,10 +595,6 @@ public class frmChat extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_EnviarActionPerformed
-
-    private void txtMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMensajeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMensajeActionPerformed
 
 //    public void cargarPanelChat(Chat chat, Usuario usuario) {
 //        PnlChat pnlChat = new PnlChat(chat, usuario);
@@ -615,11 +619,12 @@ public class frmChat extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
     private javax.swing.JPanel pnlChats;
     private javax.swing.JPanel pnlMensajes;
-    private javax.swing.JTextField txtMensaje;
+    private javax.swing.JTextArea txtMensaje;
     // End of variables declaration//GEN-END:variables
 }
