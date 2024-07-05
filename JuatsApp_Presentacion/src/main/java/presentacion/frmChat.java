@@ -248,91 +248,86 @@ public class frmChat extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún chat.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-  
-    private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
-        pnlMensajes.removeAll();
-        pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
+    
+  private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
+    pnlMensajes.removeAll();
+    pnlMensajes.setLayout(new BoxLayout(pnlMensajes, BoxLayout.Y_AXIS));
 
-        if (mensajes != null && !mensajes.isEmpty()) {
-            for (MensajeDTO mensaje : mensajes) {
-                JPanel panelMensaje = new JPanel();
-                panelMensaje.setLayout(new BorderLayout());
-                panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+    if (mensajes != null && !mensajes.isEmpty()) {
+        for (MensajeDTO mensaje : mensajes) {
+            JPanel panelMensaje = new JPanel();
+            panelMensaje.setLayout(new BorderLayout());
+            panelMensaje.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-                JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
-                txtMensaje.setEditable(false);
-                txtMensaje.setLineWrap(true);
-                txtMensaje.setWrapStyleWord(true);
-                txtMensaje.setOpaque(false);
-                txtMensaje.setBorder(null);
-                txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16)); // Aumentar el tamaño de la fuente
+            JTextArea txtMensaje = new JTextArea(mensaje.getTexto());
+            txtMensaje.setEditable(false);
+            txtMensaje.setLineWrap(true);
+            txtMensaje.setWrapStyleWord(true);
+            txtMensaje.setOpaque(false);
+            txtMensaje.setBorder(null);
+            txtMensaje.setFont(new Font("Arial", Font.PLAIN, 16));
 
-                JPanel wrapperPanel = new JPanel();
-                wrapperPanel.setLayout(new BorderLayout());
-                wrapperPanel.setOpaque(false);
+            JPanel wrapperPanel = new JPanel();
+            wrapperPanel.setLayout(new BorderLayout());
+            wrapperPanel.setOpaque(false);
 
-                boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
-                if (esMensajePropio) {
-                    panelMensaje.setBackground(new Color(0, 51, 102)); // Azul oscuro original
-                    txtMensaje.setForeground(Color.WHITE);
-                    wrapperPanel.add(panelMensaje, BorderLayout.EAST);
-                } else {
-                    panelMensaje.setBackground(new Color(230, 230, 230)); // Gris claro
-                    txtMensaje.setForeground(Color.BLACK);
-                    wrapperPanel.add(panelMensaje, BorderLayout.WEST);
-                }
+            boolean esMensajePropio = mensaje.getIdUsuario().equals(idUsuarioLogeado);
+            if (esMensajePropio) {
+                panelMensaje.setBackground(new Color(0, 51, 102));
+                txtMensaje.setForeground(Color.WHITE);
+                wrapperPanel.add(panelMensaje, BorderLayout.EAST);
+            } else {
+                panelMensaje.setBackground(new Color(230, 230, 230));
+                txtMensaje.setForeground(Color.BLACK);
+                wrapperPanel.add(panelMensaje, BorderLayout.WEST);
+            }
 
-                panelMensaje.add(txtMensaje, BorderLayout.CENTER);
-                panelMensaje.setMaximumSize(new Dimension(400, 1500)); // Limitar el ancho máximo
+            panelMensaje.add(txtMensaje, BorderLayout.CENTER);
+            panelMensaje.setMaximumSize(new Dimension(400, 1500));
 
-                // Agregar MouseListener al panelMensaje si es mensaje propio
-                if (esMensajePropio) {
-                    panelMensaje.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            int option = JOptionPane.showOptionDialog(null, 
-                                "¿Qué deseas hacer con este mensaje?", 
-                                "Opciones de Mensaje", 
-                                JOptionPane.YES_NO_CANCEL_OPTION, 
-                                JOptionPane.QUESTION_MESSAGE, 
-                                null, 
-                                new String[]{"Editar", "Eliminar", "Cancelar"}, 
-                                "Cancelar");
-                            
-                            // si la opcion elegida es Editar
-                            if (option == JOptionPane.YES_OPTION) {
-                                DlgEditar editar = new DlgEditar(null, true, chatActual.getId(), mensaje);
-                                editar.setVisible(true);
-                                
-                            // si la opcion elegida es eliminar    
-                            } else if (option == JOptionPane.NO_OPTION) {
-                                try {
-                                    chatBO.eliminarMensaje(chatActual.getId(), mensaje.getFecha_de_registro());
-                                } catch (NegocioException ex) {
-                                    JOptionPane.showMessageDialog(null, "No se pudo eliminar el mensaje");
-                                }
+            if (esMensajePropio) {
+                panelMensaje.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        int option = JOptionPane.showOptionDialog(null, 
+                            "¿Qué deseas hacer con este mensaje?", 
+                            "Opciones de Mensaje", 
+                            JOptionPane.YES_NO_CANCEL_OPTION, 
+                            JOptionPane.QUESTION_MESSAGE, 
+                            null, 
+                            new String[]{"Editar", "Eliminar", "Cancelar"}, 
+                            "Cancelar");
+                        
+                        if (option == JOptionPane.YES_OPTION) {
+                            DlgEditar editar = new DlgEditar(null, true, chatActual.getId(), mensaje);
+                            editar.setVisible(true);
+                        } else if (option == JOptionPane.NO_OPTION) {
+                            try {
+                                chatBO.eliminarMensaje(chatActual.getId(), mensaje.getFecha_de_registro());
+                            } catch (NegocioException ex) {
+                                JOptionPane.showMessageDialog(null, "No se pudo eliminar el mensaje");
                             }
                         }
-                    });
-                }
-                pnlMensajes.add(wrapperPanel);
-                pnlMensajes.add(Box.createVerticalStrut(10)); // Espacio entre mensajes
+                    }
+                });
             }
+            pnlMensajes.add(wrapperPanel);
+            pnlMensajes.add(Box.createVerticalStrut(10));
         }
-
-        pnlMensajes.add(Box.createVerticalGlue());
-        pnlMensajes.revalidate();
-        pnlMensajes.repaint();
-
-        SwingUtilities.invokeLater(() -> {
-            JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
-            if (scrollPane != null) {
-                JScrollBar vertical = scrollPane.getVerticalScrollBar();
-                vertical.setValue(vertical.getMaximum());
-            }
-        });
     }
 
+    pnlMensajes.add(Box.createVerticalGlue());
+    pnlMensajes.revalidate();
+    pnlMensajes.repaint();
+
+    SwingUtilities.invokeLater(() -> {
+        JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, pnlMensajes);
+        if (scrollPane != null) {
+            JScrollBar vertical = scrollPane.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        }
+    });
+}
   
   @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
