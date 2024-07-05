@@ -83,13 +83,13 @@ public class frmChat extends javax.swing.JFrame {
         ocultarComponentes();
         
         
-        mensajeTimer = new Timer(500, new ActionListener() { // Actualizar cada 5 segundos
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                verChat();
-            }
-        });
-        mensajeTimer.start();
+//        mensajeTimer = new Timer(500, new ActionListener() { // Actualizar cada 5 segundos
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                verChat();
+//            }
+//        });
+//        mensajeTimer.start();
         
     }
 
@@ -235,40 +235,145 @@ public class frmChat extends javax.swing.JFrame {
 
     }
 
-    private void llenarPanelChats(List<UsuarioChat> listaChats) {
-        pnlChats.removeAll();
-        if (listaChats != null) {
-            for (UsuarioChat usuarioChat : listaChats) {
-                JLabel lblContacto = new JLabel();
-                Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
-                lblContacto.setIcon(icono);
+//    private void llenarPanelChats(List<UsuarioChat> listaChats) {
+//        pnlChats.removeAll();
+//        if (listaChats != null) {
+//            for (UsuarioChat usuarioChat : listaChats) {
+//                JLabel lblContacto = new JLabel();
+//                Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
+//                lblContacto.setIcon(icono);
+//
+//                try {
+//                    if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))) {
+//                        lblContacto.setText(usuarioChat.contacto.getUsuario());
+//                    } else {
+//                        lblContacto.setText(usuarioChat.contacto.getTelefono());
+//                    }
+//                } catch (NegocioException ex) {
+//                    JOptionPane.showMessageDialog(this, "no se pudo");
+//                }
+//
+//                lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
+//                lblContacto.addMouseListener(new MouseAdapter() {
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//                        chatActual = usuarioChat.chat;
+//                        contactoActual = usuarioChat.contacto; // Guarda la información del contacto actual
+//                        verChat();
+//                    }
+//                });
+//                pnlChats.add(lblContacto);
+//            }
+//        }
+//        pnlChats.revalidate();
+//        pnlChats.repaint();
+//    }
 
-                try {
-                    if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))) {
-                        lblContacto.setText(usuarioChat.contacto.getUsuario());
-                    } else {
-                        lblContacto.setText(usuarioChat.contacto.getTelefono());
-                    }
-                } catch (NegocioException ex) {
-                    JOptionPane.showMessageDialog(this, "no se pudo");
+    
+    private void llenarPanelChats(List<UsuarioChat> listaChats) {
+    pnlChats.removeAll();
+    pnlChats.setLayout(new BoxLayout(pnlChats, BoxLayout.Y_AXIS));
+    pnlChats.setBackground(new Color(17, 27, 33)); // Color de fondo oscuro
+
+    if (listaChats != null) {
+        for (UsuarioChat usuarioChat : listaChats) {
+            JPanel panelChat = new JPanel();
+            panelChat.setLayout(new BorderLayout());
+            panelChat.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70)); // Altura fija para cada chat
+            panelChat.setBackground(new Color(17, 27, 33)); // Color de fondo oscuro
+            panelChat.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(50, 55, 57))); // Línea divisoria
+
+            // Panel para la imagen de perfil
+            JPanel panelImagen = new JPanel(new BorderLayout());
+            panelImagen.setPreferredSize(new Dimension(60, 60));
+            panelImagen.setOpaque(false);
+            
+            JLabel lblImagen = new JLabel();
+            Icon icono = byteArrayToIcon(usuarioChat.contacto.getImagen());
+            lblImagen.setIcon(icono);
+            panelImagen.add(lblImagen, BorderLayout.CENTER);
+
+            // Panel para el nombre y último mensaje
+            JPanel panelInfo = new JPanel();
+            panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+            panelInfo.setOpaque(false);
+
+            JLabel lblNombre = new JLabel();
+            lblNombre.setForeground(Color.WHITE);
+            lblNombre.setFont(new Font("Arial", Font.BOLD, 14));
+
+            JLabel lblUltimoMensaje = new JLabel("Último mensaje");
+            lblUltimoMensaje.setForeground(new Color(177, 177, 177));
+            lblUltimoMensaje.setFont(new Font("Arial", Font.PLAIN, 12));
+
+            try {
+                if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))) {
+                    lblNombre.setText(usuarioChat.contacto.getUsuario());
+                } else {
+                    lblNombre.setText(usuarioChat.contacto.getTelefono());
+                }
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "No se pudo cargar el contacto");
+            }
+
+            panelInfo.add(lblNombre);
+            panelInfo.add(Box.createVerticalStrut(5));
+            panelInfo.add(lblUltimoMensaje);
+
+            // Panel para la hora del último mensaje
+            JPanel panelHora = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            panelHora.setOpaque(false);
+            
+            JLabel lblHora = new JLabel("12:45 a.m.");
+            lblHora.setForeground(new Color(177, 177, 177));
+            lblHora.setFont(new Font("Arial", Font.PLAIN, 11));
+            panelHora.add(lblHora);
+
+            panelChat.add(panelImagen, BorderLayout.WEST);
+            panelChat.add(panelInfo, BorderLayout.CENTER);
+            panelChat.add(panelHora, BorderLayout.EAST);
+
+            panelChat.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    chatActual = usuarioChat.chat;
+                    contactoActual = usuarioChat.contacto;
+                    verChat();
                 }
 
-                lblContacto.setHorizontalTextPosition(SwingConstants.RIGHT);
-                lblContacto.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        chatActual = usuarioChat.chat;
-                        contactoActual = usuarioChat.contacto; // Guarda la información del contacto actual
-                        verChat();
-                    }
-                });
-                pnlChats.add(lblContacto);
-            }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    panelChat.setBackground(new Color(30, 36, 40));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    panelChat.setBackground(new Color(17, 27, 33));
+                }
+            });
+
+            pnlChats.add(panelChat);
+            pnlChats.add(Box.createVerticalStrut(1)); // Espacio entre chats
         }
-        pnlChats.revalidate();
-        pnlChats.repaint();
     }
 
+    pnlChats.add(Box.createVerticalGlue()); // Empuja todo hacia arriba
+    pnlChats.revalidate();
+    pnlChats.repaint();
+
+    // Configurar el JScrollPane
+    JScrollPane scrollPane = new JScrollPane(pnlChats);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    scrollPane.setBorder(null);
+
+    panelContenedor.removeAll();
+    panelContenedor.setLayout(new BorderLayout());
+    panelContenedor.add(scrollPane, BorderLayout.CENTER);
+    panelContenedor.revalidate();
+    panelContenedor.repaint();
+}
     private void verChat() {
         if (chatActual != null) {
             try {
@@ -412,13 +517,15 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         lblNombreContacto = new javax.swing.JLabel();
         lblTelefono = new javax.swing.JLabel();
         btnNuevoChat = new javax.swing.JButton();
-        pnlChats = new javax.swing.JPanel();
         pnlEscribir = new javax.swing.JPanel();
         btnCargarImagen = new javax.swing.JButton();
         lblImagen = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtMensaje = new javax.swing.JTextArea();
         btnEnviar = new javax.swing.JButton();
+        panelContenedor = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        pnlChats = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Chat");
@@ -543,19 +650,6 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         });
         pnBackground.add(btnNuevoChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 460, 40));
 
-        javax.swing.GroupLayout pnlChatsLayout = new javax.swing.GroupLayout(pnlChats);
-        pnlChats.setLayout(pnlChatsLayout);
-        pnlChatsLayout.setHorizontalGroup(
-            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
-        );
-        pnlChatsLayout.setVerticalGroup(
-            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
-        );
-
-        pnBackground.add(pnlChats, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 460, 690));
-
         pnlEscribir.setBackground(new java.awt.Color(255, 255, 255));
 
         btnCargarImagen.setBackground(new java.awt.Color(0, 51, 102));
@@ -613,6 +707,36 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
         );
 
         pnBackground.add(pnlEscribir, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 690, 1080, 160));
+
+        panelContenedor.setBackground(new java.awt.Color(255, 255, 255));
+
+        pnlChats.setBackground(new java.awt.Color(204, 204, 204));
+
+        javax.swing.GroupLayout pnlChatsLayout = new javax.swing.GroupLayout(pnlChats);
+        pnlChats.setLayout(pnlChatsLayout);
+        pnlChatsLayout.setHorizontalGroup(
+            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+        );
+        pnlChatsLayout.setVerticalGroup(
+            pnlChatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 684, Short.MAX_VALUE)
+        );
+
+        jScrollPane2.setViewportView(pnlChats);
+
+        javax.swing.GroupLayout panelContenedorLayout = new javax.swing.GroupLayout(panelContenedor);
+        panelContenedor.setLayout(panelContenedorLayout);
+        panelContenedorLayout.setHorizontalGroup(
+            panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+        );
+        panelContenedorLayout.setVerticalGroup(
+            panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+        );
+
+        pnBackground.add(panelContenedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 460, 690));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -731,9 +855,11 @@ private void cargarMensajesEnPanel(List<MensajeDTO> mensajes) {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblNombreContacto;
     private javax.swing.JLabel lblTelefono;
+    private javax.swing.JPanel panelContenedor;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnBackground;
     private javax.swing.JPanel pnlChats;
