@@ -20,8 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -43,7 +41,7 @@ public class UsuarioBO implements IUsuarioBO{
    /**
     *   
     *   @return UsuarioDTO convertido
-    *   @return usuario a convetir
+    *   @param usuario a convetir
     */
     public UsuarioDTO convertirADTO(Usuario usuario){
         UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -71,7 +69,7 @@ public class UsuarioBO implements IUsuarioBO{
    /**
     *   Se usa para agregar un usuario 
     *   @return Usuario convertido
-    *   @return usuarioDTO a convetir
+    *   @param usuarioDTO a convetir
     */
     public Usuario convertirAEntidad(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
@@ -145,16 +143,16 @@ public class UsuarioBO implements IUsuarioBO{
         }
     }
     
-    /**
-     * Método para autenticar a un usuario utilizando su contraseña y teléfono.
-     * Encripta la contraseña proporcionada y verifica las credenciales en la base de datos.
-     *
-     * @param contrasena La contraseña en texto plano proporcionada por el usuario.
-     * @param telefono El número de teléfono del usuario.
-     * @return Un objeto UsuarioDTO que representa al usuario autenticado.
-     * @throws NegocioException Si ocurre algún error durante el proceso de autenticación,
-     *         incluyendo errores de persistencia, encriptación o si el usuario no es encontrado.
-     */
+   /**
+    *   Método para autenticar a un usuario utilizando su contraseña y teléfono.
+    *   Encripta la contraseña proporcionada y verifica las credenciales en la base de datos.
+    *
+    *   @param contrasena La contraseña en texto plano proporcionada por el usuario.
+    *   @param telefono El número de teléfono del usuario.
+    *   @return Un objeto UsuarioDTO que representa al usuario autenticado.
+    *   @throws NegocioException Si ocurre algún error durante el proceso de autenticación,
+    *         incluyendo errores de persistencia, encriptación o si el usuario no es encontrado.
+    */
     @Override
     public UsuarioDTO login(String contrasena, String telefono) throws NegocioException {
         String contrasenaEncriptada;

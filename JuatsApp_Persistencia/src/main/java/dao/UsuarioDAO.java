@@ -1,8 +1,5 @@
 package dao;
 
-
-
-
 import static com.mongodb.client.model.Aggregates.*;
 import Conexion.ConexionBD;
 import entidades.Domicilio;
@@ -35,16 +32,17 @@ public class UsuarioDAO implements IUsuarioDAO {
     
     private final MongoCollection<Usuario> usuarioCollection;
     private final MongoCollection<Document> chatCollection;
-
-
+    
     public UsuarioDAO() {
         this.usuarioCollection = ConexionBD.getInstance().getDatabase().getCollection("usuarios", Usuario.class);
         this.chatCollection = ConexionBD.getInstance().getDatabase().getCollection("chats");
     }
     
-    
-    /**
-    *   Es para registrar un usuario
+   /**
+    *  Inserta un usuario en la base de datos
+    *
+    *  @param usuario usuario a insertar
+    *  @throws PersistenciaException cacha MongoExceptions
     */
     @Override
     public void agregar(Usuario usuario) throws PersistenciaException {
@@ -54,8 +52,14 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException(e);
         }
     }
-
-
+    
+   /**
+    *  Consulta un usuario de la base de datos segun su object id
+    *   
+    *  @param idUsuario ObjectId del usuario que queremos consultar
+    *  @return Usuario usuario encontrado
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public Usuario consultar(ObjectId idUsuario) throws PersistenciaException {
         try {
@@ -64,7 +68,15 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("No fue posible consultar el usuario.", e);
         }
     }
-
+    
+   /**
+    *  consultar un usuario segun su telefono
+    *  creo que este metodo no lo usamos para nada 
+    *   
+    *  @param telefono telefono del usuario
+    *  @return Usuario usuario encontrado
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public Usuario consultar(String telefono) throws PersistenciaException {
         try {
@@ -73,7 +85,16 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("No fue posible consultar el usuario.", e);
         }
     }
-
+    
+    
+   /**
+    *  consultar un usuario segun su nombre de usuario
+    *  creo que este metodo no lo usamos para nada 
+    *   
+    *  @param username nombre del usuario
+    *  @return Usuario usuario encontrado
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public Usuario consultarPorUsuario(String username) throws PersistenciaException {
         try {
@@ -82,7 +103,15 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("No fue posible consultar el usuario.", e);
         }
     }
-
+    
+    
+   /**
+    *   Metodo para actualizar un usuario de la base de datos.
+    *   El metodo lo reemplaza filtrando usuarios por id
+    * 
+    *  @param usuario Recibe un usuario, y se va a reemplazar segun su ObjectId en la base de datos con los nuevos atributos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public void actualizar(Usuario usuario) throws PersistenciaException {
         try {
@@ -91,105 +120,113 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("No fue posible actualizar el usuario.", e);
         }
     }
-
+    
+   /**
+    *   Metodo para validar las credenciales del usuario
+    * 
+    *  @return Usuario regresa el usuario para poder pasar al siguiente frame con su ObjectId
+    *  @param contrasena Recibe la contraseña del usuario, ya encriptada desde la capa de negocio
+    *  @param telefono Recibe el teléfono del usuario
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public Usuario login(String contrasena, String telefono) throws PersistenciaException {
         try {
-            Bson filter = Filters.and(
-                Filters.eq("contrasena", contrasena),
-                Filters.eq("telefono", telefono)
-            );
+            Bson filter = Filters.and(Filters.eq("contrasena", contrasena), Filters.eq("telefono", telefono));
             return usuarioCollection.find(filter).first();
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible consultar el usuario.", e);
         }
     }
     
-    private Usuario convertirDocumentoAUsuario(Document doc) {
-        ObjectId id = doc.getObjectId("_id");
-        String usuario = doc.getString("usuario");
-        String contrasena = doc.getString("contrasena");
-        Document domicilioDoc = doc.get("domicilio", Document.class);
-        Domicilio domicilio = new Domicilio(
-                domicilioDoc.getString("calle"),
-                domicilioDoc.getString("codigoPostal"),
-                domicilioDoc.getString("colonia"),
-                domicilioDoc.getString("numero")
-        );
-        String telefono = doc.getString("telefono");
-        String sexo = doc.getString("sexo");
-        byte[] imagen = doc.get("imagen", org.bson.types.Binary.class).getData();
-        LocalDate fechaNacimiento = doc.getDate("fechaNacimiento").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        List<ObjectId> contactos = doc.getList("contactos", ObjectId.class);
-        return new Usuario(id, usuario, contrasena, domicilio, telefono, sexo, imagen, fechaNacimiento, contactos);
-    }
-    
+   /**
+    *   Metodo para consultar los usuarios que un usuario tiene agregados como contactos
+    * 
+    *  @return List regresa la lista de usuarios
+    *  @param objectId ObjectId del usuario que queremos sus contactos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public List<Usuario> consultarContactosDelUsuario(ObjectId objectId) throws PersistenciaException {
         List<Usuario> contactos = new ArrayList<>();
         
         try {
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", objectId)).first();
-            if (usuario != null) {
-                List<ObjectId> contactosIds = usuario.getContactos();
-                if (contactosIds != null) {
-                    for (ObjectId contactoId : contactosIds) {
-                        Usuario contacto = usuarioCollection.find(Filters.eq("_id", contactoId)).first();
-                        if (contacto != null) {
-                            contactos.add(contacto);
-                        }
+            List<ObjectId> contactosIds = usuario.getContactos();
+
+            if (contactosIds != null) {
+                for (ObjectId contactoId : contactosIds) {
+                    Usuario contacto = usuarioCollection.find(Filters.eq("_id", contactoId)).first();
+                    if (contacto != null) {
+                        contactos.add(contacto);
                     }
                 }
             }
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible consultar los contactos del usuario.", e);
         }
-
         return contactos;
     }
     
+   /**
+    *   Metodo para agregar un contacto a la lista de contactos de un usuario,
+    *   el metodo lo que hace es consultar la lista de contactos del usuario, y el mismo metodo
+    *   verifica si contiene el id del contacto, si no lo contiene lo agrega a la lista y actualiza la
+    *   lista de contactos del usuario con la nueva creada
+    * 
+    *   si la lista de contactos es nula entonces la crea y le añade el contacto
+    * 
+    *  @param objectId ObjectId del usuario al que le vamos a agregar el contacto
+    *  @param idContacto ObjectId del contacto que agregaremos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public void agregarContacto(ObjectId idUsuario, ObjectId idContacto) throws PersistenciaException {
         try {
-            Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
-            if (usuario != null) {
+                Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
+            
                 List<ObjectId> contactos = usuario.getContactos();
+                
                 if (contactos == null) {
                     contactos = new ArrayList<>();
                 }
+                
                 if (!contactos.contains(idContacto)) {
                     contactos.add(idContacto);
                 }
-                usuarioCollection.updateOne(
-                        Filters.eq("_id", idUsuario),
-                        Updates.set("contactos", contactos)
-                );
-            } else {
-                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
-            }
+                
+                usuarioCollection.updateOne(Filters.eq("_id", idUsuario), Updates.set("contactos", contactos));
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible agregar el contacto al usuario.", e);
         }
     }
     
+   /**
+    *   consulta el usuario, agarra la lista de sus contactos,
+    *   y con sus ids va consultando uno por uno y regresa la lista
+    * 
+    *  @return List Regresa el array de contactos de un usuario
+    *  @param idUsuario ObjectId del  usuario que queremos sus contactos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public List<Usuario> consultarContactos(ObjectId idUsuario) throws PersistenciaException {
         List<Usuario> contactos = new ArrayList<>();
         
         try {
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
-            if (usuario != null) {
-                List<ObjectId> contactosIds = usuario.getContactos();
-                if (contactosIds != null) {
-                    for (ObjectId idContacto : contactosIds) {
-                        Usuario contacto = usuarioCollection.find(Filters.eq("_id", idContacto)).first();
-                        if (contacto != null) {
-                            contactos.add(contacto);
-                        }
+            List<ObjectId> contactosIds = usuario.getContactos();
+
+            if (contactosIds != null) {
+
+                for (ObjectId idContacto : contactosIds) {
+                    Usuario contacto = usuarioCollection.find(Filters.eq("_id", idContacto)).first();
+                    if (contacto != null) {
+                        contactos.add(contacto);
                     }
+
                 }
-            } else {
-                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
+
             }
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible consultar los contactos del usuario.", e);
@@ -197,48 +234,75 @@ public class UsuarioDAO implements IUsuarioDAO {
         return contactos;
     }
     
+   /**
+    *   elimina un contacto de un usuario, 
+    *   la manera en la que funciona el metodo es que consulta la lista de contactos 
+    *   del usuario, y si contiene el id del contacto que le pasamos, lo eliminamos y actualizamos la lista
+    *   de contactos del usuario en la base de datos
+    * 
+    *  @param idUsuario ObjectId de la persona en la que se encuentra el contacto
+    *  @param idContacto ObjectId del contacto que eliminaremos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */
     @Override
     public void eliminarContacto(ObjectId idUsuario, ObjectId idContacto) throws PersistenciaException {
         try {
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
-            if (usuario != null) {
-                List<ObjectId> contactos = usuario.getContactos();
-                if (contactos != null && contactos.contains(idContacto)) {
-                    contactos.remove(idContacto);
-                    usuarioCollection.updateOne(Filters.eq("_id", idUsuario), Updates.set("contactos", contactos));
-                }
-            } else {
-                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
+            
+            List<ObjectId> contactos = usuario.getContactos();
+                
+            if (contactos != null && contactos.contains(idContacto)) {
+                contactos.remove(idContacto);
+                usuarioCollection.updateOne(Filters.eq("_id", idUsuario), Updates.set("contactos", contactos));
             }
+
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible eliminar el contacto del usuario.", e);
         }
     }
     
+   /**
+    *   El metodo lo que hace es consultar los usuarios que están en la base de datos 
+    *   y que no tiene el usuario en sus contactos  
+    * 
+    *   consulta todos los usuarios de la base de datos y los contactos del usuario, 
+    *   y compara las dos listas  a ver si la de contactos contiene a alguno de todos los usuarios
+    *   en caso de que no, agrega el contacto a una nueva lista y la regresa
+    * 
+    *  @return List regresa la lista de usuarios que no tiene agregados
+    *  @param idUsuario ObjectId del usuario del que queremos todos los usuarios menos sus contactos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */    
     @Override
     public List<Usuario> consultarTelefonosQueNoTieneEnContactos(ObjectId idUsuario) throws PersistenciaException {
         List<Usuario> noContactos = new ArrayList<>();
 
         try {
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
-            if (usuario != null) {
-                List<ObjectId> contactosIds = usuario.getContactos();
+            
+            List<ObjectId> contactosIds = usuario.getContactos();
                 List<Usuario> todosUsuarios = usuarioCollection.find().into(new ArrayList<>());
-                for (Usuario usuarioActual : todosUsuarios) {
-                    if ((contactosIds == null || !contactosIds.contains(usuarioActual.getId())) && !usuarioActual.getId().equals(idUsuario)) {
-                        noContactos.add(usuarioActual);
-                    }
+                
+            for (Usuario usuarioActual : todosUsuarios) {
+                if ((contactosIds == null || !contactosIds.contains(usuarioActual.getId())) && !usuarioActual.getId().equals(idUsuario)) {
+                    noContactos.add(usuarioActual);
                 }
-            } else {
-                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
             }
+
         } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible consultar los usuarios no contactos.", e);
+            throw new PersistenciaException("No fue posible consultar los usuarios no agregados a contactos.", e);
         }
 
         return noContactos;
     }
-
+    
+   /**
+    *   El metodo lo que hace es consultar los usuarios del array de contactos, pero que aun no tiene chat con ellos 
+    * 
+    *  @return List regresa la lista de usuarios que no tiene un chat
+    *  @param idUsuario ObjectId del contacto que eliminaremos
+    *  @throws PersistenciaException cacha MongoExceptions
+    */    
     @Override
     public List<Usuario> consultarContactosSinChat(ObjectId idUsuario) throws PersistenciaException {
         List<Usuario> contactosSinChat = new ArrayList<>();
@@ -278,19 +342,27 @@ public class UsuarioDAO implements IUsuarioDAO {
         return contactosSinChat;
     }
     
+    
+   /**
+    *   lo que hace el metodo es que consigue la lista de los contactos del usuario
+    *   y compara a ver si contiene el usuario que le pasamos como parametro para despues regresar el booleano
+    * 
+    *  @return boolean regresa booleano si lo tiene en su lista de contactos
+    *  @param idUsuario 
+    *  @param idContacto 
+    *  @throws PersistenciaException cacha MongoExceptions
+    */        
     @Override
     public boolean esContacto(ObjectId idUsuario, ObjectId idContacto) throws PersistenciaException {
         try {
             Usuario usuario = usuarioCollection.find(Filters.eq("_id", idUsuario)).first();
 
-            if (usuario != null) {
-                List<ObjectId> contactosIds = usuario.getContactos();
-                if (contactosIds != null && contactosIds.contains(idContacto)) {
-                    return true;
-                }
-            } else {
-                throw new PersistenciaException("No se encontró el usuario con ID: " + idUsuario);
+            List<ObjectId> contactosIds = usuario.getContactos();
+                
+            if (contactosIds != null && contactosIds.contains(idContacto)) {
+                return true;
             }
+            
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible verificar el contacto del usuario.", e);
         }
