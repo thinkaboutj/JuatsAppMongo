@@ -37,6 +37,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -48,6 +49,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -270,18 +272,18 @@ public class frmChat extends javax.swing.JFrame {
 //    }
 
     
-    private void llenarPanelChats(List<UsuarioChat> listaChats) {
+   private void llenarPanelChats(List<UsuarioChat> listaChats) {
     pnlChats.removeAll();
     pnlChats.setLayout(new BoxLayout(pnlChats, BoxLayout.Y_AXIS));
-    pnlChats.setBackground(new Color(17, 27, 33)); // Color de fondo oscuro
+    pnlChats.setBackground(new Color(240, 242, 245)); // Color base gris claro
 
     if (listaChats != null) {
         for (UsuarioChat usuarioChat : listaChats) {
             JPanel panelChat = new JPanel();
             panelChat.setLayout(new BorderLayout());
-            panelChat.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70)); // Altura fija para cada chat
-            panelChat.setBackground(new Color(17, 27, 33)); // Color de fondo oscuro
-            panelChat.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(50, 55, 57))); // Línea divisoria
+            panelChat.setMaximumSize(new Dimension(Integer.MAX_VALUE, 72)); // Altura fija para cada chat
+            panelChat.setBackground(new Color(240, 242, 245)); // Color base gris claro
+            panelChat.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220))); // Línea divisoria
 
             // Panel para la imagen de perfil
             JPanel panelImagen = new JPanel(new BorderLayout());
@@ -299,12 +301,12 @@ public class frmChat extends javax.swing.JFrame {
             panelInfo.setOpaque(false);
 
             JLabel lblNombre = new JLabel();
-            lblNombre.setForeground(Color.WHITE);
-            lblNombre.setFont(new Font("Arial", Font.BOLD, 14));
+            lblNombre.setForeground(Color.BLACK);
+            lblNombre.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
             JLabel lblUltimoMensaje = new JLabel("Último mensaje");
-            lblUltimoMensaje.setForeground(new Color(177, 177, 177));
-            lblUltimoMensaje.setFont(new Font("Arial", Font.PLAIN, 12));
+            lblUltimoMensaje.setForeground(new Color(100, 100, 100));
+            lblUltimoMensaje.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
             try {
                 if (usuarioBO.esContacto(idUsuarioLogeado, new ObjectId(usuarioChat.contacto.getId()))) {
@@ -317,16 +319,16 @@ public class frmChat extends javax.swing.JFrame {
             }
 
             panelInfo.add(lblNombre);
-            panelInfo.add(Box.createVerticalStrut(5));
+            panelInfo.add(Box.createVerticalStrut(4));
             panelInfo.add(lblUltimoMensaje);
 
             // Panel para la hora del último mensaje
             JPanel panelHora = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             panelHora.setOpaque(false);
             
-            JLabel lblHora = new JLabel("12:45 a.m.");
-            lblHora.setForeground(new Color(177, 177, 177));
-            lblHora.setFont(new Font("Arial", Font.PLAIN, 11));
+            JLabel lblHora = new JLabel("12:45 PM");
+            lblHora.setForeground(new Color(100, 100, 100));
+            lblHora.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             panelHora.add(lblHora);
 
             panelChat.add(panelImagen, BorderLayout.WEST);
@@ -343,17 +345,23 @@ public class frmChat extends javax.swing.JFrame {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    panelChat.setBackground(new Color(30, 36, 40));
+                    panelChat.setBackground(new Color(0, 51, 102)); // Color seleccionado azul índigo
+                    lblNombre.setForeground(Color.WHITE);
+                    lblUltimoMensaje.setForeground(new Color(220, 220, 220));
+                    lblHora.setForeground(new Color(220, 220, 220));
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    panelChat.setBackground(new Color(17, 27, 33));
+                    panelChat.setBackground(new Color(240, 242, 245)); // Volver al color base
+                    lblNombre.setForeground(Color.BLACK);
+                    lblUltimoMensaje.setForeground(new Color(100, 100, 100));
+                    lblHora.setForeground(new Color(100, 100, 100));
                 }
             });
 
             pnlChats.add(panelChat);
-            pnlChats.add(Box.createVerticalStrut(1)); // Espacio entre chats
+            pnlChats.add(Box.createVerticalStrut(1)); // Pequeño espacio entre chats
         }
     }
 
@@ -367,13 +375,42 @@ public class frmChat extends javax.swing.JFrame {
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     scrollPane.getVerticalScrollBar().setUnitIncrement(16);
     scrollPane.setBorder(null);
+    scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(8, Integer.MAX_VALUE)); // Barra de desplazamiento más delgada
 
+    // Personalizar la barra de desplazamiento
+    scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+        @Override
+        protected void configureScrollBarColors() {
+            this.thumbColor = new Color(200, 200, 200);
+        }
+
+        @Override
+        protected JButton createDecreaseButton(int orientation) {
+            return createZeroButton();
+        }
+
+        @Override
+        protected JButton createIncreaseButton(int orientation) {
+            return createZeroButton();
+        }
+
+        private JButton createZeroButton() {
+            JButton button = new JButton();
+            button.setPreferredSize(new Dimension(0, 0));
+            button.setMinimumSize(new Dimension(0, 0));
+            button.setMaximumSize(new Dimension(0, 0));
+            return button;
+        }
+    });
+
+    // Asumiendo que tienes un panel contenedor para el scrollPane
     panelContenedor.removeAll();
     panelContenedor.setLayout(new BorderLayout());
     panelContenedor.add(scrollPane, BorderLayout.CENTER);
     panelContenedor.revalidate();
     panelContenedor.repaint();
 }
+    
     private void verChat() {
         if (chatActual != null) {
             try {
